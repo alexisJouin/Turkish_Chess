@@ -1,0 +1,43 @@
+//
+   Created by Alexis on 09/06/2016.
+
+extends layout
+block title
+    title Inscription
+block append stylesheets
+    link(rel='stylesheet', href='/stylesheets/inscriptionConnexion.css')
+block content
+    div(id="formConnect")
+        h2 Inscription
+        form(action='/inscription',method='POST', id='inscription')
+            div(data-role='fieldcontain')
+                fieldset(data-role='controlgroup')
+                    if(!pseudo)
+                        input(id='pseudo',type='text',value='',placeholder='Pseudo (3 lettres min)',name='username')
+                    else if (pseudo == 1)
+                        input(id='pseudo',type='text', style='background-color:red',value='',placeholder='Pseudo déjà pris(3 lettres min)',name='username')
+                    else if (pseudo == 2)
+                        input(id='pseudo',type='text', style='background-color:red',value='',placeholder='Pseudo trop court(3 lettres min)',name='username')
+                    span(class="erreur",id="errPseudo", style="display:none; color:#F00;") Tape ton pseudo !
+            div(data-role='fieldcontain')
+                fieldset(data-role='controlgroup')
+                        if(!mail)
+                            input(id='email',type='email',value='',placeholder='Adresse email',name='mail')
+                        else if(mail == 1)
+                            input(id='email',type='email', style='background-color:red', value='',placeholder='Adresse email déjà prise',name='mail')
+                        span(class="erreur",id="errMail", style="display:none; color:#F00;") Tape ton email !
+            div#passworddiv(data-role='fieldcontain')
+                fieldset(data-role='controlgroup')
+                        if(!password)
+                            input(id='password',type='password',value='',placeholder='Mot de passe (6 lettres min)',name='password')
+                        else if(password == 1)
+                            input(id='password',type='password', style='background-color:red', value='',placeholder='Mot de passe trop court (6 lettres min)',name='password')
+                        span(class="erreur",id="errMdp", style="display:none; color:#F00;") Tape ton mot de passe
+            div(data-role='fieldcontain')
+                button(type='submit',value='Valider',data-transition='fade', data-theme='c' id="inscription_button") Inscription
+        hr
+        p Déjà un compte ?
+        button(id="connexion_move") Connectez-vous
+
+    script(src="/js/connexionInscription.js")
+
