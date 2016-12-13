@@ -25,6 +25,7 @@ module.exports = (function (self) {
                 ["B", "B", "B", "B", "B", "B", "B", "B"],
                 [" ", " ", " ", " ", " ", " ", " ", " "]
             ];
+            // test
         };
 
 
