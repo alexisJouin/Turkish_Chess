@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var indexRoutes = require('./routes/menu');
+var indexRoutes = require('./routes/index');
 var connexionRoutes = require('./routes/connexion');
 var inscriptionRoutes = require('./routes/inscription');
 var jeuRoutes = require('./routes/jeu');

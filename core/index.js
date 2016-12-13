@@ -1,3 +1,3 @@
-/**
- * Created by sschoute on 13/12/16.
- */
+var merge = require('merge');
+
+module.exports = merge(require('./player'));

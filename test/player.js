@@ -1,3 +1,12 @@
-/**
- * Created by sschoute on 13/12/16.
- */
+var chai = require('chai');
+var expect = chai.expect; // we are using the "expect" style of Chai
+var fs = require('fs');
+var core = require('./../core');
+
+describe('Player', function () {
+    it('Init', function () {
+        var player = new core.Player();
+        expect(player.getName()).equal("toto");
+    });
+
+});
