@@ -19,16 +19,14 @@ module.exports = (function (self) {
         var whitePawns = [];
         var blackPawns = [];
 
-        this.initializeBoard = function () {
-            // Init white pawns
-
+        var init = function () {
+            // Init pawns
             for (var i = 0; i < 16; i++) {
                 whitePawns.push(new core.Pawn(core.PawnType.WHITE, "WHITE"));
                 blackPawns.push(new core.Pawn(core.PawnType.BLACK, "BLACK"));
             }
-
             // Init the board
-            this.board = [
+            board = [
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,14 +36,12 @@ module.exports = (function (self) {
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0]
             ];
-
-
             // Putting pawns on the board            
             for (var i = 0; i < 8; i++) {
-                this.board[1][i] = whitePawns[i];
-                this.board[2][i] = whitePawns[i + 8];
-                this.board[5][i] = blackPawns[i];
-                this.board[6][i] = blackPawns[i + 8];
+                board[1][i] = whitePawns[i];
+                board[2][i] = whitePawns[i + 8];
+                board[5][i] = blackPawns[i];
+                board[6][i] = blackPawns[i + 8];
             }
         };
 
@@ -66,10 +62,29 @@ module.exports = (function (self) {
 
 
         this.getBoard = function () {
-            return this.plateau;
+            return plateau;
         };
 
 
+        this.toString = function () {
+            var st = "[";
+            for (var i = 0; i < board.length; i++) {
+                st += "[";
+                for (var j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != 0) {
+                        st += board[i][j].toString() + ", ";                        
+                    } else {
+                        st += "\" \",";
+                    }
+                }
+                st += "], \n";
+            }
+            st += "]";
+            console.log(st);
+            return st;
+        };
+
+        init();
     };
 
     return self;

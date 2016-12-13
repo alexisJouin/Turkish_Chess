@@ -19,7 +19,7 @@ module.exports = (function (self) {
         };
 
         this.setType = function (newtype) {
-            type = newtype;
+            this.type = newtype;
         };
 
         this.getType = function () {
@@ -29,7 +29,7 @@ module.exports = (function (self) {
         this.lastPosition = function () {
             return lastPos;
         };
-        
+
 //        this.setPos = function (_pos) {
 //            pos = _pos;
 //        };
@@ -39,7 +39,7 @@ module.exports = (function (self) {
 //        };
 
         // This function needs a boolean
-        this.setQueen = function(value){
+        this.setQueen = function (value) {
             isQueen = value;
         };
 
@@ -47,13 +47,17 @@ module.exports = (function (self) {
 //            return (type == core.PawnType.Q_BLACK || type == core.PawnType.Q_WHITE);
             return isQueen;
         };
-        
-        this.getColour = function() {
+
+        this.getColour = function () {
             return colour;
         };
-        
-        this.setColour = function(_colour){
+
+        this.setColour = function (_colour) {
             colour = _colour;
+        };
+
+        this.toString = function () {
+            return "{colour : " + colour + ", isQueen:" + isQueen + "}";
         };
 
         init(_type, _colour);
