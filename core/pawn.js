@@ -1,16 +1,12 @@
 var Turkish_Chess = Turkish_Chess || {};
 
+var merge = require('merge');
+var core = merge(require('./pawn_type'));
+
 module.exports = ( function (self) {
     "use strict";
 
     self.Pawn = function (_type) {
-        this.Type = {
-            WHITE: 1,
-            BLACK: 2,
-            Q_WHITE: 3,
-            Q_BLACK: 4,
-        };
-
         var type;
         var pos = [];
         var lastPos = [];
@@ -40,7 +36,7 @@ module.exports = ( function (self) {
         };
 
         this.isQueen = function(){
-            return (type == Type.Q_BLACK || type == Type.Q_WHITE);
+            return (type == core.PawnType.Q_BLACK || type == core.PawnType.Q_WHITE);
         };
 
         init(_type);

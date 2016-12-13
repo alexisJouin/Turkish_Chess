@@ -6,7 +6,7 @@ var core = require('./../core');
 describe('Player', function () {
     it('Init', function () {
         var player = new core.Player();
-        expect(player.getName()).equal("toto");
+        expect(player.getTest().getType()).equal(0);
     });
 
 });
