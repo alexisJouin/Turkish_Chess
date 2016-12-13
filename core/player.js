@@ -1,14 +1,12 @@
 var Turkish_Chess = Turkish_Chess || {};
 
+var core = require('./pawn');
+
 module.exports = ( function (self) {
     "use strict";
 
     self.Player = function () {
-        var name = "toto";
 
-        this.getName = function () {
-            return name;
-        };
     };
 
     return self;
