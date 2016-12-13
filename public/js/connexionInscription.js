@@ -6,13 +6,11 @@ $( document ).ready(function() {
 
     //Gestion des cliques boutons pour inscription/connexion
     $("#connexion_move").click(function(){
-        $('#sonMenu')[0].play(); //Son au clic sur menu
         window.location.replace("/connexion");
     });
 
     //Gestion des cliques boutons pour inscription/connexion
     $("#inscription_move").click(function(){
-        $('#sonMenu')[0].play(); //Son au clic sur menu
         window.location.replace("/inscription");
     });
     
