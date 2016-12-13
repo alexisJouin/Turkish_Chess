@@ -57,7 +57,6 @@ router.post('/', function(req, res, next) {
                         req.session.mail = user.mail;
 
                         res.redirect('/menu');
-                        //console.log(req.session);
                     }
                 });
             }
