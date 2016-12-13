@@ -1,0 +1,62 @@
+body{
+    margin: 10px;
+}
+
+
+#leftPannel, #rightPannel{
+    display: inline-block;
+    background-color: rgba(198, 162, 128, 0.8);
+    height: auto;
+    padding: 20px;
+
+}
+
+#leftPannel{
+    width: 30%;
+    position: relative;
+    border-radius: 5px 0 0 5px;
+}
+
+#rightPannel{
+    width: 60%;
+    position: absolute;
+    border-radius: 0 5px 5px 0;
+}
+
+#rank{
+    padding: 10px;
+    background-color: #e6dcc0;
+}
+
+#switchers{
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    background-color: whitesmoke;
+}
+
+#personnalStaticsSwitcher{
+    display: inline-block;
+    width: 45%;
+    text-algin: center;
+    right: 0px;
+    background-color: whitesmoke;
+}
+
+#personnalStaticsSwitcher:hover, #rankSwitcher:hover{
+    background-color: #e6dcc0;
+    cursor: pointer;
+}
+
+#rankSwitcher{
+    display: inline-block;
+    width: 45%;
+    text-algin: center;
+    background-color: whitesmoke;
+}
+
+
+.mainButtons{
+    width: 100%;
+}
+
