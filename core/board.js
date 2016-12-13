@@ -7,8 +7,8 @@
 
 var Turkish_Chess = Turkish_Chess || {};
 
-//var merge = require("merge");
-var core = require("./pawn.js");
+var merge = require("merge");
+var core = merge(require("./pawn"), require("./pawn_type"));
 
 module.exports = (function (self) {
     "use strict";
@@ -21,10 +21,10 @@ module.exports = (function (self) {
 
         this.initializeBoard = function () {
             // Init white pawns
-                        
+
             for (var i = 0; i < 16; i++) {
-                whitePawns.push(new core.Pawn(core.Pawn.Type.WHITE));
-                blackPawns.push(new core.Pawn(core.Pawn.Type.BLACK));
+                whitePawns.push(new core.Pawn(core.PawnType.WHITE, "WHITE"));
+                blackPawns.push(new core.Pawn(core.PawnType.BLACK, "BLACK"));
             }
 
             // Init the board
@@ -39,14 +39,29 @@ module.exports = (function (self) {
                 [0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            // Putting pawns on the board
 
-            for (var i = 1; i < 3; i++) {
-                for (var j = 0; j < 8 * i; j++) {
-                    this.board[i][j] = whitePawns[j * (i-1)];
-                    console.log(j * (i -1));
-                }
+            // Putting pawns on the board            
+            for (var i = 0; i < 8; i++) {
+                this.board[1][i] = whitePawns[i];
+                this.board[2][i] = whitePawns[i + 8];
+                this.board[5][i] = blackPawns[i];
+                this.board[6][i] = blackPawns[i + 8];
             }
+        };
+
+        // coulour must be "BLACK" or "WHITE"
+        this.getNbPawns = function (colour) {
+            var nb = 0;
+            switch (colour) {
+                case "WHITE":
+                    nb = whitePawns.length;
+                    break;
+                case "BLACK":
+                    nb = blackPawns.length;
+                default:
+                    break;
+            }
+            return nb;
         };
 
 
@@ -54,18 +69,6 @@ module.exports = (function (self) {
             return this.plateau;
         };
 
-        this.toString = function () {
-            var plateauString = "[";
-            for (var line = 0; line < plateau.length; line++) {
-                plateauString += "[";
-                for (var column = 0; column < plateau[line].length; column++) {
-
-                }
-            }
-
-            plateauString += "]";
-            return plateau;
-        };
 
     };
 

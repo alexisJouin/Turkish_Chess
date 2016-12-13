@@ -4,7 +4,7 @@ module.exports = ( function (self) {
     "use strict";
 
     self.Player = function () {
-
+// toto
     };
 
     return self;
