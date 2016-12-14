@@ -96,42 +96,59 @@ module.exports = (function (self) {
         }
 
         //Deplacement autoriser ou non pour pion
-        this.allow = function (pawn, i, j) {
+        this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
 
-            var x = pawn[0];
-            var y = pawn[1];
+            var pawn = board[pawnIndexLine][pawnIndexColumn];
+            pawn.isQueen();
 
-            //RECUPERE COULEUR : board[1][5].getColour());
-            //Verifie si le pion existe !
-            if (board[x][y] == 0) {
-                return false;
-            }
+            if (!pawn.isQueen()) {
 
-            console.log(board[x][y].isQueen());
-            //DOIT FAIRE LE TEST SI PION OU DAME !
-            //Pawn is WHITE
-            if (board[i][j] == 0) {
-                if (board[pawn[0]][pawn[1]].getColour() == "WHITE") {
-                    if ((i == x + 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {//[i,j] == [x+1,y]
-                        return true;
+                //Pawn is WHITE
+                if (board[indexLineToMove][indexColumnToMove] == 0) {
+                    if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE") {
+                        if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 } else {
-                    if ((i == x - 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return false;
                 }
             } else {
+                //TODO Autoriser Dame
                 return false;
             }
+
         };
 
+        this.getPossibleMoves = function (indexLine, indexColumn) {
+            var possibleMoves = [];
+            for (var line = 0; line < board.length; line++) {
+                for (var column = 0; column < board[line].length; column++) {
+                    if (this.allow(indexLine, indexColumn, line, column)) {
+                        var possibleMove = [line, column];
+                        possibleMoves.push(possibleMove);
+                        // TODO : recursivity trick
+                    }
+                }
+            }
+            return possibleMoves;
+        };
 
-           this.getPossibleMove 
-            
+        //Coup obligatoire
+        this.requiredAllow = function (pawn) {
+
+            console.log("====" + pawn);
+
+        };
+
 
         this.toString = function () {
             var st = "[";
