@@ -15,14 +15,14 @@ module.exports = (function (self) {
 
     self.Board = function () {
         var board;
-        var player = []; //J1 : WHITE, J2 : BLACK
+        var players = []; //J1 : WHITE, J2 : BLACK
         var whitePawns = [];
         var blackPawns = [];
 
         var init = function () {
             // Init player
-            player.push(1);
-            player.push(2);
+//            player.push(1);
+//            player.push(2);
 
             // Init pawns
             for (var i = 0; i < 16; i++) {
@@ -70,7 +70,7 @@ module.exports = (function (self) {
         };
 
         this.getPlayers = function () {
-            return player;
+            return players;
         };
 
         this.getBoardArray = function () {
@@ -159,7 +159,7 @@ module.exports = (function (self) {
             var possibleMoves = [];
             for (var line = 0; line < board.length; line++) {
                 for (var column = 0; column < board[line].length; column++) {
-                    if (this.allow(indexLine, indexColumn, line, column)) {                        
+                    if (this.allow(indexLine, indexColumn, line, column)) {
                         var possibleMove = new core.Move();
                         possibleMove.positionDepart = [indexLine, indexColumn];
                         possibleMove.positionArrive = [line, column];
@@ -175,7 +175,7 @@ module.exports = (function (self) {
 
         //Coup obligatoire
         this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
-            
+
         };
 
 
@@ -205,6 +205,21 @@ module.exports = (function (self) {
 
                 }
             }
+        };
+
+
+        this.setPlayer = function (id) {
+            players.push(id);
+        };
+
+        this.swapPlayer = function () {
+            var tmp = players[1];
+            players[1] = players[0];
+            players[0] = tmp;
+        };
+
+        this.getCurrentPlayer = function () {
+            return players[0];
         };
 
         init();
