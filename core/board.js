@@ -15,11 +15,15 @@ module.exports = (function (self) {
 
     self.Board = function () {
         var board;
-
+        var player = []; //J1 : WHITE, J2 : BLACK
         var whitePawns = [];
         var blackPawns = [];
 
         var init = function () {
+            // Init player
+            player.push(1);
+            player.push(2);
+
             // Init pawns
             for (var i = 0; i < 16; i++) {
                 whitePawns.push(new core.Pawn(core.PawnType.WHITE, "WHITE"));
@@ -63,6 +67,10 @@ module.exports = (function (self) {
 
         this.getBoard = function () {
             return board;
+        };
+
+        this.getPlayers = function () {
+            return player;
         };
 
         this.getBoardArray = function () {
@@ -142,10 +150,11 @@ module.exports = (function (self) {
             return possibleMoves;
         };
 
-        //Coup obligatoire
-        this.requiredAllow = function (pawn) {
 
-            console.log("====" + pawn);
+        //Coup obligatoire
+        this.requiredAllow = function (pawnIndexLine , pawnIndexColumn) {
+
+            console.log("===="+pawnIndexLine+pawnIndexColumn);
 
         };
 
