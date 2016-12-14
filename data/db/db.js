@@ -1,3 +1,3 @@
 module.exports = {
-    'url' : 'mongodb://127.0.0.1:27017/db'
+    'url' : 'mongodb://turkishcheckersbase:1checkers@ds131878.mlab.com:31878/turkishcheckersgame'
 };
