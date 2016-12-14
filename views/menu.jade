@@ -2,11 +2,22 @@ extends layout
 block title
     title Menu
 block append stylesheets
-    link(rel='stylesheet', href='/stylesheets/inscriptionConnexion.css')
     link(rel='stylesheet', href='/stylesheets/menu.css')
 block content
 
-    //Menu
+    body
+    div(id='leftPannel')
+        a(href="/game" class="mainButtons") Jouer
+    div(id='rightPannel')
+        div(id='switchers')
+            div(id='personnalStaticsSwitcher') Statistiques personnelles
+            div(id='rankSwitcher') Rang
+        div(id='rank')
+            div(id='personnalStatics')
+                p 1
+                p 2
+                p 3
+                p 4
 
-    script(src="/js/menu.js")
-    script(src="/js/creation-deck.js")
+
+
