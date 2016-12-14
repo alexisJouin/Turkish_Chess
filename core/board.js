@@ -78,9 +78,9 @@ module.exports = (function (self) {
             ];
 
             for (var line = 0; line < board.length; line++) {
-                for (var column = 0; column < board[i].length; column++) {
-                    if (board[i][j] != 0) {
-                        array[i][j] = board[i][j].getType;
+                for (var column = 0; column < board[line].length; column++) {
+                    if (board[line][column] != 0) {
+                        array[line][column] = board[line][column].getType();
                     }
                 }
             }
