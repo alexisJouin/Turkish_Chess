@@ -62,7 +62,49 @@ module.exports = (function (self) {
 
 
         this.getBoard = function () {
-            return plateau;
+            return board;
+        };
+
+        this.getLineBoard = function (i) {
+            return board[i];
+        };
+
+        this.getPositionBoard = function (i,j) {
+            return board[i][j];
+        }
+
+        //Deplacement autoriser ou non pour pion
+        this.allow = function (pawn,i,j) {
+
+            var x = pawn[0];
+            var y = pawn[1];
+
+            //RECUPERE COULEUR : board[1][5].getColour());
+            //Verifie si le pion existe !
+            if(board[x][y]==0){
+                return false;
+            }
+
+            console.log(board[x][y].isQueen());
+            //DOIT FAIRE LE TEST SI PION OU DAME !
+            //Pawn is WHITE
+            if (board[i][j] == 0) {
+                if (board[pawn[0]][pawn[1]].getColour() == "WHITE") {
+                    if ((i==x+1 && j==y) || (i==x  && j== y-1) && (i==x && j== y+1)) {//[i,j] == [x+1,y]
+                        return true;
+                    }else{
+                        return false;
+                    }
+                } else {
+                    if ((i==x-1 && j==y) || (i==x  && j== y-1) && (i==x && j== y+1)) {
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            }else{
+                return false;
+            }
         };
 
 
