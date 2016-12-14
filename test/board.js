@@ -15,7 +15,7 @@ describe('Board', function () {
 
             var board = new core.Board();
             var colors = board.getPositionBoard(1,2).getColour();
-            var nbWhite=board.getNbPawns("WHITE");
+            var nbWhite= board.getNbPawns("WHITE");
 
             expect("WHITE").colors;
             expect(16).nbWhite;
@@ -35,8 +35,6 @@ describe('Board', function () {
         });
 
     });
-
-
-
-
 });
+
+
