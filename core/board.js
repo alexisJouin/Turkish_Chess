@@ -96,41 +96,45 @@ module.exports = (function (self) {
         }
 
         //Deplacement autoriser ou non pour pion
-        this.allow = function (pawn, i, j) {
+        this.allow = function (pawnIndexLine , pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+           
+            var pawn = board[pawnIndexLine][pawnIndexColumn];
+            pawn.isQueen();
 
-            var x = pawn[0];
-            var y = pawn[1];
+            if(!pawn.isQueen()){
 
-            //RECUPERE COULEUR : board[1][5].getColour());
-            //Verifie si le pion existe !
-            if (board[x][y] == 0) {
-                return false;
-            }
-
-            console.log(board[x][y].isQueen());
-            //DOIT FAIRE LE TEST SI PION OU DAME !
-            //Pawn is WHITE
-            if (board[i][j] == 0) {
-                if (board[pawn[0]][pawn[1]].getColour() == "WHITE") {
-                    if ((i == x + 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {//[i,j] == [x+1,y]
-                        return true;
+                //Pawn is WHITE
+                if (board[indexLineToMove][indexColumnToMove] == 0) {
+                    if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE") {
+                        if ((pawnIndexLine+1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn-1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn+1 == indexColumnToMove)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        if ((pawnIndexLine-1 == indexLineToMove&& pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn-1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn+1 == indexColumnToMove)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
-                } else {
-                    if ((i == x - 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                }else{
+                    return false;
                 }
-            } else {
+            }else{
+                //TODO Autoriser Dame
                 return false;
             }
+            
         };
 
 
-           this.getPossibleMove 
+        //Coup obligatoire
+        this.requiredAllow = function (pawn) {
+
+          console.log("===="+pawn);
+
+        };
             
 
         this.toString = function () {

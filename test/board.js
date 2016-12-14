@@ -17,8 +17,8 @@ describe('Board', function () {
             var colors = board.getPositionBoard(1,2).getColour();
             var nbWhite=board.getNbPawns("WHITE");
 
-            expect("WHITE").colors;
-            expect(16).nbWhite;
+            expect("WHITE").equal(colors);
+            expect(16).equal(nbWhite);
 
         });
 
@@ -28,9 +28,12 @@ describe('Board', function () {
         it('Move Pion', function () {
            var board = new core.Board();
 
-           var pion = [2,2];
-           var allows = board.allow(pion,3,2);
-           expect(allows).equal(true);
+            var allows1 = board.allow(2,2,3,2);
+            var allows2 = board.allow(5,2,4,2);
+            var allows3 = board.allow(5,2,5,3);
+            expect(allows1).equal(true);
+            expect(allows2).equal(true);
+            expect(allows3).equal(false);
 
         });
 
