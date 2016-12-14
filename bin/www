@@ -28,31 +28,78 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-var board = new core.Board();
 var game = [];
-var nbGame = 0;
-game.push([new core.Player(), new core.Player()]);
+var clients = [];
+game.push([new core.Board(), 0, 0]);
 
-console.log(game);
+// Return an available game
+function getAvailableGame(){
+
+    var available = [];
+
+    for(var i = 0; i < game.length; i++){
+        if(game[i][1] == -1 || game[i][2] == -1){
+            available = game[i];
+        }
+    }
+
+    if(available.length == 0){
+        game.push([new core.Board(), -1, -1]);
+        available = game[game.length-1];
+    }
+
+    return available;
+}
+
+function getGameClientID(id){
+    var found = false;
+    var i = 0;
+
+    while(!found && i < game.length){
+        if(game[i][1] == clients.indexOf(id) || game[i][2] == clients.indexOf(id)){
+            g = game[i];
+        }
+        i++;
+    }
+
+    return g;
+}
 
 // Connexion
 io.sockets.on('connection', function (socket) {
-    console.log("Nouveau client");
+    clients.push(socket);
 
     // Initialisation du plateau + broadcast
     socket.on('play', function(){
-        console.log('Initialisation du plateau');
+        var g = getAvailableGame();
+        if(g[1] == -1){
+            g[1] = clients.indexOf(socket);
+        }
+        else if(g[2] == -1){
+            g[2] = clients.indexOf(socket);
+        }
+        console.log(g);
 
-        socket.emit("board", board.getBoardArray());
+        socket.emit("board", g[0].getBoardArray());
 
-        console.log('Tour du joueur blanc');
+        socket.emit("turn", false);
 
+        if(g[1] != -1 && g[2] != -1) {
+            /*
+            clients[g[1]].emit("test", "T'es blanc, tu commences");
+            clients[g[2]].emit("test", "T'es noir, attends que le blanc joue");
+            */
+            clients[g[1]].emit("turn", true);
+            clients[g[2]].emit("turn", false);
+        }
     });
 
     // Déplacement d'un pion en broadcast
     socket.on('move', function(){
         console.log('Fin de tour');
         console.log('Joueur suivant');
+        clients[g[1]].emit("turn", true);
+        clients[g[2]].emit("turn", false);
     });
 
     // Victoire
