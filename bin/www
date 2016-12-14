@@ -29,8 +29,6 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 var game = [];
-var clients = [];
-game.push([new core.Board(), 0, 0]);
 
 // Return an available game
 function getAvailableGame(){
@@ -38,13 +36,13 @@ function getAvailableGame(){
     var available = [];
 
     for(var i = 0; i < game.length; i++){
-        if(game[i][1] == -1 || game[i][2] == -1){
+        if(game[i].getPlayers().length <= 1){
             available = game[i];
         }
     }
 
     if(available.length == 0){
-        game.push([new core.Board(), -1, -1]);
+        game.push(new core.Board());
         available = game[game.length-1];
     }
 
@@ -54,52 +52,44 @@ function getAvailableGame(){
 function getGameClientID(id){
     var found = false;
     var i = 0;
+    var board = [];
 
     while(!found && i < game.length){
-        if(game[i][1] == clients.indexOf(id) || game[i][2] == clients.indexOf(id)){
-            g = game[i];
+        if(game[i].getPlayers()[0] == id || game[i].getPlayers()[1] == id){
+            board = game[i];
         }
         i++;
     }
 
-    return g;
+    return board;
 }
 
 // Connexion
 io.sockets.on('connection', function (socket) {
-    clients.push(socket);
 
     // Initialisation du plateau + broadcast
     socket.on('play', function(){
-        var g = getAvailableGame();
-        if(g[1] == -1){
-            g[1] = clients.indexOf(socket);
-        }
-        else if(g[2] == -1){
-            g[2] = clients.indexOf(socket);
-        }
-        console.log(g);
+        var board = getAvailableGame();
 
-        socket.emit("board", g[0].getBoardArray());
+        board.setPlayer(socket);
+
+        socket.emit("board", board.getBoardArray());
 
         socket.emit("turn", false);
 
-        if(g[1] != -1 && g[2] != -1) {
-            /*
-            clients[g[1]].emit("test", "T'es blanc, tu commences");
-            clients[g[2]].emit("test", "T'es noir, attends que le blanc joue");
-            */
-            clients[g[1]].emit("turn", true);
-            clients[g[2]].emit("turn", false);
+        if(board.getPlayers().length == 2) {
+            board.getCurrentPlayer().emit("turn", true);
         }
     });
 
     // Déplacement d'un pion en broadcast
-    socket.on('move', function(){
-        console.log('Fin de tour');
-        console.log('Joueur suivant');
-        clients[g[1]].emit("turn", true);
-        clients[g[2]].emit("turn", false);
+    socket.on('move', function(pos){
+        var board = getGameClientID(socket);
+
+        board.swapPlayer();
+
+        board.getCurrentPlayer().emit("turn", true);
+        board.getPlayers()[1].emit("turn", false);
     });
 
     // Victoire
