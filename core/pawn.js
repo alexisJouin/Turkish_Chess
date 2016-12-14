@@ -16,6 +16,7 @@ module.exports = (function (self) {
         var init = function (_type, _colour) {
             type = _type;
             colour = _colour;
+            isQueen = false;
         };
 
         this.setType = function (newtype) {

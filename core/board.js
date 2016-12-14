@@ -65,23 +65,45 @@ module.exports = (function (self) {
             return board;
         };
 
+        this.getBoardArray = function () {
+            var array = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+
+            for (var line = 0; line < board.length; line++) {
+                for (var column = 0; column < board[i].length; column++) {
+                    if (board[i][j] != 0) {
+                        array[i][j] = board[i][j].getType;
+                    }
+                }
+            }
+            return array;
+        };
+
         this.getLineBoard = function (i) {
             return board[i];
         };
 
-        this.getPositionBoard = function (i,j) {
+        this.getPositionBoard = function (i, j) {
             return board[i][j];
         }
 
         //Deplacement autoriser ou non pour pion
-        this.allow = function (pawn,i,j) {
+        this.allow = function (pawn, i, j) {
 
             var x = pawn[0];
             var y = pawn[1];
 
             //RECUPERE COULEUR : board[1][5].getColour());
             //Verifie si le pion existe !
-            if(board[x][y]==0){
+            if (board[x][y] == 0) {
                 return false;
             }
 
@@ -90,19 +112,19 @@ module.exports = (function (self) {
             //Pawn is WHITE
             if (board[i][j] == 0) {
                 if (board[pawn[0]][pawn[1]].getColour() == "WHITE") {
-                    if ((i==x+1 && j==y) || (i==x  && j== y-1) && (i==x && j== y+1)) {//[i,j] == [x+1,y]
+                    if ((i == x + 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {//[i,j] == [x+1,y]
                         return true;
-                    }else{
+                    } else {
                         return false;
                     }
                 } else {
-                    if ((i==x-1 && j==y) || (i==x  && j== y-1) && (i==x && j== y+1)) {
+                    if ((i == x - 1 && j == y) || (i == x && j == y - 1) && (i == x && j == y + 1)) {
                         return true;
-                    }else{
+                    } else {
                         return false;
                     }
                 }
-            }else{
+            } else {
                 return false;
             }
         };
@@ -114,7 +136,7 @@ module.exports = (function (self) {
                 st += "[";
                 for (var j = 0; j < board[i].length; j++) {
                     if (board[i][j] != 0) {
-                        st += board[i][j].toString() + ", ";                        
+                        st += board[i][j].toString() + ", ";
                     } else {
                         st += "\" \",";
                     }
