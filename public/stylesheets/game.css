@@ -1,0 +1,44 @@
+#board{
+    border:1px solid black;
+    width:80%;
+    margin:0 auto;
+}
+
+table {
+    margin: 0 auto;
+    width:50%;
+}
+
+#board td{
+
+    -moz-background-size:100px 100px;
+    background-size:100px 100px;
+    -webkit-background-size:100px 101px; /* override value for shitty webkit */
+
+
+    background-position:0 0, 50px 0, 50px -50px, 0px 50px;
+
+    height: 40px;
+
+    border:1px solid black;
+    margin: 0 auto;
+    /*background: brown;*/
+}
+
+#board th{
+    width: 100px;
+}
+
+.row:nth-child(even) .tile:nth-child(odd),
+.row:nth-child(odd) .tile:nth-child(even) {
+    background-color: #777;
+}
+img{
+    width:50px;
+    cursor: -webkit-grab; cursor:-moz-grab;
+    margin:0 auto;
+}
+img:active{
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+}

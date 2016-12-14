@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 var indexRoutes = require('./routes/index');
 var connexionRoutes = require('./routes/connexion');
 var inscriptionRoutes = require('./routes/inscription');
-var jeuRoutes = require('./routes/jeu');
 var menuRoutes = require('./routes/menu');
+var gameRoutes = require('./routes/game');
 
 
 // DB
@@ -50,8 +50,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRoutes);
 app.use('/connexion', connexionRoutes);
 app.use('/inscription', inscriptionRoutes);
-app.use('/jeu', jeuRoutes);
 app.use('/menu', menuRoutes);
+app.use('/game', gameRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
