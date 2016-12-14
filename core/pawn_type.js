@@ -4,10 +4,10 @@ module.exports = ( function (self) {
     "use strict";
 
     self.PawnType = {
-        WHITE: 0,
-        BLACK: 1,
-        Q_WHITE: 2,
-        Q_BLACK: 3,
+        WHITE: 1,
+        BLACK: 2,
+        Q_WHITE: 3,
+        Q_BLACK: 4,
 
         key: function (value) {
             return Object.keys(this)[Object.keys(this).map(function (key) {

@@ -130,6 +130,9 @@ module.exports = (function (self) {
         };
 
 
+           this.getPossibleMove 
+            
+
         this.toString = function () {
             var st = "[";
             for (var i = 0; i < board.length; i++) {
