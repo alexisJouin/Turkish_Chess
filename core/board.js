@@ -103,10 +103,10 @@ module.exports = (function (self) {
             return board[i][j];
         };
 
-//        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
-//            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
-//            board[pawnIndexLine][pawnIndexColumn] = 0;
-//        };
+        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
+            board[pawnIndexLine][pawnIndexColumn] = 0;
+        };
 
         //Deplacement autoriser ou non pour pion
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
@@ -188,7 +188,7 @@ module.exports = (function (self) {
 
 
         //Coup obligatoire
-        this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
+        this.getPossibleAttacks = function (pawnIndexLine, pawnIndexColumn) {
 
             var movesArray = [];
 
@@ -217,7 +217,7 @@ module.exports = (function (self) {
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
                             possibleMove.determinateDirection();
-                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            possibleMove.addMove(this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
                             movesArray.push(possibleMove);
                             console.log("Capture !!!");
                         }
@@ -230,7 +230,7 @@ module.exports = (function (self) {
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
                             possibleMove.determinateDirection();
-                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            possibleMove.addMove(this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
                             movesArray.push(possibleMove);
                             console.log("Capture !!!");
                         }
@@ -245,7 +245,7 @@ module.exports = (function (self) {
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
                             possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
-                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            possibleMove.addMove(this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
                             movesArray.push(possibleMove);
                             console.log("Capture !!!");
                         }
@@ -259,7 +259,7 @@ module.exports = (function (self) {
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
                             possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
-                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            possibleMove.addMove(this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
                             movesArray.push(possibleMove);
                             console.log("Capture !!!");
                         }
@@ -329,15 +329,15 @@ module.exports = (function (self) {
             return st;
         };
 
-        this.movePawn = function (fromLine, fromColumn, toLine, toColumn) {
-            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn);
-            var desiredMoveLocation = [toLine, toColumn];
-            for (var i = 0; i < possibleMoves.length; i++) {
-                if (possibleMoves[i] === desiredMoveLocation) {
-
-                }
-            }
-        };
+//        this.movePawn = function (fromLine, fromColumn, toLine, toColumn) {
+//            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn);
+//            var desiredMoveLocation = [toLine, toColumn];
+//            for (var i = 0; i < possibleMoves.length; i++) {
+//                if (possibleMoves[i] === desiredMoveLocation) {
+//
+//                }
+//            }
+//        };
 
 
         this.setPlayer = function (id) {

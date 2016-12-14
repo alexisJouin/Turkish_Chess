@@ -55,9 +55,19 @@ describe('Board', function () {
 describe('Board', function () {
     it('capture required', function () {
         var board = new core.Board();
-
-        var allows1 = board.requiredAllow(2, 2);
-
+        
+        board.movePawn(2, 3, 3, 3);
+        board.movePawn(5, 3, 4, 3);
+        board.movePawn(2, 6, 4, 6);
+        
+        console.log("On test le capture required =DD");
+        var allows1 = board.getPossibleAttacks(3, 3);
+        var allows2 = board.getPossibleAttacks(5, 6);
+        
+        
+        console.log(allows1);
+        console.log(allows1[0].nextMove);
+        console.log(allows2);
         //expect(allows1).equal(true);
 
     });
