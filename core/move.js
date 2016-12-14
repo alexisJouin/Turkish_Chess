@@ -23,7 +23,7 @@ module.exports = (function (self) {
         };
 
 
-        this.determinateDirection(){
+        this.determinateDirection = function(){
             var fromLine = this.positionDepart[0];
             var fromColumn = this.positionDepart[1];
 
@@ -37,7 +37,7 @@ module.exports = (function (self) {
             } else if (fromColumn < toColumn) {
                 direction = "RIGHT";
             } else if (fromColumn > toColumn) {
-                .direction = "LEFT";
+                direction = "LEFT";
             }
         };
         
