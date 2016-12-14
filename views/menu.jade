@@ -12,23 +12,33 @@ block content
                 img(src='/img/logo.png')
             div(id='menu')
                 div(id='leftPannel')
+                    h1 Bonjour #{username} !
                     a(href="/jeu")
                         button(value='play', id="playGame") Jouer
                     a(href="/menu/deconnexion")
                         button(value='disconnect', id="logOut") Se déconnecter
-
                 div(id='rightPannel')
                     div(id='switchers')
                         div(id='personnalStaticsSwitcher' class='selected') Statistiques personnelles
                         div(id='rankSwitcher') Rang
+
                     div(id='personnalStatics')
-                        p 1
-                        p 2
-                        p 3
-                        p 4
+                        if has_game
+                            table
+                                tr
+                                    td Nombre matchs
+                                    td Nombre victoire
+                                    td Ratio
+                                    td Moyenne de coups
+                                    td Minimum de coups
+                                tr
+                                    td #{stats.nbmatch}
+                                    td #{stats.nbwin}
+                                    td #{stats.ratio}
+                                    td #{stats.nbturnmean}
+                                    td #{stats.nbturnmin}
+
                     div(id='rank' class='hidden')
                         p 1er
         script(src="/js/calculElo.js")
         script(src="/js/menu.js")
-
-
