@@ -3,40 +3,42 @@ block title
     title Menu
 block append stylesheets
     link(rel='stylesheet', href='/stylesheets/menu.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
 block content
 
     body
-    div(id='leftPannel')
-        h1 Bonjour #{username} !
-        h1
-            a(href="/game" class="mainButtons") Play !
-    div(id='rightPannel')
-        div(id='switchers')
-            div(id='personnalStaticsSwitcher') Statistiques personnelles
-            div(id='rankSwitcher') Rang
-        div(id='rank')
-            div(id='personnalStatics')
+        div(id='wrapper')
+            div(id="banner")
+                img(src='/img/logo.png')
+            div(id='menu')
+                div(id='leftPannel')
+                    h1 Bonjour #{username} !
+                    a(href="/jeu")
+                        button(value='play', id="playGame") Jouer
+                    a(href="/menu/deconnexion")
+                        button(value='disconnect', id="logOut") Se déconnecter
+                div(id='rightPannel')
+                    div(id='switchers')
+                        div(id='personnalStaticsSwitcher' class='selected') Statistiques personnelles
+                        div(id='rankSwitcher') Rang
 
-                if has_game
-                    table
-                        tr
-                            td Nombre matchs
-                            td Nombre victoire
-                            td Ratio
-                            td Moyenne de coups
-                            td Minimum de coups
-                        tr
-                            td #{stats.nbmatch}
-                            td #{stats.nbwin}
-                            td #{stats.ratio}
-                            td #{stats.nbturnmean}
-                            td #{stats.nbturnmin}
+                    div(id='personnalStatics')
+                        if has_game
+                            table
+                                tr
+                                    td Nombre matchs
+                                    td Nombre victoire
+                                    td Ratio
+                                    td Moyenne de coups
+                                    td Minimum de coups
+                                tr
+                                    td #{stats.nbmatch}
+                                    td #{stats.nbwin}
+                                    td #{stats.ratio}
+                                    td #{stats.nbturnmean}
+                                    td #{stats.nbturnmin}
 
+                    div(id='rank' class='hidden')
 
-
-
-
-
-
-
+        script(src="/js/menu.js")
 
