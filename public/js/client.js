@@ -4,7 +4,11 @@
 var socket = io.connect('http://localhost:3000');
 
 
-$('#poke').click(function () {
-    socket.emit('message', 'Salut serveur, ça va ?');
+$('#play').click(function () {
+    socket.emit('play');
+});
+
+socket.on('board',function(board) {
+    console.log(board);
 });
 
