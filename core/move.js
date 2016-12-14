@@ -12,18 +12,18 @@ module.exports = (function (self) {
         var positionArrive;
         var nextMove;
         var direction; // UP || DOWN || RIGHT || LEFT
-        var taille;
+        var size;
 
         var init = function () {
             positionDepart = [];
             positionArrive = [];
             nextMove = null;
             direction = null;
-            taille = 0;
+            size = 0;
         };
 
 
-        this.determinateDirection = function(){
+        this.determinateDirection = function () {
             var fromLine = this.positionDepart[0];
             var fromColumn = this.positionDepart[1];
 
@@ -40,7 +40,20 @@ module.exports = (function (self) {
                 direction = "LEFT";
             }
         };
-        
+
+        this.addMove = function (newMove) {
+            nextMove = newMove;
+            size++;
+        };
+
+        this.getTotalSize = function () {
+            return size + this.recursiveOperation(nextMove);
+
+        };
+
+        this.recursiveOperation = function (_nextMove) {
+            return _nextMove.size + this.recursiveOperation(_nextMove.nextMove);
+        };
 
         init();
     };

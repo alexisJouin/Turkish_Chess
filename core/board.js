@@ -168,6 +168,7 @@ module.exports = (function (self) {
                         possibleMove.positionDepart = [indexLine, indexColumn];
                         possibleMove.positionArrive = [line, column];
                         possibleMove.determinateDirection();
+                        possibleMove.addMove(this.getPossibleMoves(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
                         possibleMoves.push(possibleMove);
                         // TODO : recursivity trick
                     }
@@ -261,6 +262,21 @@ module.exports = (function (self) {
 
                 }
             }
+        };
+
+
+        this.setPlayer = function (id) {
+            players.push(id);
+        };
+
+        this.swapPlayer = function () {
+            var tmp = players[1];
+            players[1] = players[0];
+            players[0] = tmp;
+        };
+
+        this.getCurrentPlayer = function () {
+            return players[0];
         };
 
         init();
