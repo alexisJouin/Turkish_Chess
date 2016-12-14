@@ -10,7 +10,7 @@ module.exports = (function (self) {
         var type;
         // var pos = []; // [line, column]  ---- We're not gonna use it 
         var lastPos = [];
-        var colour; // WHITE || BLACK
+        var colour; // "WHITE" or "BLACK"
         var isQueen;
 
         var init = function (_type, _colour) {
@@ -41,7 +41,7 @@ module.exports = (function (self) {
 
         // This function needs a boolean
         this.setQueen = function (value) {
-            isQueen = value;
+            isQueen = value;           
         };
 
         this.isQueen = function () {

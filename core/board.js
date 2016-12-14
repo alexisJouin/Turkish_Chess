@@ -15,14 +15,14 @@ module.exports = (function (self) {
 
     self.Board = function () {
         var board;
-        var player = []; //J1 : WHITE, J2 : BLACK
+        var players = []; //J1 : WHITE, J2 : BLACK
         var whitePawns = [];
         var blackPawns = [];
 
         var init = function () {
             // Init player
-            player.push(1);
-            player.push(2);
+//            players.push(1);
+//            players.push(2);
 
             // Init pawns
             for (var i = 0; i < 16; i++) {
@@ -70,7 +70,7 @@ module.exports = (function (self) {
         };
 
         this.getPlayers = function () {
-            return player;
+            return players;
         };
 
         this.getBoardArray = function () {
@@ -164,13 +164,13 @@ module.exports = (function (self) {
             for (var line = 0; line < board.length; line++) {
                 for (var column = 0; column < board[line].length; column++) {
                     if (this.allow(indexLine, indexColumn, line, column)) {
-                        var possibleMove = new core.Move();
-                        possibleMove.positionDepart = [indexLine, indexColumn];
-                        possibleMove.positionArrive = [line, column];
-                        possibleMove.determinateDirection();
-                        possibleMove.addMove(this.getPossibleMoves(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
-                        possibleMoves.push(possibleMove);
-                        // TODO : recursivity trick
+//                        var possibleMove = new core.Move();
+//                        possibleMove.positionDepart = [indexLine, indexColumn];
+//                        possibleMove.positionArrive = [line, column];
+//                        possibleMove.determinateDirection();
+//                        possibleMove.addMove(this.getPossibleMoves(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+//                        possibleMoves.push(possibleMove);
+                        possibleMoves.push([line, column]);
                     }
                 }
             }
@@ -190,43 +190,121 @@ module.exports = (function (self) {
         //Coup obligatoire
         this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
 
+            var movesArray = [];
 
             var caseDown = [pawnIndexLine + 1, pawnIndexColumn];
             var caseUp = [pawnIndexLine - 1, pawnIndexColumn];
             var caseLeft = [pawnIndexLine, pawnIndexColumn - 1];
             var caseRight = [pawnIndexLine, pawnIndexColumn + 1];
 
+            var pawn = board[pawnIndexLine][pawnIndexColumn];
 
-            //Possible capture ?
-            if(!this.empty(caseRight) //CASE RIGHT
-                && board[pawnIndexLine][pawnIndexColumn+1].getColour()!==board[pawnIndexLine][pawnIndexColumn].getColour()
-                && board[pawnIndexLine][pawnIndexColumn+2]==0 ){
-                //TODO ajouter au tableau le coup possible
-                console.log("Capture !!!");
-            }
+            if (pawn != 0) {
 
-            if(!this.empty(caseLeft) //CASE LEFT
-                && board[pawnIndexLine][pawnIndexColumn-1].getColour()!==board[pawnIndexLine][pawnIndexColumn].getColour()
-                && board[pawnIndexLine][pawnIndexColumn-2]==0 ){
-                //TODO ajouter au tableau le coup possible
-                console.log("Capture !!!");
-            }
 
-            //Pawn is WHITE
-            if(board[pawnIndexLine][pawnIndexColumn].getColour()=="WHITE" // CASE DOWN
-                && !this.empty(caseDown)
-                && board[pawnIndexLine+1][pawnIndexColumn].getColour()=="BLACK"
-                && board[pawnIndexLine+2][pawnIndexColumn]==0 ){
-                //TODO ajouter au tableau le coup possible
-                console.log("Capture !!!");
-            }
-            //Pawn is BLACK
-            if(board[pawnIndexLine][pawnIndexColumn].getColour()=="BLACK" // CASE UP
-                && !this.empty(caseUp)
-                && board[pawnIndexLine-1][pawnIndexColumn].getColour()=="WHITE"
-                && board[pawnIndexLine-2][pawnIndexColumn]==0 ){
-                //TODO ajouter au tableau le coup possible
-                console.log("Capture !!!");
+
+                switch (pawn.isQueen()) {
+                    // Si c'est un pion
+                    case false:
+
+
+                        //Possible capture ?
+                        if (!this.empty(caseRight) //CASE RIGHT
+                                && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            var possibleMove = new core.Move();
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
+                            possibleMove.determinateDirection();
+                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            movesArray.push(possibleMove);
+                            console.log("Capture !!!");
+                        }
+
+                        if (!this.empty(caseLeft) //CASE LEFT
+                                && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            var possibleMove = new core.Move();
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
+                            possibleMove.determinateDirection();
+                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            movesArray.push(possibleMove);
+                            console.log("Capture !!!");
+                        }
+
+                        //Pawn is WHITE
+                        if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
+                                && !this.empty(caseDown)
+                                && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
+                                && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            var possibleMove = new core.Move();
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
+                            possibleMove.determinateDirection();
+                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            movesArray.push(possibleMove);
+                            console.log("Capture !!!");
+                        }
+                        //Pawn is BLACK
+                        if (board[pawnIndexLine][pawnIndexColumn].getColour() == "BLACK" // CASE UP
+                                && !this.empty(caseUp)
+                                && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
+                                && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            var possibleMove = new core.Move();
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
+                            possibleMove.determinateDirection();
+                            possibleMove.addMove(this.requiredAllow(possibleMove.positionArrive[0], possibleMove.positionArrive[1]));
+                            movesArray.push(possibleMove);
+                            console.log("Capture !!!");
+                        }
+
+
+                        break;
+
+                        // Si c'est une reine.
+                    case true :
+                        if (!this.empty(caseRight) //CASE RIGHT
+                                && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            console.log("Capture !!!");
+                        }
+
+                        if (!this.empty(caseLeft) //CASE LEFT
+                                && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            console.log("Capture !!!");
+                        }
+
+                        //Pawn is WHITE
+                        if (!this.empty(caseDown)
+                                && board[pawnIndexLine + 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            console.log("Capture !!!");
+                        }
+                        //Pawn is BLACK
+                        if (!this.empty(caseUp)
+                                && board[pawnIndexLine - 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                                && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                            //TODO ajouter au tableau le coup possible
+                            console.log("Capture !!!");
+                        }
+                        break;
+                        break;
+                    default:
+                        break;
+                }
+                return movesArray;
+            } else {
+                return null;
             }
 
 

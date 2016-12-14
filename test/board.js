@@ -46,8 +46,9 @@ describe('Board', function () {
         var board = new core.Board();
         var possibleMoves = board.getPossibleMoves(5,0);
         console.log(possibleMoves);
+        console.log(possibleMoves[0].positionArrive);
         var expectedPossibleMoves = [[4,0]];
-        expect(expectedPossibleMoves) === (possibleMoves);
+        expect(expectedPossibleMoves) === (possibleMoves[0].positionArrive);
     });
 });
 
