@@ -37,7 +37,6 @@ describe('Board', function () {
         expect(allows1).equal(true);
         expect(allows2).equal(true);
         expect(allows3).equal(false);
-
     });
 
 });

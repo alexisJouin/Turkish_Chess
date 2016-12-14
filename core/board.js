@@ -8,7 +8,7 @@
 var Turkish_Chess = Turkish_Chess || {};
 
 var merge = require("merge");
-var core = merge(require("./pawn"), require("./pawn_type"));
+var core = merge(require("./pawn"), require("./pawn_type"), require("./move"));
 
 module.exports = (function (self) {
     "use strict";
@@ -112,41 +112,58 @@ module.exports = (function (self) {
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
 
             var pawn = board[pawnIndexLine][pawnIndexColumn];
-            pawn.isQueen();
 
-            if (!pawn.isQueen()) {
-
-                //Pawn is WHITE
-                if (board[indexLineToMove][indexColumnToMove] == 0) {
-                    if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE") {
-                        if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
-                            return true;
-                        } else {
-                            return false;
+            switch (pawn.isQueen()) {
+                // -- IS NOT A QUEEN
+                case false:
+                    // Pawn is WHITE
+                    if (board[indexLineToMove][indexColumnToMove] == 0) {
+                        switch (board[pawnIndexLine][pawnIndexColumn].getColour()) {
+                            case "WHITE":
+                                if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) // Mouvement en bas
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) // Mouvement à gauche
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) { // mouvement à droite
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                                break;
+                            case "BLACK":
+                                if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) // Move up
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) // Move left
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) { // move right
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     } else {
-                        if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return false;
                     }
-                } else {
-                    return false;
-                }
-            } else {
-                //TODO Autoriser Dame
-                return false;
-            }
+                    break;
+                    // -- IS A QUEEN
+                case true:
 
+                    return false;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
         };
 
         this.getPossibleMoves = function (indexLine, indexColumn) {
             var possibleMoves = [];
             for (var line = 0; line < board.length; line++) {
                 for (var column = 0; column < board[line].length; column++) {
-                    if (this.allow(indexLine, indexColumn, line, column)) {
-                        var possibleMove = [line, column];
+                    if (this.allow(indexLine, indexColumn, line, column)) {                        
+                        var possibleMove = new core.Move();
+                        possibleMove.positionDepart = [indexLine, indexColumn];
+                        possibleMove.positionArrive = [line, column];
+                        possibleMove.determinateDirection();
                         possibleMoves.push(possibleMove);
                         // TODO : recursivity trick
                     }
@@ -157,10 +174,8 @@ module.exports = (function (self) {
 
 
         //Coup obligatoire
-        this.requiredAllow = function (pawnIndexLine , pawnIndexColumn) {
-
-            console.log("===="+pawnIndexLine+pawnIndexColumn);
-
+        this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
+            
         };
 
 
@@ -180,6 +195,16 @@ module.exports = (function (self) {
             st += "]";
             console.log(st);
             return st;
+        };
+
+        this.movePawn = function (fromLine, fromColumn, toLine, toColumn) {
+            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn);
+            var desiredMoveLocation = [toLine, toColumn];
+            for (var i = 0; i < possibleMoves.length; i++) {
+                if (possibleMoves[i] === desiredMoveLocation) {
+
+                }
+            }
         };
 
         init();
