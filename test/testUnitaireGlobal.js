@@ -42,10 +42,45 @@ describe('Global Test', function () {
         //ko pawn on other
         expect(board.allow(1,1,2,1)).equal(false);
         //ok lateral
-        board.movePawn(2,1,3,1); // not cool standing todo Move fct
-        expect(board.allow(3,1,3,0)).equal(true);
-        expect(board.allow(3,1,3,2)).equal(true);
+        board.movePawn(2,1,3,1); // not cool standing
+        //console.log(board.getBoardArray());
+        //Todo Fct move
+        // expect(board.allow(3,1,3,0)).equal(true);
+        // expect(board.allow(3,1,3,2)).equal(true);
+    });
+});
+
+describe('Init Pawn tests', function () {
+    var pawnW = new core.Pawn(core.PawnType.WHITE, "WHITE");
+    var pawnB = new core.Pawn(core.PawnType.BLACK, "BLACK");
+
+    it('Base create pawnW', function () {
+        //test white pawn
+        expect(pawnW.getType()).equal(core.PawnType.WHITE);
+        expect(pawnW.getColour()).equal("WHITE");
+        expect(pawnW.isQueen()).equal(false);
+        expect(pawnW.toString()).equal("{colour : WHITE, isQueen : false}");
+
+        pawnW.setQueen();
+
+        expect(pawnW.isQueen()).equal(true);
+        expect(pawnW.getType()).equal(core.PawnType.Q_WHITE);
+        expect(pawnW.getColour()).equal("WHITE");
+        expect(pawnW.toString()).equal("{colour : WHITE, isQueen : true}");
     });
 
+    it('Base create pawnB', function () {
+        //test white pawn
+        expect(pawnB.getType()).equal(core.PawnType.BLACK);
+        expect(pawnB.getColour()).equal("BLACK");
+        expect(pawnB.isQueen()).equal(false);
+        expect(pawnB.toString()).equal("{colour : BLACK, isQueen : false}");
 
+        pawnB.setQueen();
+
+        expect(pawnB.isQueen()).equal(true);
+        expect(pawnB.getType()).equal(core.PawnType.Q_BLACK);
+        expect(pawnB.getColour()).equal("BLACK");
+        expect(pawnB.toString()).equal("{colour : BLACK, isQueen : true}");
+    });
 });

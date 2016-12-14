@@ -3,14 +3,14 @@ var Turkish_Chess = Turkish_Chess || {};
 var merge = require('merge');
 var core = merge(require('./pawn_type'));
 
-module.exports = (function (self) {
+module.exports = function (self) {
     "use strict";
 
     self.Pawn = function (_type, _colour) {
         var type;
-        // var pos = []; // [line, column]  ---- We're not gonna use it 
-        var lastPos = [];
-        var colour; // "WHITE" or "BLACK"
+        // var pos = []; // [line, column]  ---- We're not gonna use it
+        var lastPos = [];
+        var colour; // WHITE || BLACK
         var isQueen;
 
         var init = function (_type, _colour) {
@@ -40,13 +40,17 @@ module.exports = (function (self) {
 //        };
 
         // This function needs a boolean
-        this.setQueen = function (value) {
-            isQueen = value;           
+        this.setQueen = function () {
+            isQueen = true;
+
+            if (colour === "WHITE") {
+                type = core.PawnType.Q_WHITE;
+            } else type = core.PawnType.Q_BLACK;
         };
 
         this.isQueen = function () {
 //            return (type == core.PawnType.Q_BLACK || type == core.PawnType.Q_WHITE);
-           return isQueen;
+            return isQueen;
         };
 
         this.getColour = function () {
@@ -58,11 +62,11 @@ module.exports = (function (self) {
         };
 
         this.toString = function () {
-            return "{colour : " + colour + ", isQueen:" + isQueen + "}";
+            return "{colour : " + colour + ", isQueen : " + isQueen + "}";
         };
 
         init(_type, _colour);
     };
 
     return self;
-}(Turkish_Chess || {}));
+}(Turkish_Chess || {});
