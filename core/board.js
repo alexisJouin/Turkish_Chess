@@ -96,46 +96,59 @@ module.exports = (function (self) {
         }
 
         //Deplacement autoriser ou non pour pion
-        this.allow = function (pawnIndexLine , pawnIndexColumn, indexLineToMove, indexColumnToMove) {
-           
+        this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+
             var pawn = board[pawnIndexLine][pawnIndexColumn];
             pawn.isQueen();
 
-            if(!pawn.isQueen()){
+            if (!pawn.isQueen()) {
 
                 //Pawn is WHITE
                 if (board[indexLineToMove][indexColumnToMove] == 0) {
                     if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE") {
-                        if ((pawnIndexLine+1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn-1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn+1 == indexColumnToMove)) {
+                        if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
                             return true;
                         } else {
                             return false;
                         }
                     } else {
-                        if ((pawnIndexLine-1 == indexLineToMove&& pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn-1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn+1 == indexColumnToMove)) {
+                        if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) {
                             return true;
                         } else {
                             return false;
                         }
                     }
-                }else{
+                } else {
                     return false;
                 }
-            }else{
+            } else {
                 //TODO Autoriser Dame
                 return false;
             }
-            
+
         };
 
+        this.getPossibleMoves = function (indexLine, indexColumn) {
+            var possibleMoves = [];
+            for (var line = 0; line < board.length; line++) {
+                for (var column = 0; column < board[line].length; column++) {
+                    if (this.allow(indexLine, indexColumn, line, column)) {
+                        var possibleMove = [line, column];
+                        possibleMoves.push(possibleMove);
+                        // TODO : recursivity trick
+                    }
+                }
+            }
+            return possibleMoves;
+        };
 
         //Coup obligatoire
         this.requiredAllow = function (pawn) {
 
-          console.log("===="+pawn);
+            console.log("====" + pawn);
 
         };
-            
+
 
         this.toString = function () {
             var st = "[";
