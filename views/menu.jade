@@ -7,17 +7,36 @@ block content
 
     body
     div(id='leftPannel')
-        a(href="/game" class="mainButtons") Jouer
+        h1 Bonjour #{username} !
+        h1
+            a(href="/game" class="mainButtons") Play !
     div(id='rightPannel')
         div(id='switchers')
             div(id='personnalStaticsSwitcher') Statistiques personnelles
             div(id='rankSwitcher') Rang
         div(id='rank')
             div(id='personnalStatics')
-                p 1
-                p 2
-                p 3
-                p 4
+
+                if has_game
+                    table
+                        tr
+                            td Nombre matchs
+                            td Nombre victoire
+                            td Ratio
+                            td Moyenne de coups
+                            td Minimum de coups
+                        tr
+                            td #{stats.nbmatch}
+                            td #{stats.nbwin}
+                            td #{stats.ratio}
+                            td #{stats.nbturnmean}
+                            td #{stats.nbturnmin}
+
+
+
+
+
+
 
 
 
