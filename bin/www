@@ -30,7 +30,7 @@ server.on('listening', onListening);
 
 var game = [];
 
-// Return an available game
+// Return an available game (1 player), or create a new one
 function getAvailableGame(){
 
     var available = [];
@@ -49,6 +49,7 @@ function getAvailableGame(){
     return available;
 }
 
+// Return the current game of client 'id'
 function getGameClientID(id){
     var found = false;
     var i = 0;
@@ -64,17 +65,15 @@ function getGameClientID(id){
     return board;
 }
 
-// Connexion
+// Connection
 io.sockets.on('connection', function (socket) {
 
-    // Initialisation du plateau + broadcast
+    // Sending the board to the new player
     socket.on('play', function(){
         var board = getAvailableGame();
-
         board.setPlayer(socket);
 
         socket.emit("board", board.getBoardArray());
-
         socket.emit("turn", false);
 
         if(board.getPlayers().length == 2) {
@@ -82,7 +81,7 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    // Déplacement d'un pion en broadcast
+    // Client moves the pawn at 'pos'
     socket.on('move', function(pos){
         var board = getGameClientID(socket);
 
@@ -92,10 +91,8 @@ io.sockets.on('connection', function (socket) {
         board.getPlayers()[1].emit("turn", false);
     });
 
-    // Victoire
 
-
-    // Deconnexion d'un client
+    // Disconnection
     socket.on('disconnect', function(){
         console.log('Client déconnecté');
     });
