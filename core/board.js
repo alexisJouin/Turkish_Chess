@@ -93,7 +93,12 @@ module.exports = (function (self) {
 
         this.getPositionBoard = function (i, j) {
             return board[i][j];
-        }
+        };
+
+        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
+            board[pawnIndexLine][pawnIndexColumn] = 0;
+        };
 
         //Deplacement autoriser ou non pour pion
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {

@@ -46,7 +46,7 @@ module.exports = (function (self) {
 
         this.isQueen = function () {
 //            return (type == core.PawnType.Q_BLACK || type == core.PawnType.Q_WHITE);
-            return isQueen;
+           return isQueen;
         };
 
         this.getColour = function () {
