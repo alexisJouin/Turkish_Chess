@@ -197,41 +197,38 @@ module.exports = (function (self) {
             var caseRight = [pawnIndexLine, pawnIndexColumn + 1];
 
 
+            //Possible capture ?
+            if(!this.empty(caseRight) //CASE RIGHT
+                && board[pawnIndexLine][pawnIndexColumn+1].getColour()!==board[pawnIndexLine][pawnIndexColumn].getColour()
+                && board[pawnIndexLine][pawnIndexColumn+2]==0 ){
+                //TODO ajouter au tableau le coup possible
+                console.log("Capture !!!");
+            }
+
+            if(!this.empty(caseLeft) //CASE LEFT
+                && board[pawnIndexLine][pawnIndexColumn-1].getColour()!==board[pawnIndexLine][pawnIndexColumn].getColour()
+                && board[pawnIndexLine][pawnIndexColumn-2]==0 ){
+                //TODO ajouter au tableau le coup possible
+                console.log("Capture !!!");
+            }
+
             //Pawn is WHITE
-            /*if(board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE"){
-             
-             console.log(board[pawnIndexLine + 1][pawnIndexColumn]);
-             console.log(board[pawnIndexLine ][pawnIndexColumn-1]);
-             console.log(board[pawnIndexLine ][pawnIndexColumn+1]);
-             
-             //Possible capture ?
-             if(board[pawnIndexLine + 1][pawnIndexColumn]!=0) {
-             
-             //Move en bas
-             if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
-             && board[pawnIndexLine + 2][pawnIndexColumn] == 0)){
-             
-             
-             }
-             }else{
-             console.log("Pas de capture possible !");
-             }
-             if(board[pawnIndexLine + 1][pawnIndexColumn]!=0 || board[pawnIndexLine][pawnIndexColumn - 1]!=0 ||  board[pawnIndexLine][pawnIndexColumn + 1]!=0) {
-             
-             if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK" && board[pawnIndexLine + 2][pawnIndexColumn] == 0)  //pion en dessous
-             || (board[pawnIndexLine][pawnIndexColumn - 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn - 2] == 0) //pion gauche
-             || (board[pawnIndexLine][pawnIndexColumn + 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn + 2] == 0) //pion droite
-             ){
-             
-             
-             }
-             }else{
-             console.log("Pas de capture possible !");
-             }
-             //Pawn is BLACK
-             }else{
-             
-             }*/
+            if(board[pawnIndexLine][pawnIndexColumn].getColour()=="WHITE" // CASE DOWN
+                && !this.empty(caseDown)
+                && board[pawnIndexLine+1][pawnIndexColumn].getColour()=="BLACK"
+                && board[pawnIndexLine+2][pawnIndexColumn]==0 ){
+                //TODO ajouter au tableau le coup possible
+                console.log("Capture !!!");
+            }
+            //Pawn is BLACK
+            if(board[pawnIndexLine][pawnIndexColumn].getColour()=="BLACK" // CASE UP
+                && !this.empty(caseUp)
+                && board[pawnIndexLine-1][pawnIndexColumn].getColour()=="WHITE"
+                && board[pawnIndexLine-2][pawnIndexColumn]==0 ){
+                //TODO ajouter au tableau le coup possible
+                console.log("Capture !!!");
+            }
+
 
         };
 
