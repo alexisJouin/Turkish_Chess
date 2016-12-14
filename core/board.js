@@ -112,6 +112,10 @@ module.exports = (function (self) {
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
 
             var pawn = board[pawnIndexLine][pawnIndexColumn];
+            //case vide
+            if(board[pawnIndexLine][pawnIndexColumn]==0){
+                return false;
+            }
 
             switch (pawn.isQueen()) {
                 // -- IS NOT A QUEEN
@@ -172,10 +176,62 @@ module.exports = (function (self) {
             return possibleMoves;
         };
 
+        //Case vide
+        this.empty = function(position){
+            if(board[position[0]][position[1]]==0){
+                return true;
+            }else{
+                return false;
+            }
+        };
+
 
         //Coup obligatoire
-        this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
-            
+        this.requiredAllow = function (pawnIndexLine , pawnIndexColumn) {
+
+
+            var caseDown=[pawnIndexLine+1,pawnIndexColumn];
+            var caseUp=[pawnIndexLine-1,pawnIndexColumn];
+            var caseLeft=[pawnIndexLine,pawnIndexColumn-1];
+            var caseRight=[pawnIndexLine,pawnIndexColumn+1];
+
+
+            //Pawn is WHITE
+            /*if(board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE"){
+
+                console.log(board[pawnIndexLine + 1][pawnIndexColumn]);
+                console.log(board[pawnIndexLine ][pawnIndexColumn-1]);
+                console.log(board[pawnIndexLine ][pawnIndexColumn+1]);
+
+                //Possible capture ?
+                if(board[pawnIndexLine + 1][pawnIndexColumn]!=0) {
+
+                    //Move en bas
+                    if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
+                        && board[pawnIndexLine + 2][pawnIndexColumn] == 0)){
+
+
+                    }
+                }else{
+                    console.log("Pas de capture possible !");
+                }
+                if(board[pawnIndexLine + 1][pawnIndexColumn]!=0 || board[pawnIndexLine][pawnIndexColumn - 1]!=0 ||  board[pawnIndexLine][pawnIndexColumn + 1]!=0) {
+
+                 if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK" && board[pawnIndexLine + 2][pawnIndexColumn] == 0)  //pion en dessous
+                 || (board[pawnIndexLine][pawnIndexColumn - 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn - 2] == 0) //pion gauche
+                 || (board[pawnIndexLine][pawnIndexColumn + 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn + 2] == 0) //pion droite
+                 ){
+
+
+                 }
+                 }else{
+                 console.log("Pas de capture possible !");
+                 }
+                //Pawn is BLACK
+            }else{
+
+            }*/
+
         };
 
 

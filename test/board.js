@@ -50,3 +50,15 @@ describe('Board', function () {
         expect(expectedPossibleMoves) === (possibleMoves);
     });
 });
+
+describe('Board', function () {
+    it('capture required', function () {
+        var board = new core.Board();
+
+        var allows1 = board.requiredAllow(2, 2);
+
+        //expect(allows1).equal(true);
+
+    });
+
+});
