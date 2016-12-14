@@ -103,17 +103,17 @@ module.exports = (function (self) {
             return board[i][j];
         };
 
-        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
-            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
-            board[pawnIndexLine][pawnIndexColumn] = 0;
-        };
+//        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+//            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
+//            board[pawnIndexLine][pawnIndexColumn] = 0;
+//        };
 
         //Deplacement autoriser ou non pour pion
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
 
             var pawn = board[pawnIndexLine][pawnIndexColumn];
             //case vide
-            if(board[pawnIndexLine][pawnIndexColumn]==0){
+            if (board[pawnIndexLine][pawnIndexColumn] == 0) {
                 return false;
             }
 
@@ -163,7 +163,7 @@ module.exports = (function (self) {
             var possibleMoves = [];
             for (var line = 0; line < board.length; line++) {
                 for (var column = 0; column < board[line].length; column++) {
-                    if (this.allow(indexLine, indexColumn, line, column)) {                        
+                    if (this.allow(indexLine, indexColumn, line, column)) {
                         var possibleMove = new core.Move();
                         possibleMove.positionDepart = [indexLine, indexColumn];
                         possibleMove.positionArrive = [line, column];
@@ -178,60 +178,60 @@ module.exports = (function (self) {
         };
 
         //Case vide
-        this.empty = function(position){
-            if(board[position[0]][position[1]]==0){
+        this.empty = function (position) {
+            if (board[position[0]][position[1]] == 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         };
 
 
         //Coup obligatoire
-        this.requiredAllow = function (pawnIndexLine , pawnIndexColumn) {
+        this.requiredAllow = function (pawnIndexLine, pawnIndexColumn) {
 
 
-            var caseDown=[pawnIndexLine+1,pawnIndexColumn];
-            var caseUp=[pawnIndexLine-1,pawnIndexColumn];
-            var caseLeft=[pawnIndexLine,pawnIndexColumn-1];
-            var caseRight=[pawnIndexLine,pawnIndexColumn+1];
+            var caseDown = [pawnIndexLine + 1, pawnIndexColumn];
+            var caseUp = [pawnIndexLine - 1, pawnIndexColumn];
+            var caseLeft = [pawnIndexLine, pawnIndexColumn - 1];
+            var caseRight = [pawnIndexLine, pawnIndexColumn + 1];
 
 
             //Pawn is WHITE
             /*if(board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE"){
-
-                console.log(board[pawnIndexLine + 1][pawnIndexColumn]);
-                console.log(board[pawnIndexLine ][pawnIndexColumn-1]);
-                console.log(board[pawnIndexLine ][pawnIndexColumn+1]);
-
-                //Possible capture ?
-                if(board[pawnIndexLine + 1][pawnIndexColumn]!=0) {
-
-                    //Move en bas
-                    if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
-                        && board[pawnIndexLine + 2][pawnIndexColumn] == 0)){
-
-
-                    }
-                }else{
-                    console.log("Pas de capture possible !");
-                }
-                if(board[pawnIndexLine + 1][pawnIndexColumn]!=0 || board[pawnIndexLine][pawnIndexColumn - 1]!=0 ||  board[pawnIndexLine][pawnIndexColumn + 1]!=0) {
-
-                 if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK" && board[pawnIndexLine + 2][pawnIndexColumn] == 0)  //pion en dessous
-                 || (board[pawnIndexLine][pawnIndexColumn - 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn - 2] == 0) //pion gauche
-                 || (board[pawnIndexLine][pawnIndexColumn + 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn + 2] == 0) //pion droite
-                 ){
-
-
-                 }
-                 }else{
-                 console.log("Pas de capture possible !");
-                 }
-                //Pawn is BLACK
-            }else{
-
-            }*/
+             
+             console.log(board[pawnIndexLine + 1][pawnIndexColumn]);
+             console.log(board[pawnIndexLine ][pawnIndexColumn-1]);
+             console.log(board[pawnIndexLine ][pawnIndexColumn+1]);
+             
+             //Possible capture ?
+             if(board[pawnIndexLine + 1][pawnIndexColumn]!=0) {
+             
+             //Move en bas
+             if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
+             && board[pawnIndexLine + 2][pawnIndexColumn] == 0)){
+             
+             
+             }
+             }else{
+             console.log("Pas de capture possible !");
+             }
+             if(board[pawnIndexLine + 1][pawnIndexColumn]!=0 || board[pawnIndexLine][pawnIndexColumn - 1]!=0 ||  board[pawnIndexLine][pawnIndexColumn + 1]!=0) {
+             
+             if((board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK" && board[pawnIndexLine + 2][pawnIndexColumn] == 0)  //pion en dessous
+             || (board[pawnIndexLine][pawnIndexColumn - 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn - 2] == 0) //pion gauche
+             || (board[pawnIndexLine][pawnIndexColumn + 1].getColour() == "BLACK" && board[pawnIndexLine][pawnIndexColumn + 2] == 0) //pion droite
+             ){
+             
+             
+             }
+             }else{
+             console.log("Pas de capture possible !");
+             }
+             //Pawn is BLACK
+             }else{
+             
+             }*/
 
         };
 
