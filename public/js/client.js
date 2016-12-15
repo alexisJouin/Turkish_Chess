@@ -16,6 +16,10 @@ socket.on('board',function(board) {
     console.log(board);
 });
 
+socket.on('opponentDisconnected',function(board) {
+    $("#waiting").html("Votre adversaire s'est déconnecté");
+});
+
 socket.on('waiting',function(wait) {
     if(wait){
         $("#waiting").html("En attente d'un autre joueur...");
