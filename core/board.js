@@ -170,7 +170,7 @@ module.exports = (function (self) {
                         possibleMove.positionDepart = [indexLine, indexColumn];
                         possibleMove.positionArrive = [line, column];
                         possibleMove.determinateDirection();
-                        var thisPossibleMove = this.getPossibleMoves(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
+                        var thisPossibleMove = this.getPossibleMovesObjects(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
                         if (thisPossibleMove !== []) {
                             possibleMove.addMove(thisPossibleMove);
                         }
@@ -380,12 +380,12 @@ module.exports = (function (self) {
                     if (board[i][j] !== 0) {
                         if (board[i][j].getColour() == playerColour) {
                             var thisPossibleAttack = this.getPossibleAttacks(i, j);
-                            var thisPossibleMove = this.getPossibleMoves(i, j);
+                            var thisPossibleMove = this.getPossibleMovesObjects(i, j);
                             if (thisPossibleAttack !== []) {
                                 everyAttackesPossible.push(this.getPossibleAttacks(i, j));
                             }
                             if (thisPossibleMove !== []) {
-                                everyMovesPossible.push(this.getPossibleMoves(i, j));
+                                everyMovesPossible.push(this.getPossibleMovesObjects(i, j));
                             }
                         }
                     }
