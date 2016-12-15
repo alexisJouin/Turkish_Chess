@@ -409,8 +409,8 @@ module.exports = (function (self) {
 
                 //mouvement est un mouvement possible
                 for (var i = 0; i < everyMovesPossible.length; i++) {
-                    if (desiredMoveLocation[0] === everyMovesPossible[i].getPositionArrive()[0]
-                            && desiredMoveLocation[1] === everyMovesPossible[i].getPositionArrive()[1]) {
+                    if (desiredMoveLocation[0] === everyMovesPossible[i].positionArrive[0]
+                            && desiredMoveLocation[1] === everyMovesPossible[i].positionArrive[1]) {
                         return {type: "Move", move: everyMovesPossible[i]};
                     }
                 }
@@ -434,8 +434,8 @@ module.exports = (function (self) {
                 } else if (whatToDo.type === "Move") {
                     var moveMovement = whatToDo.move;
                     // Moving the pawn gently
-                    this.movePawn(moveMovement.getPositionDepart()[0], moveMovement.getPositionDepart()[1],
-                            moveMovement.getPositionArrive()[0], moveMovement.getPositionArrive()[1]);
+                    this.movePawn(moveMovement.positionDepart[0], moveMovement.positionDepart[1],
+                            moveMovement.positionArrive[0], moveMovement.positionArrive[1]);
                 }
             }
         };
