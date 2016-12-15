@@ -363,7 +363,7 @@ module.exports = (function (self) {
         this.allowMovePawn = function (fromLine, fromColumn) {
 //            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn); //ensemble des mouvements possibles
 //            var possibleAttacks = this.getPossibleAttacks(fromLine, fromColumn);//capture possible ou non
-//            var desiredMoveLocation = [toLine, toColumn];
+            var desiredMoveLocation = [toLine, toColumn];
 
             // Determining current player colour
             var playerColour = "";
@@ -424,7 +424,7 @@ module.exports = (function (self) {
             board[toLine][toColumn] = board[fromLine][fromColumn];
             board[fromLine][fromColumn] = 0;
 
-            var whatToDo = this.allowMovePawn(fromLine, fromColumn);
+            var whatToDo = this.allowMovePawn(fromLine, fromColumn, toLine, toColumn);
 
             if (whatToDo != null && whatToDo.length > 0) {
                 if (whatToDo.type === "Attack") {
