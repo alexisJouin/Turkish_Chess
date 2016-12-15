@@ -161,7 +161,7 @@ module.exports = (function (self) {
             }
         };
 
-        this.getPossibleMoves = function (indexLine, indexColumn) {
+        this.getPossibleMovesObjects = function (indexLine, indexColumn) {
             var possibleMoves = [];
             for (var line = 0; line < board.length; line++) {
                 for (var column = 0; column < board[line].length; column++) {
@@ -180,6 +180,21 @@ module.exports = (function (self) {
                 }
             }
             return possibleMoves;
+        };
+
+        this.getPossibleMoves = function (indexLine, indexColumn) {
+            var possibleMoves = [];
+            var result = this.getPossibleMovesObjects(indexLine, indexColumn);
+            if (result.length > 0) {
+                for (var i = 0; i < result.length; i++) {
+                    var x = result[i].getPositionArrive()[0];
+                    var y = result[i].getPositionArrive()[1];
+                    possibleMoves.push([x, y]);
+                }
+                return possibleMoves;
+            } else {
+                return null;
+            }
         };
 
         //Case vide
@@ -204,7 +219,7 @@ module.exports = (function (self) {
 
             var pawn = board[pawnIndexLine][pawnIndexColumn];
 
-            if (pawn != 0) {
+            if (pawn !== 0) {
 
 
 
@@ -231,8 +246,8 @@ module.exports = (function (self) {
                         }
 
                         if (!this.empty(caseLeft) //CASE LEFT
-                                && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
+                                && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour())
+                                && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
                             //TODO ajouter au tableau le coup possible
                             var possibleMove = new core.Move();
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
@@ -247,8 +262,8 @@ module.exports = (function (self) {
                         }
 
                         //Pawn is WHITE
-                        if (board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
-                                && !this.empty(caseDown)
+                        if (!this.empty(caseDown) &&
+                                board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
                                 && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
                                 && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
@@ -432,7 +447,7 @@ module.exports = (function (self) {
             // Détermination de la position du pion à supprimer
             var positionPawnRemove = [positionArrive[0] - positionDepart[0], positionArrive[1] - positionDepart[1]];
 
-            if (move.getNextMove() !== null) {                
+            if (move.getNextMove() !== null) {
                 this.removePawn(positionPawnRemove[0], positionPawnRemove[1]);
                 this.movePawn(positionDepart[0], positionDepart[1], positionArrive[0], positionArrive[1]);
                 this.attackPawn(move.getNextMove());
@@ -468,6 +483,15 @@ module.exports = (function (self) {
 
         this.getCurrentPlayer = function () {
             return playingPlayerIndex;
+        };
+
+        this.whoWins = function () {
+            var whoWin = "NOBODY";
+            if (whitePawns.length > blackPawns.length) {
+                whoWin = "WHITE";
+            } else if (blackPawns.length > whitePawns.length) {
+                whoWin = "BLACK";
+            }
         };
 
         init();
