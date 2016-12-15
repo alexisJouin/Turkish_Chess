@@ -42,7 +42,7 @@ describe('Global Test', function () {
         //ko pawn on other
         expect(board.allow(1,1,2,1)).equal(false);
         //ok lateral
-        board.movePawn(2,1,3,1); // not cool standing
+        board.moveOrAttackPawn(2,1,3,1); // not cool standing
         //console.log(board.getBoardArray());
         //Todo Fct move
          expect(board.allow(3,1,3,0)).equal(true);
@@ -60,18 +60,19 @@ describe('Global Test', function () {
         //ko for diagonal
         expect(board.allow(5,1,4,0)).equal(false);
         expect(board.allow(5,1,4,2)).equal(false);
-        //TODO erreur isqueen sur case vide
         //ko no pawn
         expect(board.allow(4,0,3,0)).equal(false);
 
         //ko pawn on other
         expect(board.allow(6,1,5,1)).equal(false);
         //ok lateral
-        board.movePawn(5,1,4,1); // not cool standing
-        //console.log(board.getBoardArray());
-        //Todo Fct move
+        board.moveOrAttackPawn(5,1,4,1); // not cool standing
         expect(board.allow(4,1,4,0)).equal(true);
         expect(board.allow(4,1,4,2)).equal(true);
+    });
+
+    it('Base template', function () {
+
     });
 });
 
@@ -112,7 +113,7 @@ describe('Init Pawn tests', function () {
 
 describe('Init moves tests', function () {
     var board = new core.Board();
-    var m1 = new core.Move();
+    var m1 = new core.Move ();
     var m2 = new core.Move();
 
     m1.addMove(m2);

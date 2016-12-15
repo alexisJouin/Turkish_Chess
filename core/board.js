@@ -187,8 +187,8 @@ module.exports = (function (self) {
             var result = this.getPossibleMovesObjects(indexLine, indexColumn);
             if (result != null && result.length > 0) {
                 for (var i = 0; i < result.length; i++) {
-                    var x = result[i].getPositionArrive()[0];
-                    var y = result[i].getPositionArrive()[1];
+                    var x = result[i].positionArrive[0];
+                    var y = result[i].positionArrive[1];
                     possibleMoves.push([x, y]);
                 }
                 return possibleMoves;
@@ -356,7 +356,7 @@ module.exports = (function (self) {
                 st += "], \n";
             }
             st += "]";
-            console.log(st);
+         //   console.log(st);
             return st;
         };
 
@@ -385,7 +385,7 @@ module.exports = (function (self) {
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 everyAttackesPossible.push(this.getPossibleAttacks(i, j));
                             }
-                            if (thisPossibleMove != null && thisPossibleMove !== []) {
+                            if (thisPossibleMove != null && thisPossibleMove.length > 0) {
                                 everyMovesPossible.push(this.getPossibleMovesObjects(i, j));
                             }
                         }
@@ -399,9 +399,12 @@ module.exports = (function (self) {
                 var maxSize = 0;
                 var indexMaxSize = -1;
                 for (var i = 0; i < everyAttackesPossible.length; i++) {
-                    if (everyAttackesPossible[i].getTotalSize() > maxSize) {
-                        maxSize = everyAttackesPossible[i].getTotalSize();
-                        indexMaxSize = i;
+                    for (var j = 0; j < everyAttackesPossible[i].length; j++) {
+
+                        if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
+                            maxSize = everyAttackesPossible[i][j].getTotalSize();
+                            indexMaxSize = i;
+                        }
                     }
                 }
                 return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
@@ -409,9 +412,11 @@ module.exports = (function (self) {
 
                 //mouvement est un mouvement possible
                 for (var i = 0; i < everyMovesPossible.length; i++) {
-                    if (desiredMoveLocation[0] === everyMovesPossible[i].positionArrive[0]
-                            && desiredMoveLocation[1] === everyMovesPossible[i].positionArrive[1]) {
-                        return {type: "Move", move: everyMovesPossible[i]};
+                    for (var j = 0; j < everyMovesPossible[i].length; j++) {
+                        if (desiredMoveLocation[0] === everyMovesPossible[i][j].positionArrive[0]
+                            && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]) {
+                            return {type: "Move", move: everyMovesPossible[i]};
+                        }
                     }
                 }
             } else {
