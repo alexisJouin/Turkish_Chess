@@ -2,7 +2,6 @@
 
 #leftPannel, #rightPannel{
     display: inline-block;
-    background: rgba(0,0,0,0.5);
     padding: 20px;
 
 }
@@ -17,6 +16,7 @@
     width: auto;
     border-radius: 0 5px 5px 5px;
     color:black;
+    height:auto;
 }
 
 #rank, #personnalStatics{
@@ -75,6 +75,8 @@
     text-decoration: none;
     padding: 10px;
     color: white;
+    background: rgba(0,0,0,0.5);
+
 }
 
 button{
@@ -114,8 +116,8 @@ a{
         margin: auto;
         width: 1000px;
         height: auto;
-        transform:  translateY(50%);
-        height:20%;
+        transform:  translateY(100px);
+        height:auto;
     }
     #leftPannel{
         height: 100%;

@@ -51,15 +51,18 @@ router.get('/', function(req, res, next) {
                         stats_game['nbturnmean'] = Math.round((number_of_turn / stats_game['nbmatch'])*100)/100;
 
 
-
-                        res.render('menu', {
-                            _id: req.session._id,
-                            username: req.session.username,
-                            mail: req.session.mail,
-                            has_game: 1,
-                            stats: stats_game,
-                            classement: tab_classement
+                        req.app.db.models.User.findOne( { 'username':req.session.username }, function(err, user) {
+                            stats_game['points'] = user.points;
+                            res.render('menu', {
+                                _id: req.session._id,
+                                username: req.session.username,
+                                mail: req.session.mail,
+                                has_game: 1,
+                                stats: stats_game,
+                                classement: tab_classement
+                            });
                         });
+
 
                     });
 
