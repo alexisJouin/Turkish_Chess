@@ -41,6 +41,14 @@ module.exports = (function (self) {
             }
         };
 
+        this.getSize = function(){
+            return size;
+        };
+
+        this.getNextMove = function(){
+            return nextMove;
+        };
+
         this.addMove = function (newMove) {
             nextMove = newMove;
             size++;
@@ -51,8 +59,10 @@ module.exports = (function (self) {
 
         };
 
-        this.recursiveOperation = function (_nextMove) {
-            return _nextMove.size + this.recursiveOperation(_nextMove.nextMove);
+        this.recursiveOperation = function (nextMove) {
+            if  (nextMove !== null) {
+                return size + this.recursiveOperation(nextMove.getNextMove());
+            } else return 0;
         };
 
         init();

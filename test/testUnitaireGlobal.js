@@ -24,7 +24,7 @@ describe('Global Test', function () {
         ]);
     });
 
-    it('Base move pawn', function () {
+    it('Base move pawn White', function () {
         // ok for front
         expect(board.allow(2,0,3,0)).equal(true);
         expect(board.allow(2,1,3,1)).equal(true);
@@ -37,7 +37,7 @@ describe('Global Test', function () {
         expect(board.allow(2,1,3,2)).equal(false);
         //TODO erreur isqueen sur case vide
         //ko no pawn
-        //expect(board.allow(0,0,0,1)).equal(false);
+        expect(board.allow(0,0,0,1)).equal(false);
 
         //ko pawn on other
         expect(board.allow(1,1,2,1)).equal(false);
@@ -45,8 +45,33 @@ describe('Global Test', function () {
         board.movePawn(2,1,3,1); // not cool standing
         //console.log(board.getBoardArray());
         //Todo Fct move
-        // expect(board.allow(3,1,3,0)).equal(true);
-        // expect(board.allow(3,1,3,2)).equal(true);
+         expect(board.allow(3,1,3,0)).equal(true);
+         expect(board.allow(3,1,3,2)).equal(true);
+    });
+
+    it('Base move pawn Black', function () {
+        // ok for front
+        expect(board.allow(5,0,4,0)).equal(true);
+        expect(board.allow(5,1,4,1)).equal(true);
+        //ko for back
+        expect(board.allow(6,1,0,7)).equal(false);
+        expect(board.allow(6,1,1,7)).equal(false);
+        expect(board.allow(6,1,2,7)).equal(false);
+        //ko for diagonal
+        expect(board.allow(5,1,4,0)).equal(false);
+        expect(board.allow(5,1,4,2)).equal(false);
+        //TODO erreur isqueen sur case vide
+        //ko no pawn
+        expect(board.allow(4,0,3,0)).equal(false);
+
+        //ko pawn on other
+        expect(board.allow(6,1,5,1)).equal(false);
+        //ok lateral
+        board.movePawn(5,1,4,1); // not cool standing
+        //console.log(board.getBoardArray());
+        //Todo Fct move
+        expect(board.allow(4,1,4,0)).equal(true);
+        expect(board.allow(4,1,4,2)).equal(true);
     });
 });
 
@@ -83,4 +108,13 @@ describe('Init Pawn tests', function () {
         expect(pawnB.getColour()).equal("BLACK");
         expect(pawnB.toString()).equal("{colour : BLACK, isQueen : true}");
     });
+});
+
+describe('Init moves tests', function () {
+    var board = new core.Board();
+    var m1 = new core.Move();
+    var m2 = new core.Move();
+
+    m1.addMove(m2);
+    expect(m1.getTotalSize()).equal(2);
 });
