@@ -1,31 +1,20 @@
 $( document ).ready(function() {
 
-    //Boutton Lancer Partie
-    $("#playGame").click(function () {
-        window.location.replace("/jeu");
+
+    $(document).on("click","#personnalStaticsSwitcher:not(.selected)",function () {
+        $(this).addClass("selected");
+        $("#rankSwitcher").removeClass("selected");
+        $("#rank").addClass("hidden");
+        $("#personnalStatics").removeClass("hidden");
     });
 
-    $("#logOut").click(function () {
-        //window.location.replace("/connexion?deconnexion=true");
-
-        $.ajax({
-            type: 'PUT',
-            url: '/connexion',
-            data: {
-                type: "logOut"
-            },
-            sucess: function (sucess) {
-                alert('sucess');
-            },
-            err: function (err) {
-                alert('err');
-            }
-        });
-        window.location.replace("/connexion");
-
+    $(document).on("click","#rankSwitcher:not(.selected)",function () {
+        $(this).addClass("selected");
+        $("#personnalStaticsSwitcher").removeClass("selected");
+        $("#rank").removeClass("hidden");
+        $("#personnalStatics").addClass("hidden");
     });
-
-
 
 });
+
 

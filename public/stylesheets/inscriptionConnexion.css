@@ -11,6 +11,9 @@
         margin-bottom: 15px;
 
     }
+    button{
+        height:50px;
+    }
     fieldset{
         padding: inherit;
 
@@ -24,6 +27,9 @@
         height: auto;
         margin-top: 50vh;
         transform:  translateY(50%);
+    }
+    button{
+        height: 30px;
     }
     input{
         padding:5px;
@@ -46,7 +52,7 @@ body{
     text-decoration: none;
     border-radius: 5px;
     padding: 10px;
-    background: rgba(198,162,128,0.9);
+    background: rgba(0,0,0,0.5);
     color: white;
 
 }
@@ -73,7 +79,6 @@ button{
     margin: 0 auto;
     background-color: #9e854c;
     color: #fff;
-    height: 30px;
     border:0;
     margin-bottom: 8px;
 }

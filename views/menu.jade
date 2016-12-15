@@ -3,21 +3,53 @@ block title
     title Menu
 block append stylesheets
     link(rel='stylesheet', href='/stylesheets/menu.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
 block content
 
     body
-    div(id='leftPannel')
-        a(href="/game" class="mainButtons") Jouer
-    div(id='rightPannel')
-        div(id='switchers')
-            div(id='personnalStaticsSwitcher') Statistiques personnelles
-            div(id='rankSwitcher') Rang
-        div(id='rank')
-            div(id='personnalStatics')
-                p 1
-                p 2
-                p 3
-                p 4
+        div(id='wrapper')
+            div(id="banner" style='width:100%;background-color:rgba(240, 240, 240, 0.4);')
+                img(src='/img/logo.png')
+            div(id='menu')
+                div(id='leftPannel')
+                    h1 Bonjour #{username} !
+                    a(href="/game")
+                        button(value='play', id="playGame") Jouer
+                    a(href="/menu/deconnexion")
+                        button(value='disconnect', id="logOut") Se déconnecter
+                div(id='rightPannel')
+                    div(id='switchers')
+                        div(id='personnalStaticsSwitcher' class='selected') Statistiques personnelles
+                        div(id='rankSwitcher') Rang
 
+                    div(id='personnalStatics')
+                        if has_game
+                            table(border="1" cellpadding="15" style='border-collapse: collapse;')
+                                tr
+                                    td Matchs
+                                    td Victoires
+                                    td Ratio
+                                    td Moy coups
+                                    td Min coups
+                                tr
+                                    td #{stats.nbmatch}
+                                    td #{stats.nbwin}
+                                    td #{stats.ratio}
+                                    td #{stats.nbturnmean}
+                                    td #{stats.nbturnmin}
+                        else
+                            h1(style='text-align:center;') Veuillez jouer un match :)
 
+                    div(id='rank' class='hidden' style='overflow: scroll;')
+                        table(border="1" style='border-collapse: collapse;')
+                            tr(style='height:10px;')
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;') Rang
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;') Pseudo
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;font-weight:bold;') Points
+                            each c in classement
+                                tr
+                                    td #{c.rang}
+                                    td #{c.pseudo}
+                                    td(style='font-weight:bold;') #{c.points}
+        script(src="/js/menu.js")
 
