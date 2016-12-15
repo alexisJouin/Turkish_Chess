@@ -71,7 +71,7 @@ io.sockets.on('connection', function (socket) {
     // Sending the board to the new player
     socket.on('play', function(){
         var board = getAvailableGame();
-        board.setPlayer(socket);
+        board.addPlayer(socket);
         console.log("Nouveau client veut jouer : " + socket.id);
 
         socket.emit("board", board.getBoardArray());
@@ -79,20 +79,43 @@ io.sockets.on('connection', function (socket) {
 
         if(board.getPlayers().length == 2) {
             board.getPlayers()[0].emit("waiting", false);
+            board.getPlayers()[0].emit("colour", 0);
             board.getPlayers()[1].emit("waiting", false);
-            board.getCurrentPlayer().emit("turn", true);
+            board.getPlayers()[1].emit("colour", 1);
+            board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
             console.log("Nouvelle partie entre "+board.getPlayers()[0].id+" et "+board.getPlayers()[1].id);
         }
     });
 
-    // Client moves the pawn at 'pos'
-    socket.on('move', function(pos){
+    // Pawn selected, send possibles moves
+    socket.on('pawn', function(pos){
         var board = getGameClientID(socket);
+
+        var moves = [];
+
+        if(board.getPossibleAttacks(pos[0], pos[1]).length > 0){
+            moves = board.getPossibleAttacks(pos[0], pos[1]);
+        }
+        else {
+            moves = board.getPossibleMoves(pos[0], pos[1]);
+        }
+
+        socket.emit('possibleMoves', moves);
+    });
+
+    // Client moves the pawn at 'pos'
+    socket.on('move', function(init, final){
+        var board = getGameClientID(socket);
+
+        board.moveOrAttackPawn(init[0],init[1], final[0], final[1]);
 
         board.swapPlayer();
 
-        board.getCurrentPlayer().emit("turn", true);
-        board.getPlayers()[1].emit("turn", false);
+        board.getPlayers()[1].emit("board", board.getBoardArray());
+        board.getPlayers()[0].emit("board", board.getBoardArray());
+
+        board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
+        board.getPlayers()[(board.getCurrentPlayer()+1)%2].emit("turn", false);
     });
 
 
