@@ -128,11 +128,10 @@ module.exports = (function (self) {
                 currentPlayerColour = "BLACK";
             }
             
-            console.log("pawnColour:" + pawn.getColour());
-            console.log("currentPlayerColour : " + currentPlayerColour);
+
 
             if (pawn.getColour() == currentPlayerColour) {
-                console.log("Colour match");
+
                 switch (pawn.isQueen()) {
                     // -- IS NOT A QUEEN
                     case false:
@@ -174,7 +173,6 @@ module.exports = (function (self) {
                         break;
                 }
             } else {
-                console.log("colour unmatch");
                 return false;
             }
         };
