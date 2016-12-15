@@ -221,15 +221,13 @@ module.exports = (function (self) {
 
             if (pawn !== 0) {
 
-
-
                 switch (pawn.isQueen()) {
                     // Si c'est un pion
                     case false:
 
-
                         //Possible capture ?
                         if (!this.empty(caseRight) //CASE RIGHT
+                                && pawnIndexColumn<6
                                 && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
                                 && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
                             //TODO ajouter au tableau le coup possible
@@ -246,6 +244,7 @@ module.exports = (function (self) {
                         }
 
                         if (!this.empty(caseLeft) //CASE LEFT
+                                && pawnIndexColumn>1
                                 && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour())
                                 && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
                             //TODO ajouter au tableau le coup possible
@@ -262,8 +261,9 @@ module.exports = (function (self) {
                         }
 
                         //Pawn is WHITE
-                        if (!this.empty(caseDown) &&
-                                board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
+                        if (!this.empty(caseDown)
+                                && pawnIndexLine<6
+                                && board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
                                 && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
                                 && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
@@ -281,6 +281,7 @@ module.exports = (function (self) {
                         //Pawn is BLACK
                         if (board[pawnIndexLine][pawnIndexColumn].getColour() == "BLACK" // CASE UP
                                 && !this.empty(caseUp)
+                                && pawnIndexLine>1
                                 && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
                                 && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
