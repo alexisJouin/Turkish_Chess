@@ -6,10 +6,29 @@ var expect = chai.expect; // we are using the "expect" style of Chai
 var fs = require('fs');
 var core = require('./../core');
 
+var ArrayMoveToString = function (arrayPositions) {
+    if (arrayPositions != null && arrayPositions.length > 0) {
+        var result = "[ ";
+        for (i = 0 ; i < arrayPositions.length ; i++) {
+           result += "["+arrayPositions[i].positionArrive[0] +","+arrayPositions[i].positionArrive[0]+"]";
+           if (i !== arrayPositions.length -1 ) {
+               result +=",";
+           } else result +=" ]";
+        }
+    } else return "[]";
+    return result;
+};
+
+var myColor = function (_board, posLine, posColumn) {
+   // var myColor;
+    if (!_board.empty([posLine, posColumn])) {
+        var pawn = _board.getPositionBoard(posLine, posColumn);
+        return  pawn.getColour();
+    } else return  "Empty";
+}
+
 describe('Test a Play', function () {
     var board = new core.Board();
-
-
 
     it('New play', function () {
         //console.log(board.getPlayers());
@@ -38,29 +57,49 @@ describe('Test a Play', function () {
         board.swapPlayer();
         //Player 1
         board.moveOrAttackPawn(2,3,3,3);
-        //console.log(board.getPositionBoard(3,3));
         expect(board.empty([2,3])).equal(true);
+        expect(board.empty([3,3])).equal(false);
+        expect(myColor(board,3,3)).equal("WHITE");
 
-      //  expect(board.getCurrentPlayer()).equal(1);
+        //possible but not authorize
+        expect(board.getPossibleMoves(3,3)).to.deep.equal([ [3,2],[3,4],[4,3] ]);
+
+        expect(board.getCurrentPlayer()).equal(0); // iterface change player
         board.swapPlayer();
-        board.moveOrAttackPawn(5,3,4,3);
-        board.swapPlayer();
-
-        //expect(board.getPossibleAttacks(3,3)).to.deep.equal([]);
-
-
-
-
-
         //player 2
-        expect(board.getPossibleAttacks(2,2)).to.deep.equal([]);
-       // expect(board.getPossibleAttacks(5,1)).to.deep.equal([[4,1]]);
-       // expect(board.getPossibleAttacks(5,0)).to.deep.equal([[4,0]]);
 
+        board.moveOrAttackPawn(5,3,4,3);
 
-       // expect(board.getPossibleAttacks(2,2)) === ([]);
-       // console.log(board.moveOrAttackPawn(2,2,0,0));
-       // expect(board.moveOrAttackPawn(2,2)) === ([])
+        board.swapPlayer();
+        //player 1
+
+        //possibleAttack
+        //todo attention multiple attack must be [5,5] and after [7,5] and Queen !
+        expect(ArrayMoveToString(board.getPossibleAttacks(3,3))).to.deep.equal("[ [5,5] ]");
+       // expect(ArrayMoveToString(board.getPossibleAttacks(3,3))).to.deep.equal("[ [7,5] ]");
+        expect(ArrayMoveToString(board.getPossibleAttacks(2,2))).to.deep.equal("[]");
+
+        //Attack
+        board.moveOrAttackPawn(3,3,5,3); //normaly must be (3,3,7,3)
+        expect(board.empty([3,3])).equal(true); // White origin
+        //todo remove black after attack
+        //expect(board.getNbPawns("BLACK")).equal(15);
+        //expect(board.empty([4,3])).equal(true); // Black to remove
+        expect(board.empty([5,3])).equal(false); // white final
+
+        console.log("Erreur black is always at [4,3]\n",board.getBoardArray(),"\n");
+        expect(myColor(board,5,3)).equal("WHITE");
+
+        expect(board.getPossibleMoves(5,3)).equal(null);
+        expect(ArrayMoveToString(board.getPossibleAttacks(5,3))).to.deep.equal("[ [7,5] ]");
+
+        board.swapPlayer();
+        //player 2
+
+        console.log(board.getBoardArray());
+        //test attack
+        expect(board.getPossibleMoves(3,3)).to.deep.equal([[3,2],[3,4]]); //not must be null
+        expect(board.getPossibleAttacks(3,3)).to.deep.equal([[5,3]]);
 
 
 
