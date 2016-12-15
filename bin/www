@@ -71,20 +71,23 @@ io.sockets.on('connection', function (socket) {
     // Sending the board to the new player
     socket.on('play', function(){
 
-        var board = getAvailableGame();
+        var testAlreadyInGame = getGameClientID(socket);
+        if(testAlreadyInGame == null){
+            var board = getAvailableGame();
 
-        board.addPlayer(socket);
+            board.addPlayer(socket);
 
-        socket.emit("board", board.getBoardArray());
-        socket.emit("waiting", true);
+            socket.emit("board", board.getBoardArray());
+            socket.emit("waiting", true);
 
-        if(board.getPlayers().length == 2) {
-            board.getPlayers()[0].emit("waiting", false);
-            board.getPlayers()[0].emit("colour", 0);
-            board.getPlayers()[1].emit("waiting", false);
-            board.getPlayers()[1].emit("colour", 1);
-            board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
-            console.log("Nouvelle partie entre "+board.getPlayers()[0].id+" et "+board.getPlayers()[1].id);
+            if(board.getPlayers().length == 2) {
+                board.getPlayers()[0].emit("waiting", false);
+                board.getPlayers()[0].emit("colour", 0);
+                board.getPlayers()[1].emit("waiting", false);
+                board.getPlayers()[1].emit("colour", 1);
+                board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
+                console.log("Nouvelle partie entre "+board.getPlayers()[0].id+" et "+board.getPlayers()[1].id);
+            }
         }
     });
 
@@ -124,10 +127,10 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function(){
         var board = getGameClientID(socket);
         if(board != null) {
-            if (board.getPlayers()[0] !== socket) {
+            if (board.getPlayers()[0] !== socket && board.getPlayers()[0] != undefined) {
                 board.getPlayers()[0].emit('opponentDisconnected');
             }
-            else {
+            else if(board.getPlayers()[1] != undefined){
                 board.getPlayers()[1].emit('opponentDisconnected');
             }
             game.splice(game.indexOf(board), 1);
