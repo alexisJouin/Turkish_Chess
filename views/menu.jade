@@ -8,7 +8,7 @@ block content
 
     body
         div(id='wrapper')
-            div(id="banner")
+            div(id="banner" style='width:100%;background-color:rgba(240, 240, 240, 0.4);')
                 img(src='/img/logo.png')
             div(id='menu')
                 div(id='leftPannel')
@@ -24,21 +24,32 @@ block content
 
                     div(id='personnalStatics')
                         if has_game
-                            table
+                            table(border="1" cellpadding="15" style='border-collapse: collapse;')
                                 tr
-                                    td Nombre matchs
-                                    td Nombre victoire
+                                    td Matchs
+                                    td Victoires
                                     td Ratio
-                                    td Moyenne de coups
-                                    td Minimum de coups
+                                    td Moy coups
+                                    td Min coups
                                 tr
                                     td #{stats.nbmatch}
                                     td #{stats.nbwin}
                                     td #{stats.ratio}
                                     td #{stats.nbturnmean}
                                     td #{stats.nbturnmin}
+                        else
+                            h1(style='text-align:center;') Veuillez jouer un match :)
 
-                    div(id='rank' class='hidden')
-
+                    div(id='rank' class='hidden' style='overflow: scroll;')
+                        table(border="1" style='border-collapse: collapse;')
+                            tr(style='height:10px;')
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;') Rang
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;') Pseudo
+                                td(style='width:43%;padding-left:10px; padding-right:10px; padding-top:0px; padding-bottom:0px;font-weight:bold;') Points
+                            each c in classement
+                                tr
+                                    td #{c.rang}
+                                    td #{c.pseudo}
+                                    td(style='font-weight:bold;') #{c.points}
         script(src="/js/menu.js")
 

@@ -2,7 +2,7 @@
 
 #leftPannel, #rightPannel{
     display: inline-block;
-    background-color: rgba(198, 162, 128, 0.8);
+    background: rgba(0,0,0,0.5);
     padding: 20px;
 
 }
@@ -10,17 +10,21 @@
 #leftPannel{
     width: 25%;
     border-radius: 5px 0 0 5px;
+    text-align: center;
 }
 
 #rightPannel{
-    width: 55%;
+    width: auto;
     border-radius: 0 5px 5px 5px;
     color:black;
 }
 
 #rank, #personnalStatics{
     padding: 10px;
+    width:auto;
     background-color: #e6dcc0;
+    max-height: 500px;
+
 }
 
 #switchers{
@@ -33,7 +37,8 @@
 
 #personnalStaticsSwitcher{
     display: inline-block;
-    width: 45%;
+    width: 200px;
+    padding:10px;
     text-algin: center;
     right: 0px;
 }
@@ -50,7 +55,8 @@
 
 #rankSwitcher{
     display: inline-block;
-    width: 45%;
+    width: 200px;
+    padding:10px;
     text-algin: center;
 }
 
@@ -106,7 +112,7 @@ a{
 @media(min-width : 501px){
     #menu{
         margin: auto;
-        width: 800px;
+        width: 1000px;
         height: auto;
         transform:  translateY(50%);
         height:20%;
@@ -119,5 +125,9 @@ a{
         display:block;
         width:90%;
     }
+}
+
+#playGame:hover, #logOut:hover{
+    background-color: #cdc3a9;
 }
 
