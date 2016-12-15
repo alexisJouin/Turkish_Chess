@@ -24,6 +24,7 @@ module.exports = (function (self) {
             // Init player
 //            players.push(1);
 //            players.push(2);
+            playingPlayerIndex = 0;
 
             // Init pawns
             for (var i = 0; i < 16; i++) {
