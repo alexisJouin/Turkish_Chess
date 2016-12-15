@@ -16,6 +16,10 @@ socket.on('board',function(board) {
     console.log(board);
 });
 
+socket.on('opponentName', function(name){
+    console.log(name);
+});
+
 socket.on('opponentDisconnected',function(board) {
     $("#waiting").html("Votre adversaire s'est déconnecté");
 });

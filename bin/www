@@ -69,18 +69,24 @@ function getGameClientID(id){
 io.sockets.on('connection', function (socket) {
 
     // Sending the board to the new player
-    socket.on('play', function(){
+    socket.on('play', function(name){
 
         var testAlreadyInGame = getGameClientID(socket);
         if(testAlreadyInGame == null){
             var board = getAvailableGame();
-
+            
             board.addPlayer(socket);
 
             socket.emit("board", board.getBoardArray());
             socket.emit("waiting", true);
 
             if(board.getPlayers().length == 2) {
+                if(board.getPlayers()[0] == socket){
+                    board.getPlayers()[1].emit('opponentName', name);
+                }
+                else {
+                    board.getPlayers()[0].emit('opponentName', name);
+                }
                 board.getPlayers()[0].emit("waiting", false);
                 board.getPlayers()[0].emit("colour", 0);
                 board.getPlayers()[1].emit("waiting", false);
