@@ -126,18 +126,18 @@ module.exports = (function (self) {
                     if (board[indexLineToMove][indexColumnToMove] == 0) {
                         switch (board[pawnIndexLine][pawnIndexColumn].getColour()) {
                             case "WHITE":
-                                if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) // Mouvement en bas
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) // Mouvement à gauche
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) { // mouvement à droite
+                                if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine<7) // Mouvement en bas
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn>0 ) // Mouvement à gauche
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn<7)) { // mouvement à droite
                                     return true;
                                 } else {
                                     return false;
                                 }
                                 break;
                             case "BLACK":
-                                if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove) // Move up
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove) // Move left
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove)) { // move right
+                                if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine>0) // Move up
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn>0) // Move left
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn<7)) { // move right
                                     return true;
                                 } else {
                                     return false;
