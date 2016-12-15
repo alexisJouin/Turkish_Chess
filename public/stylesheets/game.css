@@ -7,6 +7,7 @@
 table {
     margin: 0 auto;
     width:50%;
+    table-layout: fixed;
 }
 
 #board td{
@@ -14,13 +15,14 @@ table {
     background-size:100px 100px;
     -webkit-background-size:100px 101px; /* override value for shitty webkit */
     background-position:0 0, 50px 0, 50px -50px, 0px 50px;
-    height: 50px;
+    height: 70px;
     border:1px solid black;
     margin: 0 auto;
+    white-space: nowrap;
 }
 
 #board th{
-    width: 50px;
+    width: 70px;
 }
 
 .row:nth-child(even) .tile:nth-child(odd),
@@ -29,10 +31,11 @@ table {
 }
 
 img{
-    width:50px;
+    width:60px;
     cursor: -webkit-grab; cursor:-moz-grab;
     margin:0 auto;
     z-index: 9999;
+    vertical-align: middle;
 }
 
 img:active{
@@ -41,11 +44,15 @@ img:active{
 }
 
 .selectedPiece{
-    border : 2px solid green;
-    border-radius : 180px;
-    filter: drop-shadow(8px 8px 10px green);
+    border: 2px solid cyan;
+    border-radius: 180px;
+    filter: drop-shadow(0px 0px 10px cyan);
 }
 
 .unselectedPiece{
 
+}
+
+.possibleCase{
+    background: #23bc1e !important;
 }

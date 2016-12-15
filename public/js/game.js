@@ -1,15 +1,17 @@
 var socket = io.connect('http://localhost:3000');
 socket.emit('play');
 
+    var boardPosibleCoords = [
+        [1, 1], [1, 2],[1, 3],[1, 6]
+    ];
+
 //On get le plateau du moteur
 socket.on('board', function (board) {
     constructBoard(board);
 });
 
 
-$(document).on('click', 'img', function () {
-    movePiece($(this));
-});
+
 
 /** List of functions **/
 
@@ -23,71 +25,74 @@ function constructBoard(board) {
         "<thead>" +
         "<tr><th><th>A<th>B<th>C<th>D<th>E<th>F<th>G<th>H" +
         "<tbody>";
-    var nbLigne = 8;
+    var nbLigne = 1;
+
     board.forEach(function (ligne) {
         output += "<tr class='row'><th>" + nbLigne;
-        nbLigne--;
+
+        var nbColumn = 1;
         ligne.forEach(function (element) {
 
-            //Blanc
+            //Noir
             if (element == 1) {
                 //&#9823;
-                output += "<td class='tile'><img src='img/noirPion.png' class='piece blackPawn'/></td>";
+                output += "<td class='tile' align='center' id='" + nbLigne + "_" + nbColumn + "'><img src='img/noirPion.png' class='piece blackPawn'/></td>";
             }
             else if (element == 2) {
                 //&#9817;
-                output += "<td class='tile'><img src='img/blancPion.png' class='piece whitePawn'/></td>";
+                output += "<td class='tile' align='center' id='" + nbLigne + "_" + nbColumn + "'><img src='img/blancPion.png' class='piece whitePawn'/></td>";
             }
             else {
-                output += "<td class='tile'></td>";
+                output += "<td class='tile' align='center' id='" + nbLigne + "_" + nbColumn + "'></td>";
             }
+            nbColumn++;
 
         });
+        nbLigne++;
     });
     $('#board').children('table').append(output);
 }
+
+$(document).on('click', "img", function () {
+    movePiece($(this));
+
+});
 
 /**
  * Déplacement d'un pion
  * @param element => pion sélectionné
  */
-function movePiece(element) {
-    var plateau = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-    ];
-
-    
+function movePiece(piece) {
     $('.piece').removeClass('selectedPiece');
-    element.addClass('selectedPiece');
+    piece.addClass('selectedPiece');
 
-    element.draggable({
+    piece.draggable({
         containment: "",
         //stack: '#board table',
         revert: true
     });
 
+    //Chercher les coordonées possibles
+    boardPosibleCoords.forEach(function (coord) {
 
-    ui.draggable.addClass( 'correct' );
-    ui.draggable.draggable( 'disable' );
-    $(this).droppable( 'disable' );
-    ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-    ui.draggable.draggable( 'option', 'revert', false );
-    correctCards++;
+        $("#"+coord[0]+"_"+coord[1]).addClass('possibleCase');
 
+    });
 
-    $('h1').droppable({
-        drop: function (event, ui) {
-            $(this)
-                .addClass("ui-state-highlight")
-                .find("p")
-                .html("Dropped!");
-        }
+    //Déplace la pièce
+    $(document).on('click', ".possibleCase" , function () {
+        $(".selectedPiece").appendTo($(this));
+    });
+
+    $('td').each(function () {
+
+        //Si case vide
+        $("td:empty").droppable({
+            drop: function (event, ui) {
+                ui.draggable.draggable('option', 'revert', false);
+                $(this).addClass("ui-state-highlight");
+                console.log($(this));
+            }
+        });
     });
 }
