@@ -16,6 +16,7 @@ module.exports = (function (self) {
     self.Board = function () {
         var board;
         var players = []; //J1 : WHITE, J2 : BLACK
+        var playingPlayerIndex;
         var whitePawns = [];
         var blackPawns = [];
 
@@ -342,10 +343,18 @@ module.exports = (function (self) {
             return st;
         };
 
-        this.movePawn = function (fromLine, fromColumn, toLine, toColumn, playerColour) {
+        this.allowMovePawn = function (fromLine, fromColumn, toLine, toColumn) {
             var possibleMoves = this.getPossibleMoves(fromLine, fromColumn); //ensemble des mouvements possibles
             var possibleAttacks = this.getPossibleAttacks(fromLine, fromColumn);//capture possible ou non
             var desiredMoveLocation = [toLine, toColumn];
+
+            // Determining current player colour
+            var playerColour = "";
+            if (playingPlayerIndex == 0) {
+                playerColour = "WHITE";
+            } else {
+                playerColour = "BLACK";
+            }
 
             var everyAttackesPossible = [];
             var everyMovesPossible = [];
@@ -392,19 +401,24 @@ module.exports = (function (self) {
             }
         };
 
+        this.moveOrAttackPawn = function (fromLine, fromColumn, toLine, toColumn, playerColour) {
+            board[toLine][toColumn] = board[fromLine][fromColumn];
+            board[fromLine][fromColumn] = 0;
+        };
 
         this.addPlayer = function (id) {
             players.push(id);
         };
 
         this.swapPlayer = function () {
-            var tmp = players[1];
-            players[1] = players[0];
-            players[0] = tmp;
+//            var tmp = players[1];
+//            players[1] = players[0];
+//            players[0] = tmp;
+            playingPlayerIndex = (playingPlayerIndex + 1) % 2;
         };
 
         this.getCurrentPlayer = function () {
-            return players[0];
+            return players[playingPlayerIndex];
         };
 
         init();
