@@ -344,9 +344,9 @@ module.exports = (function (self) {
             return st;
         };
 
-        this.allowMovePawn = function (fromLine, fromColumn, toLine, toColumn) {
-            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn); //ensemble des mouvements possibles
-            var possibleAttacks = this.getPossibleAttacks(fromLine, fromColumn);//capture possible ou non
+        this.allowMovePawn = function (fromLine, fromColumn) {
+//            var possibleMoves = this.getPossibleMoves(fromLine, fromColumn); //ensemble des mouvements possibles
+//            var possibleAttacks = this.getPossibleAttacks(fromLine, fromColumn);//capture possible ou non
             var desiredMoveLocation = [toLine, toColumn];
 
             // Determining current player colour
