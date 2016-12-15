@@ -23,12 +23,20 @@ describe('Test a Play', function () {
         expect(board.getCurrentPlayer()).equal(1);
         board.swapPlayer();
 
+        //player 1
         expect(board.getPossibleMoves(2,2)).to.deep.equal([[3,2]]);
         expect(board.getPossibleMoves(2,0)).to.deep.equal([[3,0]]);
         board.swapPlayer();
-        expect(board.getPossibleAttacks(2,2)).to.deep.equal([]);
-        expect(board.getPossibleAttacks(5,1)).to.deep.equal([[4,1]]);
-        expect(board.getPossibleAttacks(5,0)).to.deep.equal([[4,0]]);
+
+        //player 2
+      //  expect(board.getPossibleMoves(2,2)).to.deep.equal([]); //noir joue blanc
+        expect(board.getPossibleMoves(5,1)).to.deep.equal([[4,1]]);
+        expect(board.getPossibleMoves(5,0)).to.deep.equal([[4,0]]);
+
+        //player 2
+        expect(board.getPossibleAttacks(2,2)).to.deep.equal([]); //noir joue blanc
+       // expect(board.getPossibleAttacks(5,1)).to.deep.equal([[4,1]]);
+       // expect(board.getPossibleAttacks(5,0)).to.deep.equal([[4,0]]);
 
 
        // expect(board.getPossibleAttacks(2,2)) === ([]);
