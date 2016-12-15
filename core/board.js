@@ -494,6 +494,25 @@ module.exports = (function (self) {
             }
         };
 
+        this.transformPawnToQueen = function(position){
+
+            var casePosition = board[position[0]][position[0]];
+
+            console.log("=>>>>>>"+board[position[0]][position[1]]);
+            console.log("=>>>>>>"+position);
+
+            if(casePosition!=0  && casePosition.getColour()=="WHITE"){
+                if(position[0]==7 || whitePawns.length==1){
+                    //TODO transform en queen + changer parametre
+                }
+            }else{
+                if(position[0]==0 || blackPawns.length==1){
+                    //TODO transform en queen + changer parametre
+                }
+            }
+
+        };
+
         init();
     };
 
