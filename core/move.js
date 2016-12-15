@@ -63,7 +63,7 @@ module.exports = (function (self) {
             return positionDepart;
         };
 
-        this.getPositionarrive = function () {
+        this.getPositionArrive = function () {
             return positionArrive;
         };
 

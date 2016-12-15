@@ -105,10 +105,10 @@ module.exports = (function (self) {
             return board[i][j];
         };
 
-//        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
-//            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
-//            board[pawnIndexLine][pawnIndexColumn] = 0;
-//        };
+        this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+            board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
+            board[pawnIndexLine][pawnIndexColumn] = 0;
+        };
 
         //Deplacement autoriser ou non pour pion
         this.allow = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
@@ -386,14 +386,14 @@ module.exports = (function (self) {
                         indexMaxSize = i;
                     }
                 }
-                return everyAttackesPossible[indexMaxSize];
+                return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
             } else if (everyMovesPossible !== []) {
 
                 //mouvement est un mouvement possible
                 for (var i = 0; i < everyMovesPossible.length; i++) {
                     if (desiredMoveLocation[0] === everyMovesPossible[i].getPositionArrive()[0]
                             && desiredMoveLocation[1] === everyMovesPossible[i].getPositionArrive()[1]) {
-                        return everyMovesPossible[i];
+                        return {type: "Move", move: everyMovesPossible[i]};
                     }
                 }
             } else {
@@ -402,9 +402,28 @@ module.exports = (function (self) {
             }
         };
 
-        this.moveOrAttackPawn = function (fromLine, fromColumn, toLine, toColumn, playerColour) {
+        this.moveOrAttackPawn = function (fromLine, fromColumn, toLine, toColumn) {
             board[toLine][toColumn] = board[fromLine][fromColumn];
             board[fromLine][fromColumn] = 0;
+
+            var whatToDo = this.allowMovePawn(fromLine, fromColumn, toLine, toColumn);
+
+            if (whatToDo.length > 0) {
+                if (whatToDo.type === "Attack") {
+                    var attackMovement = whatToDo.move;
+                    //TODO : VIOLENT ATTACK !!!!
+
+                } else if (whatToDo.type === "Move") {
+                    var moveMovement = whatToDo.move;
+                    // Moving the pawn gently
+                    this.movePawn(moveMovement.getPositionDepart()[0], moveMovement.getPositionDepart()[1],
+                            moveMovement.getPositionArrive()[0], moveMovement.getPositionArrive()[1]);
+                }
+            }
+        };
+
+        this.removePawn = function(line, column){
+
         };
 
         this.addPlayer = function (id) {
@@ -419,7 +438,7 @@ module.exports = (function (self) {
         };
 
         this.getCurrentPlayer = function () {
-            return players[playingPlayerIndex];
+            return playingPlayerIndex;
         };
 
         init();
