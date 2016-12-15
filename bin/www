@@ -33,7 +33,7 @@ var game = [];
 // Return an available game (1 player), or create a new one
 function getAvailableGame(){
 
-    var available = [];
+    var available = null;
 
     for(var i = 0; i < game.length; i++){
         if(game[i].getPlayers().length <= 1){
@@ -41,7 +41,7 @@ function getAvailableGame(){
         }
     }
 
-    if(available.length == 0){
+    if(available == null){
         game.push(new core.Board());
         available = game[game.length-1];
     }
@@ -53,7 +53,7 @@ function getAvailableGame(){
 function getGameClientID(id){
     var found = false;
     var i = 0;
-    var board = [];
+    var board = null;
 
     while(!found && i < game.length){
         if(game[i].getPlayers()[0] == id || game[i].getPlayers()[1] == id){
@@ -70,9 +70,10 @@ io.sockets.on('connection', function (socket) {
 
     // Sending the board to the new player
     socket.on('play', function(){
+
         var board = getAvailableGame();
+
         board.addPlayer(socket);
-        console.log("Nouveau client veut jouer : " + socket.id);
 
         socket.emit("board", board.getBoardArray());
         socket.emit("waiting", true);
@@ -97,7 +98,7 @@ io.sockets.on('connection', function (socket) {
             moves = board.getPossibleAttacks(pos[0], pos[1]);
         }
         else {
-            moves = board.getPossibleMoves(pos[0], pos[1]);
+            moves = board.getPossibleMovesObjects(pos[0], pos[1]);
         }
 
         socket.emit('possibleMoves', moves);
@@ -121,7 +122,16 @@ io.sockets.on('connection', function (socket) {
 
     // Disconnection
     socket.on('disconnect', function(){
-        //console.log('Client déconnecté');
+        var board = getGameClientID(socket);
+        if(board != null) {
+            if (board.getPlayers()[0] !== socket) {
+                board.getPlayers()[0].emit('opponentDisconnected');
+            }
+            else {
+                board.getPlayers()[1].emit('opponentDisconnected');
+            }
+            game.splice(game.indexOf(board), 1);
+        }
     });
 });
 
