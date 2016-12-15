@@ -41,11 +41,11 @@ module.exports = (function (self) {
             }
         };
 
-        this.getSize = function(){
+        this.getSize = function () {
             return size;
         };
 
-        this.getNextMove = function(){
+        this.getNextMove = function () {
             return nextMove;
         };
 
@@ -59,10 +59,19 @@ module.exports = (function (self) {
 
         };
 
+        this.getPositionDepart = function () {
+            return positionDepart;
+        };
+
+        this.getPositionarrive = function () {
+            return positionArrive;
+        };
+
         this.recursiveOperation = function (nextMove) {
-            if  (nextMove !== null) {
+            if (nextMove !== null) {
                 return size + this.recursiveOperation(nextMove.getNextMove());
-            } else return 0;
+            } else
+                return 0;
         };
 
         init();
