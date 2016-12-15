@@ -1,7 +1,9 @@
 #board{
-    border:1px solid black;
-    width:80%;
+    border:5px solid white;
+    width:800px;
     margin:0 auto;
+    background-color:rgba(255, 255, 255, 0.9);
+    margin-top: 20px;
 }
 
 table {
@@ -27,7 +29,13 @@ table {
 
 .row:nth-child(even) .tile:nth-child(odd),
 .row:nth-child(odd) .tile:nth-child(even) {
-    background-color: #777;
+    /*background-color: #777;*/
+    background-image: url("../img/gris_carre.jpg");
+}
+
+.row:nth-child(even) .tile:nth-child(even),
+.row:nth-child(odd) .tile:nth-child(odd) {
+    background-image: url("../img/bois_carre.jpg");
 }
 
 img{
@@ -55,7 +63,7 @@ img:active{
 
 .possibleCase{
     background: #23bc1e !important;
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .loader {
@@ -81,4 +89,121 @@ img:active{
     font-size: 25px;
     font-weight: bold;
     border-radius: 15px;
+}
+
+button{
+    background-color: #9e854c;
+    color: #fff;
+    height: 30px;
+    border:0;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+#menuButton{
+    width:150px;
+    margin:0px;
+    top:-30px;
+    position:absolute;
+}
+
+
+#playerbox{
+    display:block;
+    width:100%;
+    text-align: center;
+}
+
+#userblanc, #usernoir, #userslash{
+    text-align:center;
+    display:inline-block;
+}
+
+
+
+@media screen and (min-width: 700px) and (max-width: 1200px) {
+    #board{
+        width:100%;
+    }
+
+    #board td{
+        height: 45px;
+    }
+
+    #board th{
+        width: 45px;
+    }
+
+    img{
+        width:45px;
+    }
+
+    #menuButton{
+        width:50px;
+        margin:0px;
+        top:-30px;
+        position:absolute;
+    }
+
+    .selectedPiece{
+        border: 0px solid cyan;
+        filter: drop-shadow(0px 0px 4px cyan);
+    }
+
+    #playerbox > #usernoir{
+        display:block;
+    }
+
+    #playerbox > #userblanc{
+        display:block;
+    }
+
+    #playerbox > #userslash{
+        display:none;
+    }
+}
+
+
+
+
+@media screen and (min-width: 200px) and (max-width: 700px) {
+    #board{
+        width:100%;
+    }
+
+    #board td{
+        height: 30px;
+    }
+
+    #board th{
+        width: 35px;
+    }
+
+    img{
+        width:30px;
+    }
+
+    #menuButton{
+        width:50px;
+        margin:0px;
+        top:-30px;
+        position:absolute;
+    }
+
+    .selectedPiece{
+        border: 0px solid cyan;
+        filter: drop-shadow(0px 0px 4px cyan);
+    }
+
+    #playerbox > #usernoir{
+        display:block;
+    }
+
+    #playerbox > #userblanc{
+        display:block;
+    }
+
+    #playerbox > #userslash{
+        display:none;
+    }
 }

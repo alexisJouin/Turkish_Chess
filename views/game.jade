@@ -9,19 +9,28 @@ block append stylesheets
     link(rel='stylesheet', href='/stylesheets/jquery-ui.structure.css')
     link(rel='stylesheet', href='/stylesheets/jquery-ui.theme.css')
 block content
+    body
+        div(id='wrapper')
+            div(id="banner" style='width:100%;background-color:rgba(240, 240, 240, 0.4);')
+                img(src='/img/logo.png')
+            a(href='/menu' style='position:absolute;')
+                button(value='menu' id='menuButton') Menu
 
-    a(href='/menu') Back to menu
+            script(src="http://localhost:3000/socket.io/socket.io.js")
+            script(src="js/jquery.min.js")
+            script(src="js/jquery-ui.js")
+            script(src="js/game.js")
 
-    script(src="http://localhost:3000/socket.io/socket.io.js")
-    script(src="js/jquery.min.js")
-    script(src="js/jquery-ui.js")
-    script(src="js/game.js")
 
-    h2(id="playerColor") En Attente ...
-    h2(id="currentPlayer")
+            h2(id="playerColor") En Attente ...
+            h2(id="currentPlayer")
 
-    div(id='board')
-        table
+            div(id='board' )
+                table
+                div(id='playerbox')
+                    h3(id='userblanc') Blanc : #{username} (16)
+                    h3(id='userslash') &nbsp&nbsp / &nbsp&nbsp
+                    h3(id='usernoir') Noir : #{username} (16)
 
     div(id='waiting')
         p En attente d'un autre joueur ...
