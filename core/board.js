@@ -362,14 +362,16 @@ module.exports = (function (self) {
             //for tous ses pions
             for (var i = 0; i < board.length; i++) {
                 for (var j = 0; j < board[i].length; j++) {
-                    if (board[i][j].getColour() == playerColour) {
-                        var thisPossibleAttack = this.getPossibleAttacks(i, j);
-                        var thisPossibleMove = this.getPossibleMoves(i, j);
-                        if (thisPossibleAttack !== []) {
-                            everyAttackesPossible.push(this.getPossibleAttacks(i, j));
-                        }
-                        if (thisPossibleMove !== []) {
-                            everyMovesPossible.push(this.getPossibleMoves(i, j));
+                    if (board[i][j] !== 0) {
+                        if (board[i][j].getColour() == playerColour) {
+                            var thisPossibleAttack = this.getPossibleAttacks(i, j);
+                            var thisPossibleMove = this.getPossibleMoves(i, j);
+                            if (thisPossibleAttack !== []) {
+                                everyAttackesPossible.push(this.getPossibleAttacks(i, j));
+                            }
+                            if (thisPossibleMove !== []) {
+                                everyMovesPossible.push(this.getPossibleMoves(i, j));
+                            }
                         }
                     }
                 }
@@ -412,7 +414,7 @@ module.exports = (function (self) {
                 if (whatToDo.type === "Attack") {
                     var attackMovement = whatToDo.move;
                     //TODO : VIOLENT ATTACK !!!!
-
+                    this.attackPawn(attackMovement);
                 } else if (whatToDo.type === "Move") {
                     var moveMovement = whatToDo.move;
                     // Moving the pawn gently
@@ -422,8 +424,35 @@ module.exports = (function (self) {
             }
         };
 
-        this.removePawn = function(line, column){
 
+        this.attackPawn = function (move) {
+            var positionDepart = move.getPositionDepart();
+            var positionArrive = move.getPositionArrive();
+
+            // Détermination de la position du pion à supprimer
+            var positionPawnRemove = [positionArrive[0] - positionDepart[0], positionArrive[1] - positionDepart[1]];
+
+            if (move.getNextMove() !== null) {                
+                this.removePawn(positionPawnRemove[0], positionPawnRemove[1]);
+                this.movePawn(positionDepart[0], positionDepart[1], positionArrive[0], positionArrive[1]);
+                this.attackPawn(move.getNextMove());
+            }
+        };
+
+        this.removePawn = function (line, column) {
+            var pawn = board[line][column];
+            switch (pawn.getColour()) {
+                case "WHITE":
+                    whitePawns.pop(pawn);
+                    break;
+
+                case "BLACK":
+                    blackPawns.pop(pawn);
+                    break;
+                default:
+                    break;
+            }
+            board[line][column] = 0;
         };
 
         this.addPlayer = function (id) {
