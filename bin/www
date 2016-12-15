@@ -72,12 +72,16 @@ io.sockets.on('connection', function (socket) {
     socket.on('play', function(){
         var board = getAvailableGame();
         board.setPlayer(socket);
+        console.log("Nouveau client veut jouer : " + socket.id);
 
         socket.emit("board", board.getBoardArray());
-        socket.emit("turn", false);
+        socket.emit("waiting", true);
 
         if(board.getPlayers().length == 2) {
+            board.getPlayers()[0].emit("waiting", false);
+            board.getPlayers()[1].emit("waiting", false);
             board.getCurrentPlayer().emit("turn", true);
+            console.log("Nouvelle partie entre "+board.getPlayers()[0].id+" et "+board.getPlayers()[1].id);
         }
     });
 
@@ -94,7 +98,7 @@ io.sockets.on('connection', function (socket) {
 
     // Disconnection
     socket.on('disconnect', function(){
-        console.log('Client déconnecté');
+        //console.log('Client déconnecté');
     });
 });
 

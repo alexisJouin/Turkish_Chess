@@ -12,6 +12,15 @@ socket.on('board',function(board) {
     console.log(board);
 });
 
+socket.on('waiting',function(wait) {
+    if(wait){
+        $("#waiting").html("En attente d'un autre joueur...");
+    }
+    else {
+        $("#waiting").html("");
+    }
+});
+
 $('#move').attr('disabled','disabled');
 socket.on('turn',function(turn) {
     if(turn){
