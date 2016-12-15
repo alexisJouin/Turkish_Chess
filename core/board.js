@@ -171,7 +171,7 @@ module.exports = (function (self) {
                         possibleMove.positionArrive = [line, column];
                         possibleMove.determinateDirection();
                         var thisPossibleMove = this.getPossibleMovesObjects(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                        if (thisPossibleMove.length > 0) {
+                        if (thisPossibleMove != null && thisPossibleMove.length > 0) {
                             possibleMove.addMove(thisPossibleMove);
                         }
                         possibleMoves.push(possibleMove);
@@ -185,7 +185,7 @@ module.exports = (function (self) {
         this.getPossibleMoves = function (indexLine, indexColumn) {
             var possibleMoves = [];
             var result = this.getPossibleMovesObjects(indexLine, indexColumn);
-            if (result.length > 0) {
+            if (result != null && result.length > 0) {
                 for (var i = 0; i < result.length; i++) {
                     var x = result[i].getPositionArrive()[0];
                     var y = result[i].getPositionArrive()[1];
@@ -238,7 +238,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack.length > 0) {
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -254,7 +254,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack.length > 0) {
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -272,7 +272,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack.length > 0) {
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -289,7 +289,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack.length > 0) {
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -381,10 +381,10 @@ module.exports = (function (self) {
                         if (board[i][j].getColour() == playerColour) {
                             var thisPossibleAttack = this.getPossibleAttacks(i, j);
                             var thisPossibleMove = this.getPossibleMovesObjects(i, j);
-                            if (thisPossibleAttack !== []) {
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 everyAttackesPossible.push(this.getPossibleAttacks(i, j));
                             }
-                            if (thisPossibleMove !== []) {
+                            if (thisPossibleMove != null && thisPossibleMove !== []) {
                                 everyMovesPossible.push(this.getPossibleMovesObjects(i, j));
                             }
                         }
@@ -393,7 +393,7 @@ module.exports = (function (self) {
             }
 
             //capture obligatoire
-            if (everyAttackesPossible.length > 0) {
+            if (everyAttackesPossible != null && everyAttackesPossible.length > 0) {
                 //ajout dans possible Attack
                 var maxSize = 0;
                 var indexMaxSize = -1;
@@ -404,7 +404,7 @@ module.exports = (function (self) {
                     }
                 }
                 return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
-            } else if (everyMovesPossible.length > 0) {
+            } else if (everyMovesPossible != null && everyMovesPossible.length > 0) {
 
                 //mouvement est un mouvement possible
                 for (var i = 0; i < everyMovesPossible.length; i++) {
@@ -425,7 +425,7 @@ module.exports = (function (self) {
 
             var whatToDo = this.allowMovePawn(fromLine, fromColumn, toLine, toColumn);
 
-            if (whatToDo.length > 0) {
+            if (whatToDo != null && whatToDo.length > 0) {
                 if (whatToDo.type === "Attack") {
                     var attackMovement = whatToDo.move;
                     //TODO : VIOLENT ATTACK !!!!
@@ -494,19 +494,19 @@ module.exports = (function (self) {
             }
         };
 
-        this.transformPawnToQueen = function(position){
+        this.transformPawnToQueen = function (position) {
 
             var casePosition = board[position[0]][position[0]];
 
-            console.log("=>>>>>>"+board[position[0]][position[1]]);
-            console.log("=>>>>>>"+position);
+            console.log("=>>>>>>" + board[position[0]][position[1]]);
+            console.log("=>>>>>>" + position);
 
-            if(casePosition!=0  && casePosition.getColour()=="WHITE"){
-                if(position[0]==7 || whitePawns.length==1){
+            if (casePosition != 0 && casePosition.getColour() == "WHITE") {
+                if (position[0] == 7 || whitePawns.length == 1) {
                     //TODO transform en queen + changer parametre
                 }
-            }else{
-                if(position[0]==0 || blackPawns.length==1){
+            } else {
+                if (position[0] == 0 || blackPawns.length == 1) {
                     //TODO transform en queen + changer parametre
                 }
             }
