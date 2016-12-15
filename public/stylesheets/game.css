@@ -59,13 +59,26 @@ img:active{
 }
 
 .loader {
-
     position : fixed;
     z-index: 9999;
-    background : url('icon-loader.gif') 50% 50% no-repeat;
+    background : url('img/loading.gif') 50% 50% no-repeat;
     top : 0px;
     left : 0px;
     height : 100%;
     width : 100%;
     cursor : wait;
+}
+
+#waiting{
+    width: 35%;
+    margin: 0 auto;
+    border: 1px solid black;
+    bottom: 44%;
+    background: rgba(0,0,0,0.5);
+    position: relative;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 15px;
 }
