@@ -119,45 +119,63 @@ module.exports = (function (self) {
                 return false;
             }
 
-            switch (pawn.isQueen()) {
-                // -- IS NOT A QUEEN
-                case false:
-                    // Pawn is WHITE
-                    if (board[indexLineToMove][indexColumnToMove] == 0) {
-                        switch (board[pawnIndexLine][pawnIndexColumn].getColour()) {
-                            case "WHITE":
-                                if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine<7) // Mouvement en bas
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn>0 ) // Mouvement à gauche
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn<7)) { // mouvement à droite
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                                break;
-                            case "BLACK":
-                                if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine>0) // Move up
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn>0) // Move left
-                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn<7)) { // move right
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        return false;
-                    }
-                    break;
-                    // -- IS A QUEEN
-                case true:
+            // Get colour of the current player
+            var currentPlayer = this.getCurrentPlayer();
+            var currentPlayerColour = "";
+            if (currentPlayer == 0) {
+                currentPlayerColour = "WHITE";
+            } else {
+                currentPlayerColour = "BLACK";
+            }
+            
+            console.log("pawnColour:" + pawn.getColour());
+            console.log("currentPlayerColour : " + currentPlayerColour);
 
-                    return false;
-                    break;
-                default:
-                    return false;
-                    break;
+            if (pawn.getColour() == currentPlayerColour) {
+                console.log("Colour match");
+                switch (pawn.isQueen()) {
+                    // -- IS NOT A QUEEN
+                    case false:
+                        // Pawn is WHITE
+                        if (board[indexLineToMove][indexColumnToMove] == 0) {
+                            switch (pawn.getColour()) {
+                                case "WHITE":
+                                    if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine < 7) // Mouvement en bas
+                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Mouvement à gauche
+                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // mouvement à droite
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                    break;
+                                case "BLACK":
+                                    if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine > 0) // Move up
+                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Move left
+                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // move right
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else {
+                            return false;
+                        }
+                        break;
+                        // -- IS A QUEEN
+                    case true:
+                        
+                        return false;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            } else {
+                console.log("colour unmatch");
+                return false;
             }
         };
 
@@ -356,7 +374,7 @@ module.exports = (function (self) {
                 st += "], \n";
             }
             st += "]";
-         //   console.log(st);
+            //   console.log(st);
             return st;
         };
 
@@ -414,7 +432,7 @@ module.exports = (function (self) {
                 for (var i = 0; i < everyMovesPossible.length; i++) {
                     for (var j = 0; j < everyMovesPossible[i].length; j++) {
                         if (desiredMoveLocation[0] === everyMovesPossible[i][j].positionArrive[0]
-                            && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]) {
+                                && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]) {
                             return {type: "Move", move: everyMovesPossible[i]};
                         }
                     }
