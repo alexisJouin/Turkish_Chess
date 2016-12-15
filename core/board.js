@@ -171,7 +171,7 @@ module.exports = (function (self) {
                         possibleMove.positionArrive = [line, column];
                         possibleMove.determinateDirection();
                         var thisPossibleMove = this.getPossibleMovesObjects(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                        if (thisPossibleMove !== []) {
+                        if (thisPossibleMove.length > 0) {
                             possibleMove.addMove(thisPossibleMove);
                         }
                         possibleMoves.push(possibleMove);
@@ -238,7 +238,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack !== []) {
+                            if (thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -254,7 +254,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack !== []) {
+                            if (thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -272,7 +272,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack !== []) {
+                            if (thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -289,7 +289,7 @@ module.exports = (function (self) {
                             possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
                             possibleMove.determinateDirection();
                             var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
-                            if (thisPossibleAttack !== []) {
+                            if (thisPossibleAttack.length > 0) {
                                 possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
@@ -393,7 +393,7 @@ module.exports = (function (self) {
             }
 
             //capture obligatoire
-            if (everyAttackesPossible !== []) {
+            if (everyAttackesPossible.length > 0) {
                 //ajout dans possible Attack
                 var maxSize = 0;
                 var indexMaxSize = -1;
@@ -404,7 +404,7 @@ module.exports = (function (self) {
                     }
                 }
                 return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
-            } else if (everyMovesPossible !== []) {
+            } else if (everyMovesPossible.length > 0) {
 
                 //mouvement est un mouvement possible
                 for (var i = 0; i < everyMovesPossible.length; i++) {
