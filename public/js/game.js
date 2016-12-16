@@ -1,6 +1,7 @@
 var socket = io.connect('http://localhost:3000');
 socket.emit('play');
 var canPlay = false;
+var player;
 
 socket.on('turn', function (turn) {
     canPlay = turn;
@@ -15,21 +16,16 @@ socket.on('turn', function (turn) {
 socket.on('colour', function (c) {
     if (c == 0) {
         $('#playerColor').html("Vous êtes le joueur BLANC");
+        player = 'whitePawn';
+        $('.blackPawn').css('cursor', 'not-allowed');
     }
     else if (c == 1) {
         $('#playerColor').html("Vous êtes le joueur NOIR");
+        player = 'blackPawn';
+        $('.whitePawn').css('cursor', 'not-allowed');
     }
 });
 
-// Get déplacement possible
-socket.on('possibleMoves', function (moves) {
-
-    $(".possibleCase").removeClass('possibleCase');
-    moves.forEach(function (pos) {
-
-        $("#" + pos.positionArrive[1] + "_" + pos.positionArrive[0]).addClass('possibleCase');
-    });
-});
 
 //On get le plateau du moteur
 socket.on('board', function (board) {
@@ -47,34 +43,51 @@ socket.on('waiting', function (wait) {
     }
 });
 
+// Get déplacement possible
+socket.on('possibleMoves', function (moves) {
+    $(".possibleCase").removeClass('possibleCase');
+    moves.forEach(function (pos) {
+        $("#" + pos.positionArrive[1] + "_" + pos.positionArrive[0]).addClass('possibleCase');
+    });
+});
 
+var coord;
 //Au click sur un pion
 $(document).on('click', ".piece", function () {
+    if (canPlay && $(this).hasClass(player)) {
+        //Coordonnées du pion
+        var y = parseInt($(this).parent().attr('id').slice(0));
+        var x = parseInt($(this).parent().attr('id').slice(2));
+        coord = [x, y];
 
-    //Coordonnées du pion
-    var y = parseInt($(this).parent().attr('id').slice(0));
-    var x = parseInt($(this).parent().attr('id').slice(2));
-    var coord = [x, y];
-    //console.log(coord);
-    socket.emit('pawn', coord);
+        socket.emit('pawn', coord);
 
-
-    //Si c'est au tour du joueur il peut déplacer les pions
-    if (canPlay) {
-        movePiece($(this));
-    }
-    else {
+        //Si c'est au tour du joueur il peut déplacer les pions
         $('.piece').removeClass('selectedPiece');
+        $(this).addClass('selectedPiece');
     }
+});
+
+//Déplace la pièce au click sur possible case
+$(document).on('click', ".possibleCase", function () {
+
+    //Coordonnées après déplacement
+    var y_final = parseInt($(this).attr('id').slice(0));
+    var x_final = parseInt($(this).attr('id').slice(2));
+    var coord_final = [x_final, y_final];
+
+    socket.emit('move', coord, coord_final);
+
+    $('.piece').removeClass('selectedPiece');
+
 });
 
 
 /** List of functions **/
-
 /**
  * Construction du plateau dans le view
  * @param board => tableau de 8 tableaux contenant les pions
- * 0 => vide / 1 => Noir / 2 => Blanc
+ * 0 => vide / 1 => Blan / 2 => Noir
  */
 function constructBoard(board) {
     var output = "" +
@@ -90,11 +103,11 @@ function constructBoard(board) {
         ligne.forEach(function (element) {
 
             //Noir
-            if (element == 1) {
+            if (element == 2) {
                 //&#9823;
                 output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/noirPion.png' class='piece blackPawn'/></td>";
             }
-            else if (element == 2) {
+            else if (element == 1) {
                 //&#9817;
                 output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/blancPion.png' class='piece whitePawn'/></td>";
             }
@@ -106,65 +119,15 @@ function constructBoard(board) {
         });
         nbLigne++;
     });
-    $('#board').children('table').append(output);
+    $('#board').children('table').html(output);
 }
 
 /**
- * Déplacement d'un pion
- * @param element => pion sélectionné
+ * Déplacer un élément avec annimation
+ * @param sel -> élément html qui reçoit élément à déplacer
+ * @param  -> vitesse de l'animation
+ * @returns {*}
  */
-function movePiece(piece) {
-    $('.piece').removeClass('selectedPiece');
-    piece.addClass('selectedPiece');
-
-    /*
-     piece.draggable({
-     containment: "",
-     //stack: '#board table',
-     revert: true
-     });
-     */
-
-    //Chercher les coordonées possibles
-    /* boardPosibleCoords.forEach(function (coord) {
-     console.log(coord);
-     $("#" + coord[0] + "_" + coord[1]).addClass('possibleCase');
-     });*/
-
-    //Déplace la pièce
-    $(document).on('click', ".possibleCase", function () {
-        $(".selectedPiece").animateAppendTo($(this), 1500);
-
-        //Coordonnées avant déplacement
-        var x_init = parseInt($(".selectedPiece").parent().attr('id').slice(0));
-        var y_init = parseInt($(".selectedPiece").parent().attr('id').slice(2));
-        var coord_init = [x_init, y_init];
-
-        //Coordonnées après déplacement
-        var x_final = parseInt($(this).attr('id').slice(0));
-        var y_final = parseInt($(this).attr('id').slice(2));
-        var coord_final = [x_final, y_final];
-
-        //socket.emit('move', coord_init, coord_final);
-        $('.piece').removeClass('selectedPiece');
-
-    });
-
-    /*
-     $('td').each(function () {
-
-     //Si case vide
-     $("td:empty").droppable({
-     drop: function (event, ui) {
-     ui.draggable.draggable('option', 'revert', false);
-     $(this).addClass("ui-state-highlight");
-     console.log($(this));
-     }
-     });
-     });
-     */
-}
-
 $.fn.animateAppendTo = function (sel, speed) {
     var $this = this,
         newEle = $this.clone(true).appendTo(sel),
