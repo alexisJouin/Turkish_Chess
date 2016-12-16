@@ -108,6 +108,7 @@ module.exports = (function (self) {
         this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
             board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
             board[pawnIndexLine][pawnIndexColumn] = 0;
+            this.transformPawnToQueen([indexLineToMove, indexColumnToMove]);
         };
 
         //Deplacement autoriser ou non pour pion
@@ -463,6 +464,7 @@ module.exports = (function (self) {
                     }
                 }
             }
+
         };
 
 
@@ -539,30 +541,32 @@ module.exports = (function (self) {
 
         this.whoWins = function () {
             var whoWin = "NOBODY";
-            if (whitePawns.length > blackPawns.length) {
-                whoWin = "WHITE";
-            } else if (blackPawns.length > whitePawns.length) {
+            if (whitePawns.length == 0) {
                 whoWin = "BLACK";
+            } else if (blackPawns.length == 0) {
+                whoWin = "WHITE";
             }
+            return whoWin;
         };
 
         this.transformPawnToQueen = function (position) {
 
-            var casePosition = board[position[0]][position[0]];
+            var pawn = board[position[0]][position[1]];
 
             console.log("=>>>>>>" + board[position[0]][position[1]]);
             console.log("=>>>>>>" + position);
 
-            if (casePosition != 0 && casePosition.getColour() == "WHITE") {
-                if (position[0] == 7 || whitePawns.length == 1) {
+            if (pawn != 0 && pawn.getColour() == "WHITE") {
+                if (position[0] == 0) {
                     //TODO transform en queen + changer parametre
+                    pawn.setQueen();
                 }
             } else {
-                if (position[0] == 0 || blackPawns.length == 1) {
+                if (position[0] == 0) {
                     //TODO transform en queen + changer parametre
+                    pawn.setQueen();
                 }
             }
-
         };
 
         init();
