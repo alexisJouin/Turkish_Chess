@@ -416,7 +416,7 @@ module.exports = (function (self) {
                 var indexMaxSize = -1;
                 for (var i = 0; i < everyAttackesPossible.length; i++) {
                     for (var j = 0; j < everyAttackesPossible[i].length; j++) {
-
+                            console.log("everyAttackPossible total size : " + everyAttackesPossible[i][j].getTotalSize());
                         if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
                             maxSize = everyAttackesPossible[i][j].getTotalSize();
                             indexMaxSize = i;
@@ -442,12 +442,14 @@ module.exports = (function (self) {
         };
 
         this.moveOrAttackPawn = function (fromLine, fromColumn, toLine, toColumn) {
-            board[toLine][toColumn] = board[fromLine][fromColumn];
-            board[fromLine][fromColumn] = 0;
+           // board[toLine][toColumn] = board[fromLine][fromColumn];
+            //board[fromLine][fromColumn] = 0;
+
+
 
             var whatToDo = this.allowMovePawn(fromLine, fromColumn, toLine, toColumn);
 
-            if (whatToDo != null && whatToDo.length > 0) {
+            if (whatToDo != null && whatToDo.move.length > 0) {
                 if (whatToDo.type === "Attack") {
                     var attackMovement = whatToDo.move;
                     //TODO : VIOLENT ATTACK !!!!
@@ -455,24 +457,52 @@ module.exports = (function (self) {
                 } else if (whatToDo.type === "Move") {
                     var moveMovement = whatToDo.move;
                     // Moving the pawn gently
-                    this.movePawn(moveMovement.positionDepart[0], moveMovement.positionDepart[1],
-                            moveMovement.positionArrive[0], moveMovement.positionArrive[1]);
+                    for (var i = 0; i < moveMovement.length; i++) {
+                        this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
+                            moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
+                    }
                 }
             }
         };
 
 
         this.attackPawn = function (move) {
-            var positionDepart = move.getPositionDepart();
-            var positionArrive = move.getPositionArrive();
+            for (var i = 0; i < move.length ; i ++) {
+                var positionDepart = move[i].positionDepart;
+                var positionArrive = move[i].positionArrive;
 
-            // Détermination de la position du pion à supprimer
-            var positionPawnRemove = [positionArrive[0] - positionDepart[0], positionArrive[1] - positionDepart[1]];
+                var positionPawnRemove;
+                switch (move[i].direction){
+                    case "DOWN":
+                        positionPawnRemove = [(positionDepart[0] +1) , positionDepart[1]];
+                        break;
+                    case "UP":
+                        positionPawnRemove = [(positionDepart[0] -1) , positionDepart[1]];
+                        break;
+                    case "RIGHT":
+                        positionPawnRemove = [positionDepart[0]  , (positionDepart[1] + 1)];
+                        break;
+                    case "LEFT":
+                        positionPawnRemove = [positionDepart[0]  , (positionDepart[1] - 1)];
+                        break;
+                    default:
+                        break;
+                }
 
-            if (move.getNextMove() !== null) {
+                // Détermination de la position du pion à supprimer
+                // var positionPawnRemove = [positionDepart[0] - positionArrive[0], positionDepart[1] - positionArrive[1]];
+///**/
+                console.log("positionDepart : " + positionDepart);
+                console.log("positionArrive : " + positionArrive);
+                console.log("positionPawnRemove : " + positionPawnRemove);
+
                 this.removePawn(positionPawnRemove[0], positionPawnRemove[1]);
                 this.movePawn(positionDepart[0], positionDepart[1], positionArrive[0], positionArrive[1]);
-                this.attackPawn(move.getNextMove());
+
+                if (move[i].nextMove != null) {
+
+                    this.attackPawn(move[i].nextMove);
+                }
             }
         };
 

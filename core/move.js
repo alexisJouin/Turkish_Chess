@@ -19,7 +19,7 @@ module.exports = (function (self) {
             positionArrive = [];
             nextMove = null;
             direction = null;
-            size = 0;
+            size = 1;
         };
 
 
@@ -27,31 +27,31 @@ module.exports = (function (self) {
             var fromLine = this.positionDepart[0];
             var fromColumn = this.positionDepart[1];
 
-            var toLine = positionArrive [0];
-            var toColumn = positionArrive[1];
+            var toLine = this.positionArrive [0];
+            var toColumn = this.positionArrive[1];
 
             if (fromLine < toLine) {
-                direction = "DOWN";
+                this.direction = "DOWN";
             } else if (fromLine > toLine) {
-                direction = "UP";
+                this.direction = "UP";
             } else if (fromColumn < toColumn) {
-                direction = "RIGHT";
+                this.direction = "RIGHT";
             } else if (fromColumn > toColumn) {
-                direction = "LEFT";
+                this.direction = "LEFT";
             }
         };
 
         this.getSize = function () {
-            return size;
+            return this.size;
         };
 
         this.getNextMove = function () {
-            return nextMove;
+            return this.nextMove;
         };
 
         this.addMove = function (newMove) {
-            nextMove = newMove;
-            size++;
+            this.nextMove = newMove;
+            this.size++;
         };
 
         this.getTotalSize = function () {
