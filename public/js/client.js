@@ -1,7 +1,11 @@
 var socket = io.connect('http://localhost:3000');
 
+var nom = Math.random();
+
+console.log("Mon nom = "+nom);
+
 $('#play').click(function () {
-    socket.emit('play');
+    socket.emit('play', nom);
 });
 
 $('#move').click(function () {
