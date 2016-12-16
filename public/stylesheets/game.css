@@ -4,6 +4,8 @@
     margin:0 auto;
     background-color:rgba(255, 255, 255, 0.9);
     margin-top: 20px;
+    margin-bottom: 100px;
+    display:block;
 }
 
 table {
@@ -89,6 +91,21 @@ img:active{
     font-size: 25px;
     font-weight: bold;
     border-radius: 15px;
+}
+
+#tour {
+    width: 35%;
+    margin: 0 auto;
+    border: 1px solid black;
+    bottom: 44%;
+    background: rgba(0, 0, 0, 0.5);
+    position: relative;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 15px;
+    display:none;
 }
 
 button{
