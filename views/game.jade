@@ -22,16 +22,22 @@ block content
             script(src="js/game.js")
 
 
-            h2(id="playerColor") En Attente ...
-            h2(id="currentPlayer")
+            //h2(id="playerColor") En Attente ...
 
             div(id='board' )
                 table
                 div(id='playerbox')
-                    h3(id='userblanc') Blanc : #{username} (16)
+                    h3(id='userblanc')
+                    div(style='display:none;' id='name', name='#{username}')
                     h3(id='userslash') &nbsp&nbsp / &nbsp&nbsp
-                    h3(id='usernoir') Noir : #{username} (16)
+                    h3(id='usernoir')
+                    //h2(style='margin:0px;padding:0px;' id="currentPlayer")
+
+
 
     div(id='waiting')
         p En attente d'un autre joueur ...
+
+    div(id='tour')
+        p A vous de jouer !
 

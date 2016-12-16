@@ -87,14 +87,16 @@ io.sockets.on('connection', function (socket) {
             socket.emit("waiting", true);
 
             if(board[0].getPlayers().length == 2) {
+
+                board[0].getPlayers()[0].emit("colour", 0);
+                board[0].getPlayers()[1].emit("colour", 1);
+
                 board[0].getPlayers()[0].emit('opponentName', board[2]);
                 board[0].getPlayers()[1].emit('opponentName', board[1]);
 
                 board[0].getPlayers()[0].emit("waiting", false);
                 board[0].getPlayers()[1].emit("waiting", false);
 
-                board[0].getPlayers()[0].emit("colour", 0);
-                board[0].getPlayers()[1].emit("colour", 1);
 
                 board[0].getPlayers()[board[0].getCurrentPlayer()].emit("turn", true);
             }

@@ -1,26 +1,38 @@
+$( document ).ready(function() {
+    socket.emit('play', $('#name').attr('name'));
+});
+
 var socket = io.connect('http://localhost:3000');
-socket.emit('play');
 var canPlay = false;
-var player;
+var joueurColor = -1;
+var player
 
 socket.on('turn', function (turn) {
     canPlay = turn;
     if (canPlay) {
-        $('#currentPlayer').html("A vous de jouer !");
+        $('#tour').html("A vous de jouer !");
+        $("#tour").fadeIn(1000);
+        $("#tour").delay(1000).fadeOut(1000);
+
+        //$('#currentPlayer').html("A vous de jouer !");
     }
     else {
-        $('#currentPlayer').html("C'est à l'adversaire de jouer");
+        $('#tour').html("C'est le tour de l'adversaire !");
+        $("#tour").fadeIn(1000);
+        $("#tour").delay(1000).fadeOut(1000);
+        //$('#currentPlayer').html("C'est à l'adversaire de jouer");
     }
 });
 
 socket.on('colour', function (c) {
+    joueurColor = c;
     if (c == 0) {
-        $('#playerColor').html("Vous êtes le joueur BLANC");
+        //$('#playerColor').html("Vous êtes le joueur BLANC");
         player = 'whitePawn';
         $('.blackPawn').css('cursor', 'not-allowed');
     }
     else if (c == 1) {
-        $('#playerColor').html("Vous êtes le joueur NOIR");
+        //$('#playerColor').html("Vous êtes le joueur NOIR");
         player = 'blackPawn';
         $('.whitePawn').css('cursor', 'not-allowed');
     }
@@ -38,7 +50,7 @@ socket.on('waiting', function (wait) {
         $("#waiting").fadeIn(1000);
     }
     else {
-        $("#waiting p").html("Trouvé !");
+        $("#waiting p").html("La partie commence, vous êtes ");
         $("#waiting").delay(1000).fadeOut(1000);
     }
 });
@@ -51,7 +63,28 @@ socket.on('possibleMoves', function (moves) {
     });
 });
 
+socket.on('opponentName', function(advNom){
+    var monNom = $('#name').attr('name');
+    console.log("advNom:" + advNom);
+    console.log("monnom:" + monNom);
+    console.log(joueurColor);
+
+    if(joueurColor == 0){
+        $("#userblanc").html("Blanc : "+monNom+" (16)");
+        $("#usernoir").html("Noir : "+advNom+" (16)");
+
+        $("#userblanc").css('text-decoration','underline');
+    }else{
+        $("#userblanc").html("Blanc : "+advNom+" (16)");
+        $("#usernoir").html("Noir : "+monNom+" (16)");
+
+        $("#usernoir").css('text-decoration','underline');
+
+    }
+});
+
 var coord;
+
 //Au click sur un pion
 $(document).on('click', ".piece", function () {
     if (canPlay && $(this).hasClass(player)) {
