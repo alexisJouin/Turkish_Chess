@@ -431,7 +431,12 @@ module.exports = (function (self) {
                 for (var i = 0; i < everyMovesPossible.length; i++) {
                     for (var j = 0; j < everyMovesPossible[i].length; j++) {
                         if (desiredMoveLocation[0] === everyMovesPossible[i][j].positionArrive[0]
-                                && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]) {
+                                && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]
+                                //modif Eric
+                                && fromLine === everyMovesPossible[i][j].positionDepart[0]
+                                && fromColumn === everyMovesPossible[i][j].positionDepart[1]
+                                //end modif eric
+                        ) {
                             return {type: "Move", move: everyMovesPossible[i]};
                         }
                     }
