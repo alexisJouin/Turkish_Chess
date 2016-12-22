@@ -108,6 +108,7 @@ module.exports = (function (self) {
         this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
             board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
             board[pawnIndexLine][pawnIndexColumn] = 0;
+
             this.transformPawnToQueen([indexLineToMove, indexColumnToMove]);
         };
 
@@ -464,8 +465,17 @@ module.exports = (function (self) {
                     var moveMovement = whatToDo.move;
                     // Moving the pawn gently
                     for (var i = 0; i < moveMovement.length; i++) {
-                        this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
-                            moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
+                        //modif eric
+                            if (moveMovement[i].positionDepart[0] === fromLine
+                                && moveMovement[i].positionDepart[1] === fromColumn
+                                && moveMovement[i].positionArrive[0] === toLine
+                                && moveMovement[i].positionArrive[1] === toColumn ) {
+                                this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
+                                    moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
+                            }
+                        //end
+                        // old value this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
+                        // moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
                     }
                 }
             }
@@ -518,10 +528,18 @@ module.exports = (function (self) {
             switch (pawn.getColour()) {
                 case "WHITE":
                     whitePawns.pop(pawn);
+                    //modif eric
+                    if (whitePawns.length ===1) {
+                        whitePawns[0].setQueen();
+                    } // end modif eric
                     break;
 
                 case "BLACK":
                     blackPawns.pop(pawn);
+                    //modif eric
+                    if (blackPawns.length ===1) {
+                        blackPawns[0].setQueen();
+                    } // end modif eric
                     break;
                 default:
                     break;
@@ -560,9 +578,25 @@ module.exports = (function (self) {
 
             console.log("=>>>>>>" + board[position[0]][position[1]]);
             console.log("=>>>>>>" + position);
+            // modif eric
+            if (pawn != 0 ) {
+                if (position[0] == 7 && pawn.getColour() == "WHITE") {
+                    //TODO transform en queen + changer parametre
+                    pawn.setQueen();
+                    board[position[0]][position[1]]=pawn; // add eric
+                }
+            } else {
+                if (position[0] == 0 && pawn.getColour() == "BLACK") {
+                    //TODO transform en queen + changer parametre
+                    pawn.setQueen();
+                    board[position[0]][position[1]]=pawn; // add eric
 
+                }
+            }
+            // end modif eric
+           /* old version
             if (pawn != 0 && pawn.getColour() == "WHITE") {
-                if (position[0] == 0) {
+                if (position[0] == 0 ) {
                     //TODO transform en queen + changer parametre
                     pawn.setQueen();
                 }
@@ -571,7 +605,7 @@ module.exports = (function (self) {
                     //TODO transform en queen + changer parametre
                     pawn.setQueen();
                 }
-            }
+            }*/
         };
 
         init();

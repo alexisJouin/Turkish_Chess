@@ -34,7 +34,21 @@ describe('Test a Play', function () {
         expect(board.empty([2,3])).equal(false);
         expect(board.empty([1,3])).equal(false);
 
-        console.log(board.getBoardArray());
+        console.log(board.getBoardArray(),"\n");
+
+        board.swapPlayer();
+        //player 2
+
+        board.moveOrAttackPawn(5,4,4,4);
+        board.swapPlayer();
+        //player 1
+        console.log(board.getBoardArray(),"\n");
+        board.moveOrAttackPawn(3,3,4,3);
+        console.log(board.getBoardArray(),"\n");
+        expect(board.empty([3,3])).equal(true);
+        expect(board.empty([4,3])).equal(false);
+        expect(board.empty([3,2])).equal(true);
+
 
 
     });

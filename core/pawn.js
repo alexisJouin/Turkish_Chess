@@ -42,10 +42,10 @@ module.exports = function (self) {
         // This function needs a boolean
         this.setQueen = function () {
             this.isQueen = true;
-
-            if (this.colour === "WHITE") {
+            if (this.getColour() === "WHITE") {//  colour === "WHITE") {
                 this.type = core.PawnType.Q_WHITE;
             } else this.type = core.PawnType.Q_BLACK;
+
         };
 
         this.isQueen = function () {

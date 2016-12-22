@@ -170,8 +170,61 @@ describe('Test a Win', function () {
         board.moveOrAttackPawn(5,3,3,3);
         //todo remove
         //board.removePawn(4,3);
-        console.log(board.getBoardArray());
+        console.log(board.getBoardArray(),"\n test queen");
         //expect(myIsQueen(board,1,3)).equal(true);
+        pawn = board.getPositionBoard(1,3);
+        console.log(pawn.getType(),"\n");
+        console.log(pawn.getColour(),"\n");
+        console.log(pawn.isQueen());
+        expect(pawn.isQueen()).equal(true);
+
+    });
+});
+
+describe('Test a Queen', function () {
+    var board2 = new core.Board();
+    var pawn;
+
+    it('New play for Queen', function () {
+
+        for (var i = 0 ; i < 8; i++) {
+
+            if (i< 2 || i > 2) {
+                board2.removePawn(1,i);
+                board2.removePawn(2,i);
+
+            }
+            if (i< 5 || i > 5) {
+                board2.removePawn(5,i);
+                board2.removePawn(6,i);
+            }
+        }
+        console.log(board2.getBoardArray(),"\n");
+        board2.moveOrAttackPawn(2,2,3,2);
+        board2.moveOrAttackPawn(3,2,4,2);
+        board2.moveOrAttackPawn(4,2,5,2);
+        board2.moveOrAttackPawn(5,2,6,2);
+        board2.moveOrAttackPawn(6,2,7,2);
+        console.log(board2.getBoardArray(),"\n");
+        console.log("[7,2] isQueen = ",board2.getPositionBoard(7,2).isQueen,"\n");
+        //expect(myIsQueen(board2,7,2)).equal(true);
+        expect(board2.getPositionBoard(7,2).isQueen).equal(true);
+
+
+        //expect(myIsQueen(board2,7,2)).equal(true);
+
+        board2.swapPlayer();
+        //player 2
+
+        board2.moveOrAttackPawn(5,5,4,5);
+        board2.moveOrAttackPawn(4,5,3,5);
+        board2.moveOrAttackPawn(3,5,2,5);
+        board2.moveOrAttackPawn(2,5,1,5);
+        board2.moveOrAttackPawn(1,5,0,5);
+        console.log(board2.getBoardArray(),"\n");
+        console.log("[0,5] isQueen = ",board2.getPositionBoard(0,5).isQueen,"\n");
+        //expect(myIsQueen(board2,0,5)).equal(true);
+        expect(board2.getPositionBoard(0,5).isQueen).equal(true);
 
     });
 });
