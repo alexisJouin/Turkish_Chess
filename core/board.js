@@ -10,7 +10,7 @@ var Turkish_Chess = Turkish_Chess || {};
 var merge = require("merge");
 var core = merge(require("./pawn"), require("./pawn_type"), require("./move"));
 
-module.exports = (function (self) {
+module.exports = function (self) {
     "use strict";
 
     self.Board = function () {
@@ -42,13 +42,74 @@ module.exports = (function (self) {
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0]
             ];
-            // Putting pawns on the board            
+            // Putting pawns on the board
             for (var i = 0; i < 8; i++) {
+                whitePawns[i].setLastPosition([1, i]);
                 board[1][i] = whitePawns[i];
+                //whitePawns[i].setLastPosition([1, i]);
+
+                whitePawns[i + 8].setLastPosition([2, i]);
                 board[2][i] = whitePawns[i + 8];
+                //whitePawns[i+8].setLastPosition([2, i]);
+
+                blackPawns[i].setLastPosition([5, i]);
                 board[5][i] = blackPawns[i];
+                //blackPawns[i].setLastPosition([5, i]);
+
+                blackPawns[i + 8].setLastPosition([6, i]);
                 board[6][i] = blackPawns[i + 8];
+                //blackPawns[i+8].setLastPosition([6, i]);
             }
+        };
+
+        this.initTest = function () {
+            // Init player
+//            players.push(1);
+//            players.push(2);
+            playingPlayerIndex = 0;
+
+
+            while (whitePawns.length > 0) {
+                whitePawns.pop()
+            }
+            while (blackPawns.length > 0) {
+                blackPawns.pop()
+            }
+
+            // Init pawns
+            for (var i = 0; i < 3; i++) {
+                whitePawns.push(new core.Pawn(core.PawnType.WHITE, "WHITE"));
+                blackPawns.push(new core.Pawn(core.PawnType.BLACK, "BLACK"));
+            }
+            // Init the board
+            board = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+            // Putting pawns on the board
+
+            whitePawns[0].setLastPosition([1, 2]);
+            board[1][2] = whitePawns[0];
+            whitePawns[1].setLastPosition([6, 2]);
+            board[6][2] = whitePawns[1];
+            whitePawns[2].setLastPosition([6, 4]);
+            board[6][4] = whitePawns[2];
+
+
+            blackPawns[0].setLastPosition([4, 4]);
+            board[4][4] = blackPawns[0];
+            blackPawns[1].setLastPosition([1, 4]);
+            board[1][4] = blackPawns[1];
+
+            blackPawns[2].setLastPosition([7, 5]);
+            board[7][5] = blackPawns[2];
+
         };
 
         // coulour must be "BLACK" or "WHITE"
@@ -105,10 +166,24 @@ module.exports = (function (self) {
             return board[i][j];
         };
 
+
         this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
             board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
             board[pawnIndexLine][pawnIndexColumn] = 0;
+            //add eric
 
+            board[indexLineToMove][indexColumnToMove].setLastPosition([indexLineToMove, indexColumnToMove]);
+           // var pawn_ = board[indexLineToMove][indexColumnToMove];
+
+            if (board[indexLineToMove][indexColumnToMove].getColour() == "WHITE") {
+                var indextemp = whitePawns.indexOf(board[indexLineToMove][indexColumnToMove]);
+                whitePawns[indextemp] = board[indexLineToMove][indexColumnToMove];
+            } else {
+                var indextemp = blackPawns.indexOf(board[indexLineToMove][indexColumnToMove]);
+                blackPawns[indextemp] = board[indexLineToMove][indexColumnToMove];
+            }
+
+            //fin eric
             this.transformPawnToQueen([indexLineToMove, indexColumnToMove]);
         };
 
@@ -129,7 +204,6 @@ module.exports = (function (self) {
             } else {
                 currentPlayerColour = "BLACK";
             }
-            
 
 
             if (pawn.getColour() == currentPlayerColour) {
@@ -142,8 +216,8 @@ module.exports = (function (self) {
                             switch (pawn.getColour()) {
                                 case "WHITE":
                                     if ((pawnIndexLine + 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine < 7) // Mouvement en bas
-                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Mouvement à gauche
-                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // mouvement à droite
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Mouvement à gauche
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // mouvement à droite
                                         return true;
                                     } else {
                                         return false;
@@ -151,8 +225,8 @@ module.exports = (function (self) {
                                     break;
                                 case "BLACK":
                                     if ((pawnIndexLine - 1 == indexLineToMove && pawnIndexColumn == indexColumnToMove && pawnIndexLine > 0) // Move up
-                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Move left
-                                            || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // move right
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn - 1 == indexColumnToMove && pawnIndexColumn > 0) // Move left
+                                        || (pawnIndexLine == indexLineToMove && pawnIndexColumn + 1 == indexColumnToMove && pawnIndexColumn < 7)) { // move right
                                         return true;
                                     } else {
                                         return false;
@@ -165,9 +239,9 @@ module.exports = (function (self) {
                             return false;
                         }
                         break;
-                        // -- IS A QUEEN
+                    // -- IS A QUEEN
                     case true:
-                        
+
                         return false;
                         break;
                     default:
@@ -244,10 +318,10 @@ module.exports = (function (self) {
                     case false:
 
                         //Possible capture ?
-                        if (!this.empty(caseRight) //CASE RIGHT
-                                && pawnIndexColumn < 6
-                                && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                        if (pawnIndexColumn < 6
+                            && !this.empty(caseRight) //CASE RIGHT
+                            && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
                             //TODO ajouter au tableau le coup possible
                             var possibleMove = new core.Move();
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
@@ -261,10 +335,11 @@ module.exports = (function (self) {
                             console.log("Capture !!!");
                         }
 
-                        if (!this.empty(caseLeft) //CASE LEFT
-                                && pawnIndexColumn > 1
-                                && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour())
-                                && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
+                        if (pawnIndexColumn > 1
+                            && !this.empty(caseLeft) //CASE LEFT
+
+                            && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour())
+                            && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
                             //TODO ajouter au tableau le coup possible
                             var possibleMove = new core.Move();
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
@@ -279,11 +354,11 @@ module.exports = (function (self) {
                         }
 
                         //Pawn is WHITE
-                        if (!this.empty(caseDown)
-                                && pawnIndexLine < 6
-                                && board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
-                                && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
-                                && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                        if (pawnIndexLine < 6
+                            && !this.empty(caseDown)
+                            && board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
+                            && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
+                            && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
                             var possibleMove = new core.Move();
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
@@ -298,10 +373,10 @@ module.exports = (function (self) {
                         }
                         //Pawn is BLACK
                         if (board[pawnIndexLine][pawnIndexColumn].getColour() == "BLACK" // CASE UP
-                                && !this.empty(caseUp)
-                                && pawnIndexLine > 1
-                                && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
-                                && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                            && pawnIndexLine > 1
+                            && !this.empty(caseUp)
+                            && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
+                            && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
                             var possibleMove = new core.Move();
                             possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
@@ -318,33 +393,37 @@ module.exports = (function (self) {
 
                         break;
 
-                        // Si c'est une reine.
+                    // Si c'est une reine.
                     case true :
-                        if (!this.empty(caseRight) //CASE RIGHT
-                                && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                        if (pawnIndexColumn < 6
+                            && !this.empty(caseRight) //CASE RIGHT
+                            && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
                             //TODO ajouter au tableau le coup possible
                             console.log("Capture !!!");
                         }
 
-                        if (!this.empty(caseLeft) //CASE LEFT
-                                && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
+                        if (pawnIndexColumn > 1
+                            && !this.empty(caseLeft) //CASE LEFT
+                            && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
                             //TODO ajouter au tableau le coup possible
                             console.log("Capture !!!");
                         }
 
                         //Pawn is WHITE
-                        if (!this.empty(caseDown)
-                                && board[pawnIndexLine + 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                        if (pawnIndexLine < 6
+                            && !this.empty(caseDown)
+                            && board[pawnIndexLine + 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
                             console.log("Capture !!!");
                         }
                         //Pawn is BLACK
-                        if (!this.empty(caseUp)
-                                && board[pawnIndexLine - 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                                && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                        if (pawnIndexLine > 1
+                            && !this.empty(caseUp)
+                            && board[pawnIndexLine - 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
                             console.log("Capture !!!");
                         }
@@ -418,7 +497,7 @@ module.exports = (function (self) {
                 var indexMaxSize = -1;
                 for (var i = 0; i < everyAttackesPossible.length; i++) {
                     for (var j = 0; j < everyAttackesPossible[i].length; j++) {
-                            console.log("everyAttackPossible total size : " + everyAttackesPossible[i][j].getTotalSize());
+                        console.log("everyAttackPossible total size : " + everyAttackesPossible[i][j].getTotalSize());
                         if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
                             maxSize = everyAttackesPossible[i][j].getTotalSize();
                             indexMaxSize = i;
@@ -432,26 +511,25 @@ module.exports = (function (self) {
                 for (var i = 0; i < everyMovesPossible.length; i++) {
                     for (var j = 0; j < everyMovesPossible[i].length; j++) {
                         if (desiredMoveLocation[0] === everyMovesPossible[i][j].positionArrive[0]
-                                && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]
-                                //modif Eric
-                                && fromLine === everyMovesPossible[i][j].positionDepart[0]
-                                && fromColumn === everyMovesPossible[i][j].positionDepart[1]
-                                //end modif eric
+                            && desiredMoveLocation[1] === everyMovesPossible[i][j].positionArrive[1]
+                            //modif Eric
+                            && fromLine === everyMovesPossible[i][j].positionDepart[0]
+                            && fromColumn === everyMovesPossible[i][j].positionDepart[1]
+                        //end modif eric
                         ) {
                             return {type: "Move", move: everyMovesPossible[i]};
                         }
                     }
                 }
             } else {
-                //Ne pas joueur 
+                //Ne pas joueur
                 return null;
             }
         };
 
         this.moveOrAttackPawn = function (fromLine, fromColumn, toLine, toColumn) {
-           // board[toLine][toColumn] = board[fromLine][fromColumn];
+            // board[toLine][toColumn] = board[fromLine][fromColumn];
             //board[fromLine][fromColumn] = 0;
-
 
 
             var whatToDo = this.allowMovePawn(fromLine, fromColumn, toLine, toColumn);
@@ -466,13 +544,13 @@ module.exports = (function (self) {
                     // Moving the pawn gently
                     for (var i = 0; i < moveMovement.length; i++) {
                         //modif eric
-                            if (moveMovement[i].positionDepart[0] === fromLine
-                                && moveMovement[i].positionDepart[1] === fromColumn
-                                && moveMovement[i].positionArrive[0] === toLine
-                                && moveMovement[i].positionArrive[1] === toColumn ) {
-                                this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
-                                    moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
-                            }
+                        if (moveMovement[i].positionDepart[0] === fromLine
+                            && moveMovement[i].positionDepart[1] === fromColumn
+                            && moveMovement[i].positionArrive[0] === toLine
+                            && moveMovement[i].positionArrive[1] === toColumn) {
+                            this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
+                                moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
+                        }
                         //end
                         // old value this.movePawn(moveMovement[i].positionDepart[0], moveMovement[i].positionDepart[1],
                         // moveMovement[i].positionArrive[0], moveMovement[i].positionArrive[1]);
@@ -484,23 +562,23 @@ module.exports = (function (self) {
 
 
         this.attackPawn = function (move) {
-            for (var i = 0; i < move.length ; i ++) {
+            for (var i = 0; i < move.length; i++) {
                 var positionDepart = move[i].positionDepart;
                 var positionArrive = move[i].positionArrive;
 
                 var positionPawnRemove;
-                switch (move[i].direction){
+                switch (move[i].direction) {
                     case "DOWN":
-                        positionPawnRemove = [(positionDepart[0] +1) , positionDepart[1]];
+                        positionPawnRemove = [(positionDepart[0] + 1), positionDepart[1]];
                         break;
                     case "UP":
-                        positionPawnRemove = [(positionDepart[0] -1) , positionDepart[1]];
+                        positionPawnRemove = [(positionDepart[0] - 1), positionDepart[1]];
                         break;
                     case "RIGHT":
-                        positionPawnRemove = [positionDepart[0]  , (positionDepart[1] + 1)];
+                        positionPawnRemove = [positionDepart[0], (positionDepart[1] + 1)];
                         break;
                     case "LEFT":
-                        positionPawnRemove = [positionDepart[0]  , (positionDepart[1] - 1)];
+                        positionPawnRemove = [positionDepart[0], (positionDepart[1] - 1)];
                         break;
                     default:
                         break;
@@ -527,17 +605,26 @@ module.exports = (function (self) {
             var pawn = board[line][column];
             switch (pawn.getColour()) {
                 case "WHITE":
-                    whitePawns.pop(pawn);
+                    //whitePawns.pop(pawn);
+
                     //modif eric
-                    if (whitePawns.length ===1) {
+                    var i = whitePawns.indexOf(board[line][column]);
+                    if (i != -1) {
+                        whitePawns.splice(i, 1);
+                    }
+                    if (whitePawns.length === 1) {
                         whitePawns[0].setQueen();
                     } // end modif eric
                     break;
 
                 case "BLACK":
-                    blackPawns.pop(pawn);
+                    // blackPawns.pop(pawn);
                     //modif eric
-                    if (blackPawns.length ===1) {
+                    var i = blackPawns.indexOf(pawn);
+                    if (i != -1) {
+                        blackPawns.splice(i, 1);
+                    }
+                    if (blackPawns.length === 1) {
                         blackPawns[0].setQueen();
                     } // end modif eric
                     break;
@@ -573,43 +660,38 @@ module.exports = (function (self) {
         };
 
         this.transformPawnToQueen = function (position) {
+            // console.log("=>>>>>>" + board[position[0]][position[1]]);
+            // console.log("=>>>>>>" + position);
 
-            var pawn = board[position[0]][position[1]];
-
-            console.log("=>>>>>>" + board[position[0]][position[1]]);
-            console.log("=>>>>>>" + position);
             // modif eric
-            if (pawn != 0 ) {
-                if (position[0] == 7 && pawn.getColour() == "WHITE") {
-                    //TODO transform en queen + changer parametre
-                    pawn.setQueen();
-                    board[position[0]][position[1]]=pawn; // add eric
-                }
-            } else {
-                if (position[0] == 0 && pawn.getColour() == "BLACK") {
-                    //TODO transform en queen + changer parametre
-                    pawn.setQueen();
-                    board[position[0]][position[1]]=pawn; // add eric
-
+            if (board[position[0]][position[1]] != 0) {
+                if (position[0] == 7 && board[position[0]][position[1]].getColour() == "WHITE") {
+                    //DO transform en queen + changer parametre
+                    board[position[0]][position[1]].setQueen();
+                } else {
+                    if (position[0] == 0 && board[position[0]][position[1]].getColour() == "BLACK") {
+                        //DO transform en queen + changer parametre
+                        board[position[0]][position[1]].setQueen();
+                    }
                 }
             }
             // end modif eric
-           /* old version
-            if (pawn != 0 && pawn.getColour() == "WHITE") {
-                if (position[0] == 0 ) {
-                    //TODO transform en queen + changer parametre
-                    pawn.setQueen();
-                }
-            } else {
-                if (position[0] == 0) {
-                    //TODO transform en queen + changer parametre
-                    pawn.setQueen();
-                }
-            }*/
+            /* old version
+                         if (pawn != 0 && pawn.getColour() == "WHITE") {
+                         if (position[0] == 0 ) {
+                         //TODO transform en queen + changer parametre
+                         pawn.setQueen();
+                         }
+                         } else {
+                         if (position[0] == 0) {
+                         //TODO transform en queen + changer parametre
+                         pawn.setQueen();
+                         }
+                         }*/
         };
 
         init();
     };
 
     return self;
-}(Turkish_Chess || {}));
+}(Turkish_Chess || {});

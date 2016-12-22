@@ -9,7 +9,7 @@ module.exports = function (self) {
     self.Pawn = function (_type, _colour) {
         var type;
         // var pos = []; // [line, column]  ---- We're not gonna use it
-        var lastPos = [];
+        var lastPos = [-1,-1];
         var colour; // WHITE || BLACK
         var isQueen;
 
@@ -20,7 +20,7 @@ module.exports = function (self) {
         };
 
         this.setType = function (newtype) {
-            this.type = newtype;
+            type = newtype;
         };
 
         this.getType = function () {
@@ -29,6 +29,24 @@ module.exports = function (self) {
 
         this.lastPosition = function () {
             return lastPos;
+        };
+
+        this.lastLinePosition = function () {
+            if (lastPos.length > 1) {
+                return lastPos[0];
+            }
+            return undefined;
+        };
+
+        this.lastColumnPosition = function () {
+            if (lastPos.length > 1) {
+                return lastPos[1];
+            }
+            return undefined;
+        }
+
+        this.setLastPosition = function (position) {
+            lastPos = position;
         };
 
 //        this.setPos = function (_pos) {
@@ -41,11 +59,10 @@ module.exports = function (self) {
 
         // This function needs a boolean
         this.setQueen = function () {
-            this.isQueen = true;
+            isQueen = true;
             if (this.getColour() === "WHITE") {//  colour === "WHITE") {
-                this.type = core.PawnType.Q_WHITE;
-            } else this.type = core.PawnType.Q_BLACK;
-
+                type = core.PawnType.Q_WHITE;
+            } else type = core.PawnType.Q_BLACK;
         };
 
         this.isQueen = function () {
