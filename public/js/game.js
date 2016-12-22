@@ -5,21 +5,21 @@ $( document ).ready(function() {
 var socket = io.connect('http://localhost:3000');
 var canPlay = false;
 var joueurColor = -1;
-var player
+var player;
 
 socket.on('turn', function (turn) {
     canPlay = turn;
     if (canPlay) {
         $('#tour').html("A vous de jouer !");
         $("#tour").fadeIn(1000);
-        $("#tour").delay(1000).fadeOut(1000);
+        $("#tour").delay(3500).fadeOut(3500);
 
         //$('#currentPlayer').html("A vous de jouer !");
     }
     else {
         $('#tour').html("C'est le tour de l'adversaire !");
         $("#tour").fadeIn(1000);
-        $("#tour").delay(1000).fadeOut(1000);
+        $("#tour").delay(4000).fadeOut(4000);
         //$('#currentPlayer').html("C'est à l'adversaire de jouer");
     }
 });
@@ -46,12 +46,20 @@ socket.on('board', function (board) {
 
 
 socket.on('waiting', function (wait) {
+    var joueurColorText;
+    if(joueurColor == 0){
+        joueurColorText = "BLANC";
+    }
+    else{
+        joueurColorText = "NOIR";
+    }
+
     if (wait) {
         $("#waiting").fadeIn(1000);
     }
     else {
-        $("#waiting p").html("La partie commence, vous êtes ");
-        $("#waiting").delay(1000).fadeOut(1000);
+        $("#waiting p").html("La partie commence, vous êtes " + joueurColorText );
+        $("#waiting").delay(3000).fadeOut(2000);
     }
 });
 
@@ -110,7 +118,8 @@ $(document).on('click', ".possibleCase", function () {
     var coord_final = [x_final, y_final];
 
     socket.emit('move', coord, coord_final);
-
+    console.log("Init : "+ coord);
+    console.log("arrivé : "+ coord_final);
     $('.piece').removeClass('selectedPiece');
 
 });
