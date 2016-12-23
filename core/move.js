@@ -10,6 +10,7 @@ module.exports = (function (self) {
 
         var positionDepart;
         var positionArrive;
+        var positionPawnRemove;
         var nextMove;
         var direction; // UP || DOWN || RIGHT || LEFT
         var size;
@@ -17,7 +18,8 @@ module.exports = (function (self) {
         var init = function () {
             positionDepart = [];
             positionArrive = [];
-            nextMove = null;
+            positionPawnRemove = [];
+            nextMove = []; //null;
             direction = null;
             size = 1;
         };
@@ -65,6 +67,10 @@ module.exports = (function (self) {
 
         this.getPositionArrive = function () {
             return positionArrive;
+        };
+
+        this.getPositionPawnRemove = function () {
+            return positionPawnRemove;
         };
 
         this.recursiveOperation = function (nextMove) {
