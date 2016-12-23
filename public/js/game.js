@@ -4,8 +4,14 @@ $( document ).ready(function() {
 
 var socket = io.connect('http://localhost:3000');
 var canPlay = false;
-var joueurColor = -1;
+var playerColour = -1;
 var player;
+var opponentName, myName;
+
+socket.on('opponentDisconnected', function(){
+    canPlay = false;
+    console.log("Adversaire déconnecté");
+});
 
 socket.on('turn', function (turn) {
     canPlay = turn;
@@ -25,7 +31,7 @@ socket.on('turn', function (turn) {
 });
 
 socket.on('colour', function (c) {
-    joueurColor = c;
+    playerColour = c;
     if (c == 0) {
         //$('#playerColor').html("Vous êtes le joueur BLANC");
         player = 'whitePawn';
@@ -40,14 +46,27 @@ socket.on('colour', function (c) {
 
 
 //On get le plateau du moteur
-socket.on('board', function (board) {
+socket.on('board', function (board, nbWhite, nbBlack) {
     constructBoard(board);
+
+    if(playerColour == 0){
+        $("#userblanc").html("Blanc : "+myName+" ("+nbWhite+")");
+        $("#usernoir").html("Noir : "+opponentName+" ("+nbBlack+")");
+
+        $("#userblanc").css('text-decoration','underline');
+    }else{
+        $("#userblanc").html("Blanc : "+opponentName+" ("+nbWhite+")");
+        $("#usernoir").html("Noir : "+myName+" ("+nbBlack+")");
+
+        $("#usernoir").css('text-decoration','underline');
+
+    }
 });
 
 
 socket.on('waiting', function (wait) {
     var joueurColorText;
-    if(joueurColor == 0){
+    if(playerColour == 0){
         joueurColorText = "BLANC";
     }
     else{
@@ -71,24 +90,9 @@ socket.on('possibleMoves', function (moves) {
     });
 });
 
-socket.on('opponentName', function(advNom){
-    var monNom = $('#name').attr('name');
-    console.log("advNom:" + advNom);
-    console.log("monnom:" + monNom);
-    console.log(joueurColor);
-
-    if(joueurColor == 0){
-        $("#userblanc").html("Blanc : "+monNom+" (16)");
-        $("#usernoir").html("Noir : "+advNom+" (16)");
-
-        $("#userblanc").css('text-decoration','underline');
-    }else{
-        $("#userblanc").html("Blanc : "+advNom+" (16)");
-        $("#usernoir").html("Noir : "+monNom+" (16)");
-
-        $("#usernoir").css('text-decoration','underline');
-
-    }
+socket.on('opponentName', function(oppName){
+    myName = $('#name').attr('name');
+    opponentName = oppName;
 });
 
 var coord;

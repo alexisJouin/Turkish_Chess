@@ -16,15 +16,17 @@ $('#pawn').click(function () {
     socket.emit('pawn', [2,3]);
 });
 
-socket.on('board',function(board) {
+socket.on('board',function(board, nbWhite, nbBlack) {
     console.log(board);
+    console.log("NB_WHITE = "+nbWhite);
+    console.log("NB_BLACK = "+nbBlack);
 });
 
 socket.on('opponentName', function(name){
     console.log(name);
 });
 
-socket.on('opponentDisconnected',function(board) {
+socket.on('opponentDisconnected',function() {
     $("#waiting").html("Votre adversaire s'est déconnecté");
 });
 
