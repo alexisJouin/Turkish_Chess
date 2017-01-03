@@ -10,7 +10,7 @@ var ArrayMoveToString = function (arrayPositions) {
     if (arrayPositions != null && arrayPositions.length > 0) {
         var result = "[ ";
         for (i = 0 ; i < arrayPositions.length ; i++) {
-           result += "["+arrayPositions[i].positionArrive[0] +","+arrayPositions[i].positionArrive[1]+"]";
+           result += "["+arrayPositions[i].positionArrive[0] +","+arrayPositions[i].positionArrive[0]+"]";
            if (i !== arrayPositions.length -1 ) {
                result +=",";
            } else result +=" ]";
@@ -36,6 +36,7 @@ var myIsQueen = function (_board, posLine, posColumn) {
 
 describe('Test a Play', function () {
     var board = new core.Board();
+    var aMove  = new core.Move();
 
     it('New play', function () {
         //console.log(board.getPlayers());
@@ -97,12 +98,18 @@ describe('Test a Play', function () {
 
         //possibleAttack
         //todo attention multiple attack must be [5,3] and after [7,5] and Queen !
-        expect(ArrayMoveToString(board.getPossibleAttacks(3,3, null))).to.deep.equal("[ [5,3] ]");
-        expect(ArrayMoveToString(board.getPossibleAttacks(3,3, null))).to.deep.equal("[ [7,3] ]");
-        expect(ArrayMoveToString(board.getPossibleAttacks(2,2, null))).to.deep.equal("[]");
+        //expect(ArrayMoveToString(board.getPossibleAttacks(3,3))).to.deep.equal("[ [5,3] ]");
+        //expect(ArrayMoveToString(board.getPossibleAttacks(3,3))).to.deep.equal("[ [7,3] ]");
+        expect(ArrayMoveToString(board.getPossibleAttacks(2,2))).to.deep.equal("[]");
+
+        //expect(board.getPossibleAttacks(3,3, null).getNextMove()).to.deep.equal("[ [7,3] ]");
+
+        // / expect(ArrayMoveToString(board.getPossibleAttacks(3,3, null))).to.deep.equal("[ [7,3] ]");
+        // expect(ArrayMoveToString(board.getPossibleAttacks(2,2, null))).to.deep.equal("[]");
 
         //Attack
-        board.moveOrAttackPawn(3,3,5,3); //normaly must be (3,3,7,3)
+        board.moveOrAttackPawn(3,3,7,3); //normaly must be (3,3,7,3)
+
         expect(board.empty([3,3])).equal(true); // White origin
         expect(board.empty([5,3])).equal(false); // white final
 
@@ -159,16 +166,14 @@ describe('Test a Win', function () {
         board.moveOrAttackPawn(6,4,7,4);
         expect(board.getPositionBoard(7,4).isQueen()).equal(true);
         expect(board.getPositionBoard(7,4).getType()).equal(3);
-        // console.log(board.getBoardArray());
-        // console.log();
+        console.log(board.getBoardArray());
+        console.log();
         //queen bouge
         //todo queen bouge
        // board.moveOrAttackPawn(7,3,4,3);
        // board.removePawn(7,3);
-
-
-        // console.log(board.getBoardArray());
-        // console.log(board.getNbPawns("WHITE"));
+        console.log(board.getBoardArray());
+        console.log(board.getNbPawns("WHITE"));
 
         board.swapPlayer();
         //player 2
@@ -181,14 +186,12 @@ describe('Test a Win', function () {
 
         board.moveOrAttackPawn(1,2,1,3);
         board.swapPlayer();
-        // console.log(board.getBoardArray());
-        // console.log();
-
+        console.log(board.getBoardArray());
+        console.log();
         //player 2
         board.moveOrAttackPawn(1,4,1,2);
 
-        // console.log(board.getBoardArray(),"\n test queen");
-
+        console.log(board.getBoardArray(),"\n test queen");
         // last pawn is Queen
         expect(board.getNbPawns("WHITE")).equal(1);
         expect(board.getPositionBoard(6,2).isQueen()).equal(true);
@@ -196,38 +199,66 @@ describe('Test a Win', function () {
 
         //player 2
         board.moveOrAttackPawn(1,2,0,2);
-        // console.log(board.getBoardArray(),"\n test queen");
+        console.log(board.getBoardArray(),"\n test queen");
         expect(board.getPositionBoard(0,2).isQueen()).equal(true);
         expect(board.getPositionBoard(0,2).getType()).equal(4);
 
-        console.log(board.getBoardArray(),"\n test fin");
-        console.log(ArrayMoveToString(board.getPossibleAttacks(0,2)));
-        //console.log(ArrayMoveToString(board.getPossibleMoves(0,2)));
-        expect(board.getPossibleMoves(0,2)).to.deep.equal([ [0,0],[0,1],[0,3],[0,4],[0,5],[0,6],
-                                                            [0,7],[1,2],[2,2],[3,2],[4,2],[5,2] ]);
-        expect(ArrayMoveToString(board.getPossibleAttacks(0,2))).to.deep.equal("[ [7,2] ]");
-
         board.moveOrAttackPawn(0,2,7,2);
-
-
         console.log(board.getBoardArray(),"\n test fin");
 
 
     });
 });
 
-// describe('Test coups multiples', function () {
+// describe('Test a Queen', function () {
 //     var board = new core.Board();
 //     var pawn;
 //
 //     board.initTest();
 //
-//     it('New play for coups multiples', function () {
+//     it('New play for Queen', function () {
 //
 //         console.log(board.getBoardArray());
 //         expect(board.getNbPawns("WHITE")).equal(2);
 //
+//         board.moveOrAttackPawn(6,2,7,2);
+//         console.log(board.getBoardArray(),"\n");
+//         console.log("[7,2] isQueen = ", board.getPositionBoard(7,2).isQueen,"\n");
+//         console.log("[7,2] type = ",board.getPositionBoard(7,2).getType(),"\n");
+//         //expect(myIsQueen(board2,7,2)).equal(true);
+//         expect(board.getPositionBoard(7,2).isQueen).equal(true);
 //
+//
+//
+//
+//         console.log(board2.getBoardArray(),"\n");
+//         board2.moveOrAttackPawn(2,2,3,2);
+//         board2.moveOrAttackPawn(3,2,4,2);
+//         board2.moveOrAttackPawn(4,2,5,2);
+//         board2.moveOrAttackPawn(5,2,6,2);
+//         board2.moveOrAttackPawn(6,2,7,2);
+//         console.log(board2.getBoardArray(),"\n");
+//         console.log("[7,2] isQueen = ",board2.getPositionBoard(7,2).isQueen,"\n");
+//         console.log("[7,2] type = ",board2.getPositionBoard(7,2).getType(),"\n");
+//         //expect(myIsQueen(board2,7,2)).equal(true);
+//         expect(board2.getPositionBoard(7,2).isQueen).equal(true);
+//      //   expect(board2.getPositionBoard(7,2).getType()).equal(3);
+//
+//
+//         //expect(myIsQueen(board2,7,2)).equal(true);
+//
+//         board2.swapPlayer();
+//         //player 2
+//
+//         board2.moveOrAttackPawn(5,5,4,5);
+//         board2.moveOrAttackPawn(4,5,3,5);
+//         board2.moveOrAttackPawn(3,5,2,5);
+//         board2.moveOrAttackPawn(2,5,1,5);
+//         board2.moveOrAttackPawn(1,5,0,5);
+//         console.log(board2.getBoardArray(),"\n");
+//         console.log("[0,5] isQueen = ",board2.getPositionBoard(0,5).isQueen,"\n");
+//         //expect(myIsQueen(board2,0,5)).equal(true);
+//         expect(board2.getPositionBoard(0,5).isQueen).equal(true);
 //
 //     });
 // });

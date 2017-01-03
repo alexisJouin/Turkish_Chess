@@ -116,7 +116,13 @@ describe('Init moves tests', function () {
     var board = new core.Board();
     var m1 = new core.Move();
     var m2 = new core.Move();
+    var m3 = new core.Move();
 
+    console.log("size move ",m1.getSize());
     m1.addMove(m2);
+    console.log("size move ",m1.getSize());
+    m2.addMove(m3);
+    console.log("size move ",m1.getSize());
     //expect(m1.getTotalSize()).equal(2);
 });
+

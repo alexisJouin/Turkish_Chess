@@ -10,18 +10,18 @@ module.exports = (function (self) {
 
         var positionDepart;
         var positionArrive;
-        var positionPawnRemove;
         var nextMove;
         var direction; // UP || DOWN || RIGHT || LEFT
         var size;
+        var originalMove = null;
 
         var init = function () {
             positionDepart = [];
             positionArrive = [];
-            positionPawnRemove = [];
-            nextMove = []; //null;
+            nextMove = null;
             direction = null;
             size = 1;
+            originalMove = null;
         };
 
 
@@ -44,21 +44,48 @@ module.exports = (function (self) {
         };
 
         this.getSize = function () {
-            return this.size;
+            return size;
+        };
+
+        this.incSize = function () {
+            size++;
         };
 
         this.getNextMove = function () {
-            return this.nextMove;
+            return nextMove;
         };
+        //
+        // this.setOriginalMove = function(aMove) {
+        //     originalMove = aMove;
+        // }
 
         this.addMove = function (newMove) {
-            this.nextMove = newMove;
-            this.size++;
+            nextMove = newMove;
+
+            // if (originalMove == null) {
+            //     newMove.setOriginalMove(this);
+            //     this.incSize();
+            // } else {
+            //     newMove.setOriginalMove(originalMove);
+            //     originalMove.incSize();
+            // }
+
+            size++;
         };
 
         this.getTotalSize = function () {
-            return size + this.recursiveOperation(nextMove);
+            var aMove = this;
+            var aSize = 0;//size = 1;
+            while (aMove !== null ) { //&& aMove.getNextMove() !== null) {
+                aMove = aMove.getNextMove();
+               // aSize += aMove.getSize();
+                aSize++;
+            }
+            return aSize; //+ this.recursiveOperation(nextMove);
 
+            //return size;
+
+            //return size + this.recursiveOperation(nextMove);
         };
 
         this.getPositionDepart = function () {
@@ -67,10 +94,6 @@ module.exports = (function (self) {
 
         this.getPositionArrive = function () {
             return positionArrive;
-        };
-
-        this.getPositionPawnRemove = function () {
-            return positionPawnRemove;
         };
 
         this.recursiveOperation = function (nextMove) {
