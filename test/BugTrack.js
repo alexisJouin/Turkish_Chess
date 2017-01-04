@@ -26,15 +26,15 @@ describe('Test a Play', function () {
 
         board.swapPlayer();
         //player 1
-        console.log(board.getBoardArray(),"\n");
+     //   console.log(board.getBoardArray(),"\n");
 
         board.moveOrAttackPawn(2,4,2,3);
-        console.log(board.getBoardArray());
+     //   console.log(board.getBoardArray());
         expect(board.empty([2,4])).equal(true);
         expect(board.empty([2,3])).equal(false);
         expect(board.empty([1,3])).equal(false);
 
-        console.log(board.getBoardArray(),"\n");
+     //   console.log(board.getBoardArray(),"\n");
 
         board.swapPlayer();
         //player 2

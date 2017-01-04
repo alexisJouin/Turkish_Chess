@@ -241,8 +241,67 @@ module.exports = function (self) {
                         break;
                     // -- IS A QUEEN
                     case true:
+                        //eric
+                        // Pawn is QUEEN
+                        if (board[indexLineToMove][indexColumnToMove] == 0) {
+                            //var possible = true;
+                            var moveline = 0;
+                            var movecol  = 0;
+                            //move up
+                            if (pawnIndexLine > indexLineToMove && pawnIndexColumn == indexColumnToMove) {
+                                moveline = pawnIndexLine -1;
+                                while (moveline >= indexLineToMove && moveline >= 0) {
+                                    if (board[moveline][indexColumnToMove] !== 0) {
+                                        return false;
+                                    }
+                                    moveline--;
+                                }
+                                return true;
+                            }
 
-                        return false;
+                            //move down
+                            if (pawnIndexLine < indexLineToMove && pawnIndexColumn == indexColumnToMove) {
+                                moveline = pawnIndexLine +1;
+                                while (moveline <= indexLineToMove && moveline <= 7) {
+                                    if (board[moveline][indexColumnToMove] !== 0) {
+                                        return false;
+                                    }
+                                    moveline++;
+                                }
+                                return true;
+                            }
+
+                            //move left
+                            if (pawnIndexColumn > indexColumnToMove && pawnIndexLine == indexLineToMove) {
+                                movecol = pawnIndexColumn -1;
+                                while (movecol >= indexLineToMove && movecol >= 0) {
+                                    if (board[indexLineToMove][movecol] !== 0){
+                                        return false;
+                                    }
+                                    movecol--;
+                                }
+                                return true;
+                            }
+
+                            //move right
+                            if (pawnIndexColumn < indexColumnToMove && pawnIndexLine == indexLineToMove) {
+                                movecol = pawnIndexColumn +1;
+                                while (movecol <= indexLineToMove && movecol <= 7 && possible) {
+                                    if (board[indexLineToMove][movecol] !== 0){
+                                        return false;
+                                    }
+                                    movecol++;
+                                }
+                                return true;
+                            }
+
+                            return false;
+
+                        } else {
+                            return false;
+                        }
+                        //fin eric
+                        // return false;
                         break;
                     default:
                         return false;
@@ -300,7 +359,7 @@ module.exports = function (self) {
 
 
         //Coup obligatoire
-        this.getPossibleAttacks = function (pawnIndexLine, pawnIndexColumn) {
+        this.getPossibleAttacks = function (pawnIndexLine, pawnIndexColumn, pawn, possibleMove) {
 
             var movesArray = [];
 
@@ -309,7 +368,16 @@ module.exports = function (self) {
             var caseLeft = [pawnIndexLine, pawnIndexColumn - 1];
             var caseRight = [pawnIndexLine, pawnIndexColumn + 1];
 
-            var pawn = board[pawnIndexLine][pawnIndexColumn];
+            if (pawn == null) {
+                pawn = board[pawnIndexLine][pawnIndexColumn];
+            }
+
+            if (possibleMove == null) {
+                possibleMove = new core.Move();
+                possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+            }
+
+            //var pawn = board[pawnIndexLine][pawnIndexColumn];
 
             if (pawn !== 0) {
 
@@ -320,78 +388,174 @@ module.exports = function (self) {
                         //Possible capture ?
                         if (pawnIndexColumn < 6
                             && !this.empty(caseRight) //CASE RIGHT
-                            && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                            && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== pawn.getColour() //board[pawnIndexLine][pawnIndexColumn].getColour()
                             && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            var possibleMove = new core.Move();
-                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
-                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
-                            possibleMove.positionPawnRemove = [pawnIndexLine, pawnIndexColumn + 1];
-                            possibleMove.determinateDirection();
-                            var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
+                            // /////////////////////////////////////////////////////////////////
+                            // //TODO ajouter au tableau le coup possible
+                            // // var possibleMove = new core.Move();
+                            // // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            // possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
+                            // possibleMove.positionPawnRemove = [pawnIndexLine, pawnIndexColumn + 1];
+                            // possibleMove.determinateDirection();
+                            // var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1], pawn, possibleMove);
+                            // if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                            //     //debut
+                            //     var myMoveAttack = new core.Move();
+                            //     myMoveAttack.positionDepart = possibleMove.positionArrive;
+                            //     myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 2];
+                            //     myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 1];
+                            //     myMoveAttack.determinateDirection();
+                            //     possibleMove.addMove(myMoveAttack);
+                            //     //possibleMove.addMove(thisPossibleAttack);
+                            // }
+                            // ///////////////////
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn +1]];
+                                possibleMove.determinateDirection();
+                            }
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn + 2, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-                                possibleMove.addMove(thisPossibleAttack);
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 2];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 1];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                                //possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
-                            console.log("Capture !!!");
+                           // console.log("Capture !!!");
                         }
 
                         if (pawnIndexColumn > 1
                             && !this.empty(caseLeft) //CASE LEFT
 
-                            && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour())
+                            && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== pawn.getColour()) //board[pawnIndexLine][pawnIndexColumn].getColour())
                             && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
-                            //TODO ajouter au tableau le coup possible
-                            var possibleMove = new core.Move();
-                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
-                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
-                            possibleMove.positionPawnRemove = [pawnIndexLine, pawnIndexColumn - 1];
-                            possibleMove.determinateDirection();
-                            var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
+                            // ////////////////////////////////////////////////////////////////////////////
+                            // //TODO ajouter au tableau le coup possible
+                            // // var possibleMove = new core.Move();
+                            // // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            // possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
+                            // possibleMove.positionPawnRemove = [pawnIndexLine, pawnIndexColumn - 1];
+                            // possibleMove.determinateDirection();
+                            // var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1], pawn, possibleMove);
+                            // if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                            //     //debut
+                            //     var myMoveAttack = new core.Move();
+                            //     myMoveAttack.positionDepart = possibleMove.positionArrive;
+                            //     myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 2];
+                            //     myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 1];
+                            //     myMoveAttack.determinateDirection();
+                            //     possibleMove.addMove(myMoveAttack);
+                            //     //possibleMove.addMove(thisPossibleAttack);
+                            // }//////////////////////////////////////////////////////////////////////////
+                            // ///////////////////
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn -1]];
+                                possibleMove.determinateDirection();
+                            }
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn - 2, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-                                possibleMove.addMove(thisPossibleAttack);
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 2];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 1];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                                //possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
-                            console.log("Capture !!!");
+                            //console.log("Capture !!!");
                         }
 
                         //Pawn is WHITE
                         if (pawnIndexLine < 6
                             && !this.empty(caseDown)
-                            && board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" // CASE DOWN
+                            //&& board[pawnIndexLine][pawnIndexColumn].getColour() == "WHITE" //
+                            // CASE DOWN
+                            && pawn.getColour() == "WHITE"
                             && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
                             && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
                             //TODO ajouter au tableau le coup possible
-                            var possibleMove = new core.Move();
-                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
-                            possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
-                            possibleMove.positionPawnRemove = [pawnIndexLine + 1, pawnIndexColumn];
-                            possibleMove.determinateDirection();
-                            var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
+                            // var possibleMove = new core.Move();
+                            // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine + 1, pawnIndexColumn]];
+                                possibleMove.determinateDirection();
+                            }
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine + 2, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-                                possibleMove.addMove(thisPossibleAttack);
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] + 2, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] + 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                                //possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
-                            console.log("Capture !!!");
+                           // console.log("Capture !!!");
                         }
                         //Pawn is BLACK
-                        if (board[pawnIndexLine][pawnIndexColumn].getColour() == "BLACK" // CASE UP
-                            && pawnIndexLine > 1
+                        if (pawnIndexLine > 1
+                            //&& board[pawnIndexLine][pawnIndexColumn].getColour() == "BLACK" //
+                            // CASE UP
+                            && pawn.getColour() == "BLACK"
                             && !this.empty(caseUp)
                             && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
                             && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            var possibleMove = new core.Move();
-                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
-                            possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
-                            possibleMove.positionPawnRemove = [pawnIndexLine - 1, pawnIndexColumn];
-                            possibleMove.determinateDirection();
-                            var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1]);
+                            // /////////////////////////
+                            // //TODO ajouter au tableau le coup possible
+                            // // var possibleMove = new core.Move();
+                            // // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            // possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
+                            // possibleMove.positionPawnRemove = [pawnIndexLine - 1, pawnIndexColumn];
+                            // possibleMove.determinateDirection();
+                            // var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1], pawn, possibleMove);
+                            // if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                            //     //debut
+                            //     var myMoveAttack = new core.Move();
+                            //     myMoveAttack.positionDepart = possibleMove.positionArrive;
+                            //     myMoveAttack.positionArrive = [possibleMove.positionArrive[0] - 2, possibleMove.positionArrive[1]];
+                            //     myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] - 1, possibleMove.positionArrive[1]];
+                            //     myMoveAttack.determinateDirection();
+                            //     possibleMove.addMove(myMoveAttack);
+                            //     //possibleMove.addMove(thisPossibleAttack);
+                            // }
+                            // ///////////////////
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine - 1, pawnIndexColumn]];
+                                possibleMove.determinateDirection();
+                            }
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine - 2, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-                                possibleMove.addMove(thisPossibleAttack);
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] - 2, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] - 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                                //possibleMove.addMove(thisPossibleAttack);
                             }
                             movesArray.push(possibleMove);
-                            console.log("Capture !!!");
+                            // console.log("Capture !!!");
                         }
 
 
@@ -399,39 +563,198 @@ module.exports = function (self) {
 
                     // Si c'est une reine.
                     case true :
-                        if (pawnIndexColumn < 6
-                            && !this.empty(caseRight) //CASE RIGHT
-                            && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                            && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            console.log("Capture !!!");
+
+
+                        var moveCol  = 1;
+                        var moveLine = 1;
+                        var myColor  = pawn.getColour();
+                        //Attack LEFT
+                        while ((pawnIndexColumn-moveCol) >= 0
+                               && board[pawnIndexLine][pawnIndexColumn-moveCol] == 0) {
+                               moveCol++;
+                        }
+                        if ((pawnIndexColumn-moveCol) > 0
+                            && board[pawnIndexLine][pawnIndexColumn-moveCol] != 0
+                            && board[pawnIndexLine][pawnIndexColumn-moveCol].getColour() !== myColor
+                            && board[pawnIndexLine][pawnIndexColumn-moveCol-1] == 0) {
+                            // ////////////////////////////////////////////////////////////////////////////
+                            // // var possibleMove = new core.Move();
+                            // // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            // possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - moveCol - 1];
+                            // possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn - moveCol]];
+                            // possibleMove.determinateDirection();
+                            //
+                            // var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1], pawn, possibleMove);
+                            // if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                            //     possibleMove.addMove(thisPossibleAttack);
+                            // }
+                            // ///////////////////////////////////////////////////////////////////////////////
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - moveCol - 1];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn - moveCol]];
+                                possibleMove.determinateDirection();
+                            }
+
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn - moveCol - 1, pawn, possibleMove);
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - moveCol - 1];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - moveCol];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                            }
+                            movesArray.push(possibleMove);
                         }
 
-                        if (pawnIndexColumn > 1
-                            && !this.empty(caseLeft) //CASE LEFT
-                            && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                            && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            console.log("Capture !!!");
+                        //Attack RIGHT
+                        moveCol = 1
+                        while ((pawnIndexColumn + moveCol) < 7   //cherche piont a droite
+                               && board[pawnIndexLine][pawnIndexColumn + moveCol] == 0) {
+                               moveCol++;
+                        }
+                        if ((pawnIndexColumn + moveCol) < 7
+                            && board[pawnIndexLine][pawnIndexColumn + moveCol] != 0
+                            && board[pawnIndexLine][pawnIndexColumn + moveCol].getColour() !== myColor
+                            && board[pawnIndexLine][pawnIndexColumn + moveCol +1] == 0) {
+
+                            // // var possibleMove = new core.Move();
+                            // // possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            // possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + moveCol + 1];
+                            // possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn + moveCol]];
+                            // possibleMove.determinateDirection();
+                            //
+                            // var thisPossibleAttack = this.getPossibleAttacks(possibleMove.positionArrive[0], possibleMove.positionArrive[1], pawn, possibleMove);
+                            // if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                            //     possibleMove.addMove(thisPossibleAttack);
+                            // }
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + moveCol + 1];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn + moveCol]];
+                                possibleMove.determinateDirection();
+                            }
+
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn + moveCol + 1, pawn, possibleMove);
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + moveCol + 1];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + moveCol];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                            }
+                            movesArray.push(possibleMove);
                         }
 
-                        //Pawn is WHITE
-                        if (pawnIndexLine < 6
-                            && !this.empty(caseDown)
-                            && board[pawnIndexLine + 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                            && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            console.log("Capture !!!");
+                        //Attack Down
+                        moveLine = 1;
+                        while ((pawnIndexLine + moveLine) < 7   //cherche pion bas
+                        && board[pawnIndexLine + moveLine][pawnIndexColumn] == 0) {
+                            moveLine++;
                         }
-                        //Pawn is BLACK
-                        if (pawnIndexLine > 1
-                            && !this.empty(caseUp)
-                            && board[pawnIndexLine - 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
-                            && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
-                            //TODO ajouter au tableau le coup possible
-                            console.log("Capture !!!");
+                        if ((pawnIndexLine + moveLine) < 7
+                            && (board[pawnIndexLine + moveLine][pawnIndexColumn] != 0
+                                && !possibleMove.isIn(pawnIndexLine + moveLine, pawnIndexColumn))
+                            && board[pawnIndexLine + moveLine][pawnIndexColumn].getColour() !== myColor
+                            && (board[pawnIndexLine + moveLine + 1][pawnIndexColumn] == 0
+                               || !possibleMove.isIn(pawnIndexLine + moveLine + 1, pawnIndexColumn)) ) {
+
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine + moveLine + 1, pawnIndexColumn];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
+                                possibleMove.determinateDirection();
+                            }
+
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine + moveLine + 1, pawnIndexColumn, pawn, possibleMove);
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] + moveLine + 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] + moveLine, possibleMove.positionArrive[1]];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                            }
+                            movesArray.push(possibleMove);
                         }
-                        break;
+
+                        //Attack UP
+                        moveLine = 1;
+                        while ((pawnIndexLine - moveLine) > 0   //cherche piont a droite
+                               && board[pawnIndexLine - moveLine][pawnIndexColumn] == 0) {
+                            moveLine++;
+                        }
+
+                        if ((pawnIndexLine - moveLine) > 0
+                            && (board[pawnIndexLine - moveLine][pawnIndexColumn] != 0
+                                && !possibleMove.isIn(pawnIndexLine- moveLine, pawnIndexColumn))
+                            && board[pawnIndexLine - moveLine][pawnIndexColumn].getColour() !== myColor
+                            && (board[pawnIndexLine - moveLine - 1][pawnIndexColumn] == 0
+                            || !possibleMove.isIn(pawnIndexLine - moveLine - 1, pawnIndexColumn)) ) {
+
+                            if (possibleMove.positionArrive == null) {
+                                possibleMove.positionArrive = [pawnIndexLine - moveLine - 1, pawnIndexColumn];
+                                possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
+                                possibleMove.determinateDirection();
+                            }
+
+                            var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine - moveLine - 1, pawnIndexColumn, pawn, possibleMove);
+                            if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+                                //debut
+                                var myMoveAttack = new core.Move();
+                                myMoveAttack.positionDepart = possibleMove.positionArrive;
+                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] - moveLine - 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] - moveLine, possibleMove.positionArrive[1]];
+                                myMoveAttack.determinateDirection();
+                                possibleMove.addMove(myMoveAttack);
+                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
+                                possibleMove.positionArrive = myMoveAttack.positionArrive;
+                            }
+                            movesArray.push(possibleMove);
+                        }
+
+
+                        // if (pawnIndexColumn < 6
+                        //     && !this.empty(caseRight) //CASE RIGHT
+                        //     && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                        //     && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                        //     //TODO ajouter au tableau le coup possible
+                        //     console.log("Capture !!!");
+                        // }
+                        //
+                        // if (pawnIndexColumn > 1
+                        //     && !this.empty(caseLeft) //CASE LEFT
+                        //     && board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                        //     && board[pawnIndexLine][pawnIndexColumn - 2] == 0) {
+                        //     //TODO ajouter au tableau le coup possible
+                        //     console.log("Capture !!!");
+                        // }
+                        //
+                        // //Pawn is WHITE
+                        // if (pawnIndexLine < 6
+                        //     && !this.empty(caseDown)
+                        //     && board[pawnIndexLine + 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                        //     && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                        //     //TODO ajouter au tableau le coup possible
+                        //     console.log("Capture !!!");
+                        // }
+                        // //Pawn is BLACK
+                        // if (pawnIndexLine > 1
+                        //     && !this.empty(caseUp)
+                        //     && board[pawnIndexLine - 1][pawnIndexColumn].getColour() !== board[pawnIndexLine][pawnIndexColumn].getColour()
+                        //     && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                        //     //TODO ajouter au tableau le coup possible
+                        //     console.log("Capture !!!");
+                        // }
+                        // break;
                         break;
                     default:
                         break;
@@ -481,13 +804,14 @@ module.exports = function (self) {
                 for (var j = 0; j < board[i].length; j++) {
                     if (board[i][j] !== 0) {
                         if (board[i][j].getColour() == playerColour) {
-                            var thisPossibleAttack = this.getPossibleAttacks(i, j);
+                            var thisPossibleAttack = this.getPossibleAttacks(i, j, null, null);
                             var thisPossibleMove = this.getPossibleMovesObjects(i, j);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-                                everyAttackesPossible.push(this.getPossibleAttacks(i, j));
+                                everyAttackesPossible.push(this.getPossibleAttacks(i, j, null, null));
                             }
                             if (thisPossibleMove != null && thisPossibleMove.length > 0) {
-                                everyMovesPossible.push(this.getPossibleMovesObjects(i, j));
+                                everyMovesPossible.push(this.getPossibleMovesObjects(i, j));//,
+                                // null)); /////////////////////////////////////////////////////
                             }
                         }
                     }
@@ -501,7 +825,8 @@ module.exports = function (self) {
                 var indexMaxSize = -1;
                 for (var i = 0; i < everyAttackesPossible.length; i++) {
                     for (var j = 0; j < everyAttackesPossible[i].length; j++) {
-                        console.log("everyAttackPossible total size : " +everyAttackesPossible[i][j].getTotalSize());
+                        //console.log("everyAttackPossible total size : "
+                        // +everyAttackesPossible[i][j].getTotalSize());
                         if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
                             maxSize = everyAttackesPossible[i][j].getTotalSize();
                             indexMaxSize = i;
@@ -564,46 +889,76 @@ module.exports = function (self) {
 
         };
 
-
         this.attackPawn = function (move) {
-            for (var i = 0; i < move.length; i++) {
-                var positionDepart = move[i].positionDepart;
-                var positionArrive = move[i].positionArrive;
 
-                var positionPawnRemove;
-                switch (move[i].direction) {
-                    case "DOWN":
-                        positionPawnRemove = [(positionDepart[0] + 1), positionDepart[1]];
-                        break;
-                    case "UP":
-                        positionPawnRemove = [(positionDepart[0] - 1), positionDepart[1]];
-                        break;
-                    case "RIGHT":
-                        positionPawnRemove = [positionDepart[0], (positionDepart[1] + 1)];
-                        break;
-                    case "LEFT":
-                        positionPawnRemove = [positionDepart[0], (positionDepart[1] - 1)];
-                        break;
-                    default:
-                        break;
-                }
+            var positionDepart = move[0].positionDepart;
+            var positionArrive = move[0].positionArrive;
 
-                // Détermination de la position du pion à supprimer
-                // var positionPawnRemove = [positionDepart[0] - positionArrive[0], positionDepart[1] - positionArrive[1]];
-///**/
-                console.log("positionDepart : " + positionDepart);
-                console.log("positionArrive : " + positionArrive);
-                console.log("positionPawnRemove : " + positionPawnRemove);
+            var positionPawnRemove = move[0].positionPawnRemove;
 
-                this.removePawn(positionPawnRemove[0], positionPawnRemove[1]);
-                this.movePawn(positionDepart[0], positionDepart[1], positionArrive[0], positionArrive[1]);
+            // console.log("positionDepart : " + positionDepart);
+            // console.log("positionArrive : " + positionArrive);
+            // console.log("positionPawnRemove : " + positionPawnRemove);
 
-                if (move[i].nextMove != null) {
-
-                    this.attackPawn(move[i].nextMove);
-                }
+            for (var i = 0; i < positionPawnRemove.length; i++) {
+                this.removePawn(positionPawnRemove[i][0], positionPawnRemove[i][1]);
             }
+
+            this.movePawn(positionDepart[0], positionDepart[1],
+                positionArrive[0], positionArrive[1]);
         };
+
+
+
+
+
+
+//         this.attackPawn = function (move) {
+//             for (var i = 0; i < move.length; i++) {
+//                 var positionDepart = move[i].positionDepart;
+//                 var positionArrive = move[i].positionArrive;
+//
+//                 var positionPawnRemove;
+//                 // switch (move[i].direction) {
+//                 //     case "DOWN":
+//                 //         positionPawnRemove = [(positionDepart[0] + 1), positionDepart[1]];
+//                 //         break;
+//                 //     case "UP":
+//                 //         positionPawnRemove = [(positionDepart[0] - 1), positionDepart[1]];
+//                 //         break;
+//                 //     case "RIGHT":
+//                 //         positionPawnRemove = [positionDepart[0], (positionDepart[1] + 1)];
+//                 //         break;
+//                 //     case "LEFT":
+//                 //         positionPawnRemove = [positionDepart[0], (positionDepart[1] - 1)];
+//                 //         break;
+//                 //     default:
+//                 //         break;
+//                 // }
+//
+//
+//                 if ( move[i].positionPawnRemove != null
+//                      && move[i].positionPawnRemove.length > 0) { //for Queen
+//                     positionPawnRemove = move[i].positionPawnRemove;
+//
+//                 }
+//
+//                 // Détermination de la position du pion à supprimer
+//                 // var positionPawnRemove = [positionDepart[0] - positionArrive[0], positionDepart[1] - positionArrive[1]];
+// ///**/
+//                 console.log("positionDepart : " + positionDepart);
+//                 console.log("positionArrive : " + positionArrive);
+//                 console.log("positionPawnRemove : " + positionPawnRemove);
+//
+//                 this.removePawn(positionPawnRemove[0], positionPawnRemove[1]);
+//                 this.movePawn(positionDepart[0], positionDepart[1], positionArrive[0], positionArrive[1]);
+//
+//                 if (move[i].nextMove != null) {
+//
+//                     this.attackPawn(move[i].nextMove);
+//                 }
+//             }
+//         };
 
         this.removePawn = function (line, column) {
             var pawn = board[line][column];

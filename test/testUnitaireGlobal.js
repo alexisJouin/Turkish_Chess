@@ -118,11 +118,14 @@ describe('Init moves tests', function () {
     var m2 = new core.Move();
     var m3 = new core.Move();
 
-    console.log("size move ",m1.getSize());
+ //   console.log("size move ",m1.getSize());
+ //   console.log("globalsize move ",m1.getTotalSize());
     m1.addMove(m2);
-    console.log("size move ",m1.getSize());
+ //   console.log("size move ",m1.getSize());
+ //   console.log("globalsize move ",m1.getTotalSize());
     m2.addMove(m3);
-    console.log("size move ",m1.getSize());
+ //   console.log("size move ",m1.getSize());
+//    console.log("globalsize move ",m1.getTotalSize());
     //expect(m1.getTotalSize()).equal(2);
 });
 

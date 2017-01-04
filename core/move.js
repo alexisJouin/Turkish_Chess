@@ -10,15 +10,18 @@ module.exports = (function (self) {
 
         var positionDepart;
         var positionArrive;
+        var positionPawnRemove;
         var nextMove;
         var direction; // UP || DOWN || RIGHT || LEFT
         var size;
-        var originalMove = null;
+        var originalMove;
 
         var init = function () {
             positionDepart = [];
             positionArrive = [];
-            nextMove = null;
+            positionPawnRemove = [];
+            nextMove = null; //[]; //null;
+            originalMove = null;
             direction = null;
             size = 1;
             originalMove = null;
@@ -54,32 +57,45 @@ module.exports = (function (self) {
         this.getNextMove = function () {
             return nextMove;
         };
-        //
-        // this.setOriginalMove = function(aMove) {
-        //     originalMove = aMove;
-        // }
+
+        this.setOriginalMove = function(aMove) {
+            originalMove = aMove;
+        };
+
+        this.getOriginalMove = function () {
+            return originalMove;
+        };
 
         this.addMove = function (newMove) {
             nextMove = newMove;
 
-            // if (originalMove == null) {
-            //     newMove.setOriginalMove(this);
-            //     this.incSize();
-            // } else {
-            //     newMove.setOriginalMove(originalMove);
-            //     originalMove.incSize();
-            // }
+           // if (positionPawnRemove.length > 0  ) {
+                nextMove.positionPawnRemove.concat(this.positionPawnRemove);
+           // }
 
-            size++;
+
+            if (originalMove == null) {
+                nextMove.setOriginalMove(this);
+
+               // this.incSize();
+            } else {
+                nextMove.setOriginalMove(originalMove);
+                //originalMove.incSize();
+            }
+
+           // size++;
         };
 
         this.getTotalSize = function () {
             var aMove = this;
-            var aSize = 0;//size = 1;
+            var aSize = 1;//size = 1;
             while (aMove !== null ) { //&& aMove.getNextMove() !== null) {
-                aMove = aMove.getNextMove();
-               // aSize += aMove.getSize();
-                aSize++;
+                if (aMove.getNextMove() !== null) {
+                    aMove = aMove.getNextMove();
+                    aSize++;
+                } else {
+                    aMove = null; //aMove.getNextMove();
+                }
             }
             return aSize; //+ this.recursiveOperation(nextMove);
 
@@ -88,12 +104,51 @@ module.exports = (function (self) {
             //return size + this.recursiveOperation(nextMove);
         };
 
+        this.isValidPawn = function (aLine,aColumn) {
+            var aMove = this;
+            while (aMove.getOriginalMove() !== null) {
+                if ((aMove.getOriginalMove().positionDepart[0] === aLine
+                     && aMove.getOriginalMove().positionDepart[1] === aColumn) //pion lui meme
+                    ||
+                    (aMove.getOriginalMove().positionPawnRemove[0] === aLine
+                     && aMove.getOriginalMove().positionPawnRemove[1] === aColumn)) { //pion retiré
+                    return false;
+                }
+                aMove = aMove.getOriginalMove();
+            }
+            return true;
+        };
+
+        this.isIn = function (aLine,aColumn) {
+            var pr = this.positionPawnRemove;
+
+            if (pr == null) {return false}
+            for (var i = 0; i < pr.length; i++) {
+                if (pr[i][0] == aLine && pr[i][1] == aColumn) {
+                    return true;
+                }
+            }
+
+            if (positionDepart[0] == aLine && positionDepart[1] == aColumn) {
+                return true;
+            }
+            return false;
+
+
+
+
+        }
+
         this.getPositionDepart = function () {
             return positionDepart;
         };
 
         this.getPositionArrive = function () {
             return positionArrive;
+        };
+
+        this.getPositionPawnRemove = function () {
+            return positionPawnRemove;
         };
 
         this.recursiveOperation = function (nextMove) {
