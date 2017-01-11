@@ -11,6 +11,8 @@ var opponentName, myName;
 socket.on('opponentDisconnected', function(){
     canPlay = false;
     console.log("Adversaire déconnecté");
+    $('#tour').html("Adversaire déconnecté");
+    $("#tour").fadeIn(1000);
 });
 
 socket.on('turn', function (turn) {
@@ -18,14 +20,14 @@ socket.on('turn', function (turn) {
     if (canPlay) {
         $('#tour').html("A vous de jouer !");
         $("#tour").fadeIn(1000);
-        $("#tour").delay(3500).fadeOut(3500);
+        $("#tour").delay(1000).fadeOut(1000);
 
         //$('#currentPlayer').html("A vous de jouer !");
     }
     else {
         $('#tour').html("C'est le tour de l'adversaire !");
         $("#tour").fadeIn(1000);
-        $("#tour").delay(4000).fadeOut(4000);
+        $("#tour").delay(1000).fadeOut(1000);
         //$('#currentPlayer').html("C'est à l'adversaire de jouer");
     }
 });
@@ -78,7 +80,7 @@ socket.on('waiting', function (wait) {
     }
     else {
         $("#waiting p").html("La partie commence, vous êtes " + joueurColorText );
-        $("#waiting").delay(3000).fadeOut(2000);
+        $("#waiting").delay(1000).fadeOut(1500);
     }
 });
 
@@ -110,7 +112,16 @@ $(document).on('click', ".piece", function () {
         //Si c'est au tour du joueur il peut déplacer les pions
         $('.piece').removeClass('selectedPiece');
         $(this).addClass('selectedPiece');
+
+
     }
+});
+
+socket.on('getPossibleAttacks', function(ObligatoireMove){
+    if(ObligatoireMove[0] = "Attack"){
+        alert("Obligatoire !!")
+    }
+    console.log("Obligatoire"+ ObligatoireMove);
 });
 
 //Déplace la pièce au click sur possible case
