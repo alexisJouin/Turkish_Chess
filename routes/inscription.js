@@ -31,7 +31,8 @@ router.post('/', function(req, res, next) {
         var newUser = {
             username: req.param('username'),
             password: req.param('password'),
-            mail: req.param('mail')
+            mail: req.param('mail'),
+            points: 1500
         };
 
         // save the user

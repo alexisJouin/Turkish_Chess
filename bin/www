@@ -36,13 +36,13 @@ function getAvailableGame(){
     var available = null;
 
     for(var i = 0; i < game.length; i++){
-        if(game[i].getPlayers().length <= 1){
+        if(game[i][0].getPlayers().length <= 1){
             available = game[i];
         }
     }
 
     if(available == null){
-        game.push(new core.Board());
+        game.push([new core.Board(), null, null]);
         available = game[game.length-1];
     }
 
@@ -56,7 +56,7 @@ function getGameClientID(id){
     var board = null;
 
     while(!found && i < game.length){
-        if(game[i].getPlayers()[0] == id || game[i].getPlayers()[1] == id){
+        if(game[i][0].getPlayers()[0] == id || game[i][0].getPlayers()[1] == id){
             board = game[i];
         }
         i++;
@@ -74,25 +74,33 @@ io.sockets.on('connection', function (socket) {
         var testAlreadyInGame = getGameClientID(socket);
         if(testAlreadyInGame == null){
             var board = getAvailableGame();
+            if(board[1] == null){
+                board[1] = name;
+            }
+            else if(board[2] == null){
+                board[2] = name;
+            }
             
-            board.addPlayer(socket);
+            board[0].addPlayer(socket);
 
-            socket.emit("board", board.getBoardArray());
             socket.emit("waiting", true);
 
-            if(board.getPlayers().length == 2) {
-                if(board.getPlayers()[0] == socket){
-                    board.getPlayers()[1].emit('opponentName', name);
-                }
-                else {
-                    board.getPlayers()[0].emit('opponentName', name);
-                }
-                board.getPlayers()[0].emit("waiting", false);
-                board.getPlayers()[0].emit("colour", 0);
-                board.getPlayers()[1].emit("waiting", false);
-                board.getPlayers()[1].emit("colour", 1);
-                board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
-                console.log("Nouvelle partie entre "+board.getPlayers()[0].id+" et "+board.getPlayers()[1].id);
+            if(board[0].getPlayers().length == 2) {
+
+                board[0].getPlayers()[0].emit("colour", 0);
+                board[0].getPlayers()[1].emit("colour", 1);
+
+                board[0].getPlayers()[0].emit('opponentName', board[2]);
+                board[0].getPlayers()[1].emit('opponentName', board[1]);
+
+                board[0].getPlayers()[0].emit("board", board[0].getBoardArray(), 16, 16);
+                board[0].getPlayers()[1].emit("board", board[0].getBoardArray(), 16, 16);
+
+                board[0].getPlayers()[0].emit("waiting", false);
+                board[0].getPlayers()[1].emit("waiting", false);
+
+
+                board[0].getPlayers()[board[0].getCurrentPlayer()].emit("turn", true);
             }
         }
     });
@@ -103,11 +111,11 @@ io.sockets.on('connection', function (socket) {
 
         var moves = [];
 
-        if(board.getPossibleAttacks(pos[0], pos[1]).length > 0){
-            moves = board.getPossibleAttacks(pos[0], pos[1]);
+        if(board[0].getPossibleAttacks(pos[0], pos[1]).length > 0){
+            moves = board[0].getPossibleAttacks(pos[0], pos[1]);
         }
         else {
-            moves = board.getPossibleMovesObjects(pos[0], pos[1]);
+            moves = board[0].getPossibleMovesObjects(pos[0], pos[1]);
         }
 
         socket.emit('possibleMoves', moves);
@@ -117,15 +125,15 @@ io.sockets.on('connection', function (socket) {
     socket.on('move', function(init, final){
         var board = getGameClientID(socket);
 
-        board.moveOrAttackPawn(init[0],init[1], final[0], final[1]);
+        board[0].moveOrAttackPawn(init[0],init[1], final[0], final[1]);
 
-        board.swapPlayer();
+        board[0].swapPlayer();
 
-        board.getPlayers()[1].emit("board", board.getBoardArray());
-        board.getPlayers()[0].emit("board", board.getBoardArray());
+        board[0].getPlayers()[1].emit("board", board[0].getBoardArray(), board[0].getNbPawns("WHITE"), board[0].getNbPawns("BLACK"));
+        board[0].getPlayers()[0].emit("board", board[0].getBoardArray(), board[0].getNbPawns("WHITE"), board[0].getNbPawns("BLACK"));
 
-        board.getPlayers()[board.getCurrentPlayer()].emit("turn", true);
-        board.getPlayers()[(board.getCurrentPlayer()+1)%2].emit("turn", false);
+        board[0].getPlayers()[board[0].getCurrentPlayer()].emit("turn", true);
+        board[0].getPlayers()[(board[0].getCurrentPlayer()+1)%2].emit("turn", false);
     });
 
 
@@ -133,11 +141,11 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function(){
         var board = getGameClientID(socket);
         if(board != null) {
-            if (board.getPlayers()[0] !== socket && board.getPlayers()[0] != undefined) {
-                board.getPlayers()[0].emit('opponentDisconnected');
+            if (board[0].getPlayers()[0] !== socket && board[0].getPlayers()[0] != undefined) {
+                board[0].getPlayers()[0].emit('opponentDisconnected');
             }
-            else if(board.getPlayers()[1] != undefined){
-                board.getPlayers()[1].emit('opponentDisconnected');
+            else if(board[0].getPlayers()[1] != undefined){
+                board[0].getPlayers()[1].emit('opponentDisconnected');
             }
             game.splice(game.indexOf(board), 1);
         }

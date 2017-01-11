@@ -1,0 +1,231 @@
+#board{
+    border:5px solid white;
+    width:800px;
+    margin:0 auto;
+    background-color:rgba(255, 255, 255, 0.9);
+    margin-top: 20px;
+    margin-bottom: 100px;
+    display:block;
+}
+
+table {
+    margin: 0 auto;
+    width:50%;
+    table-layout: fixed;
+}
+
+#board td{
+    -moz-background-size:100px 100px;
+    background-size:100px 100px;
+    -webkit-background-size:100px 101px; /* override value for shitty webkit */
+    background-position:0 0, 50px 0, 50px -50px, 0px 50px;
+    height: 70px;
+    border:1px solid black;
+    margin: 0 auto;
+    white-space: nowrap;
+}
+
+#board th{
+    width: 70px;
+}
+
+.row:nth-child(even) .tile:nth-child(odd),
+.row:nth-child(odd) .tile:nth-child(even) {
+    /*background-color: #777;*/
+    background-image: url("../img/gris_carre.jpg");
+}
+
+.row:nth-child(even) .tile:nth-child(even),
+.row:nth-child(odd) .tile:nth-child(odd) {
+    background-image: url("../img/bois_carre.jpg");
+}
+
+img{
+    width:60px;
+    cursor: -webkit-grab; cursor:-moz-grab;
+    margin:0 auto;
+    z-index: 9999;
+    vertical-align: middle;
+}
+
+img:active{
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+}
+
+.selectedPiece{
+    border: 2px solid cyan;
+    border-radius: 180px;
+    filter: drop-shadow(0px 0px 10px cyan);
+}
+
+.unselectedPiece{
+
+}
+
+.possibleCase{
+    background: #23bc1e !important;
+	cursor: pointer;
+}
+
+.loader {
+    position : fixed;
+    z-index: 9999;
+    background : url('img/loading.gif') 50% 50% no-repeat;
+    top : 0px;
+    left : 0px;
+    height : 100%;
+    width : 100%;
+    cursor : wait;
+}
+
+#waiting{
+    width: 35%;
+    margin: 0 auto;
+    border: 1px solid black;
+    bottom: 44%;
+    background: rgba(0,0,0,0.5);
+    position: relative;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+#tour {
+    width: 35%;
+    margin: 0 auto;
+    border: 1px solid black;
+    bottom: 44%;
+    background: rgba(0, 0, 0, 0.5);
+    position: relative;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 15px;
+    display:none;
+}
+
+button{
+    background-color: #9e854c;
+    color: #fff;
+    height: 30px;
+    border:0;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+#menuButton{
+    width:150px;
+    margin:0px;
+    top:-30px;
+    position:absolute;
+}
+
+
+#playerbox{
+    display:block;
+    width:100%;
+    text-align: center;
+}
+
+#userblanc, #usernoir, #userslash{
+    text-align:center;
+    display:inline-block;
+}
+
+#waiting, #tour{
+    bottom: 50px;
+    vertical-align: middle;
+}
+
+
+
+@media screen and (min-width: 700px) and (max-width: 1200px) {
+    #board{
+        width:100%;
+    }
+
+    #board td{
+        height: 45px;
+    }
+
+    #board th{
+        width: 45px;
+    }
+
+    img{
+        width:45px;
+    }
+
+    #menuButton{
+        width:50px;
+        margin:0px;
+        top:-30px;
+        position:absolute;
+    }
+
+    .selectedPiece{
+        border: 0px solid cyan;
+        filter: drop-shadow(0px 0px 4px cyan);
+    }
+
+    #playerbox > #usernoir{
+        display:block;
+    }
+
+    #playerbox > #userblanc{
+        display:block;
+    }
+
+    #playerbox > #userslash{
+        display:none;
+    }
+}
+
+
+
+
+@media screen and (min-width: 200px) and (max-width: 700px) {
+    #board{
+        width:100%;
+    }
+
+    #board td{
+        height: 30px;
+    }
+
+    #board th{
+        width: 35px;
+    }
+
+    img{
+        width:30px;
+    }
+
+    #menuButton{
+        width:50px;
+        margin:0px;
+        top:-30px;
+        position:absolute;
+    }
+
+    .selectedPiece{
+        border: 0px solid cyan;
+        filter: drop-shadow(0px 0px 4px cyan);
+    }
+
+    #playerbox > #usernoir{
+        display:block;
+    }
+
+    #playerbox > #userblanc{
+        display:block;
+    }
+
+    #playerbox > #userslash{
+        display:none;
+    }
+}

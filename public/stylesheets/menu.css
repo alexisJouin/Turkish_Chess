@@ -1,0 +1,135 @@
+
+
+#leftPannel, #rightPannel{
+    display: inline-block;
+    padding: 20px;
+
+}
+
+#leftPannel{
+    width: 25%;
+    border-radius: 5px 0 0 5px;
+    text-align: center;
+}
+
+#rightPannel{
+    width: auto;
+    border-radius: 0 5px 5px 5px;
+    color:black;
+    height:auto;
+}
+
+#rank, #personnalStatics{
+    padding: 10px;
+    width:auto;
+    background-color: #e6dcc0;
+    max-height: 500px;
+
+}
+
+#switchers{
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    background-color: whitesmoke;
+
+}
+
+#personnalStaticsSwitcher{
+    display: inline-block;
+    width: 200px;
+    padding:10px;
+    text-algin: center;
+    right: 0px;
+}
+
+#personnalStaticsSwitcher:not(.selected),#rankSwitcher:not(.selected)
+{
+    background-color: whitesmoke;
+}
+
+#personnalStaticsSwitcher:hover,#personnalStaticsSwitcher.selected,#rankSwitcher.selected, #rankSwitcher:hover{
+    background-color: #e6dcc0;
+    cursor: pointer;
+}
+
+#rankSwitcher{
+    display: inline-block;
+    width: 200px;
+    padding:10px;
+    text-algin: center;
+}
+
+.hidden{
+    display:none;
+}
+.mainButtons{
+    width: 100%;
+}
+
+
+#menu{
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 24px;
+    text-decoration: none;
+    padding: 10px;
+    color: white;
+    background: rgba(0,0,0,0.5);
+
+}
+
+button{
+    background-color: #9e854c;
+    color: #fff;
+    height: 30px;
+    border:0;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+}
+
+/* Petit écran */
+@media(max-width : 500px){
+    #rightPannel{
+        /*position: absolute;*/
+        width: 95%;
+        margin-bottom: 16vh;
+    }
+    #leftPannel{
+        width: 95%;
+    }
+    button{
+        display: inline-block;
+
+    }
+    a{
+        margin-left: 20%;
+    }
+}
+/* Ecran moyen et grand */
+@media(min-width : 501px){
+    #menu{
+        margin: auto;
+        width: 1000px;
+        height: auto;
+        transform:  translateY(100px);
+        height:auto;
+    }
+    #leftPannel{
+        height: 100%;
+        float:left;
+    }
+    button{
+        display:block;
+        width:90%;
+    }
+}
+
+#playGame:hover, #logOut:hover{
+    background-color: #cdc3a9;
+}
+

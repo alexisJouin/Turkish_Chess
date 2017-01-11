@@ -3,33 +3,36 @@ block title
     title
 block append stylesheets
     link(rel='stylesheet', href='/stylesheets/inscriptionConnexion.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
 block content
-
-    div(id="formConnect")
-        h2 Connexion
-        form(action='/connexion' method='POST' id="connexion")
-            div(data-role='fieldcontain')
-                fieldset(data-role='controlgroup')
-                    if(!pseudo)
-                        input(id='pseudo',type='text',value='',placeholder='Pseudo',name='username')
-                    else if(pseudo == 3)
-                        input(id='pseudo', style='background-color:red', type='text',value='',placeholder='Pseudo inconnu',name='username')
-                    span(class="erreur", id="errPseudo", style="display:none; color:#F00;") Tape ton pseudo !
-            div#passworddiv(data-role='fieldcontain')
-                fieldset(data-role='controlgroup')
-                    if(!password)
-                        input(id='password',type='password',value='',placeholder='Mot de passe',name='password')
-                    else if(password == 4)
-                        input(id='password', style='background-color:red',type='password',value='',placeholder='Mot de passe invalide',name='password')
-                    span(class="erreur",id="errMdp", style="display:none; color:#F00;") Tape ton mot de passe !
+    div(id="wrapper")
+        div(id="banner" style='width:100%;background-color:rgba(240, 240, 240, 0.4);')
+          img(src='/img/logo.png')
+        div(id="formConnect")
+            h2 Connexion
+            form(action='/connexion' method='POST' id="connexion")
                 div(data-role='fieldcontain')
-            button(type='submit',value='submit',data-transition='fade', data-theme='c' id="connexion_button") Se connecter
-        hr
-        p Pas de compte ?
+                    fieldset(data-role='controlgroup')
+                        if(!pseudo)
+                            input(id='pseudo',type='text',value='',placeholder='Pseudo',name='username')
+                        else if(pseudo == 3)
+                            input(id='pseudo', style='background-color:red', type='text',value='',placeholder='Pseudo inconnu',name='username')
+                        span(class="erreur", id="errPseudo", style="display:none; color:#F00;") Tape ton pseudo !
+                div#passworddiv(data-role='fieldcontain')
+                    fieldset(data-role='controlgroup')
+                        if(!password)
+                            input(id='password',type='password',value='',placeholder='Mot de passe',name='password')
+                        else if(password == 4)
+                            input(id='password', style='background-color:red',type='password',value='',placeholder='Mot de passe invalide',name='password')
+                        span(class="erreur",id="errMdp", style="display:none; color:#F00;") Tape ton mot de passe !
+                    div(data-role='fieldcontain')
+                button(type='submit',value='submit',data-transition='fade', data-theme='c' id="connexion_button") Se connecter
+            hr
+            p Pas de compte ?
 
-        button(value='inscription', id="inscription_move") Inscription
-        //fenêtre DIALOG
-        div(style="display: none;" id="dialog_si_erreur" title="Erreur !")
-            p Le formulaire est incomplet !
+            button(value='inscription', id="inscription_move") Inscription
+            //fenêtre DIALOG
+            div(style="display: none;" id="dialog_si_erreur" title="Erreur !")
+                p Le formulaire est incomplet !
 
     script(src="/js/connexionInscription.js")

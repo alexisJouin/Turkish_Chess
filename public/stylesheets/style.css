@@ -1,0 +1,33 @@
+#banner{
+    text-align: center;
+}
+#banner>img{
+    width:50%;
+}
+html{
+    height: 100%;
+    background: url("/img/fond_damiers.jpg");
+    background-repeat:repeat;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -o-background-size:cover;
+    background-size:cover;
+    background-position:center;
+}
+body{
+    height: inherit;
+}
+
+#wrapper{
+    /*
+    background: url("/img/fond_damiers.jpg");
+    background-repeat:no-repeat;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -o-background-size:cover;
+    background-size:cover;
+    background-position:center;
+    height:auto;
+    */
+
+}

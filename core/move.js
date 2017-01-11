@@ -1,7 +1,5 @@
 var Turkish_Chess = Turkish_Chess || {};
 
-//var merge = require('merge');
-//var core = merge(require('./pawn_type'));
 
 module.exports = (function (self) {
     "use strict";
@@ -10,16 +8,21 @@ module.exports = (function (self) {
 
         var positionDepart;
         var positionArrive;
+        var positionPawnRemove;
         var nextMove;
         var direction; // UP || DOWN || RIGHT || LEFT
         var size;
+        var originalMove;
 
         var init = function () {
             positionDepart = [];
             positionArrive = [];
+            positionPawnRemove = [];
             nextMove = null;
+            originalMove = null;
             direction = null;
             size = 1;
+            originalMove = null;
         };
 
 
@@ -42,22 +45,81 @@ module.exports = (function (self) {
         };
 
         this.getSize = function () {
-            return this.size;
+            return size;
+        };
+
+        this.incSize = function () {
+            size++;
         };
 
         this.getNextMove = function () {
-            return this.nextMove;
+            return nextMove;
+        };
+
+        this.setOriginalMove = function(aMove) {
+            originalMove = aMove;
+        };
+
+        this.getOriginalMove = function () {
+            return originalMove;
         };
 
         this.addMove = function (newMove) {
-            this.nextMove = newMove;
-            this.size++;
+            nextMove = newMove;
+
+            nextMove.positionPawnRemove.concat(this.positionPawnRemove);
+
+            if (originalMove == null) {
+                nextMove.setOriginalMove(this);
+            } else {
+                nextMove.setOriginalMove(originalMove);
+            }
         };
 
         this.getTotalSize = function () {
-            return size + this.recursiveOperation(nextMove);
-
+            var aMove = this;
+            var aSize = 1;//size = 1;
+            while (aMove !== null ) {
+                if (aMove.getNextMove() !== null) {
+                    aMove = aMove.getNextMove();
+                    aSize++;
+                } else {
+                    aMove = null;
+                }
+            }
+            return aSize;
         };
+
+        this.isValidPawn = function (aLine,aColumn) {
+            var aMove = this;
+            while (aMove.getOriginalMove() !== null) {
+                if ((aMove.getOriginalMove().positionDepart[0] === aLine
+                     && aMove.getOriginalMove().positionDepart[1] === aColumn) //pion lui meme
+                    ||
+                    (aMove.getOriginalMove().positionPawnRemove[0] === aLine
+                     && aMove.getOriginalMove().positionPawnRemove[1] === aColumn)) { //pion retiré
+                    return false;
+                }
+                aMove = aMove.getOriginalMove();
+            }
+            return true;
+        };
+
+        this.isIn = function (aLine,aColumn) {
+            var pr = this.positionPawnRemove;
+
+            if (pr == null) {return false}
+            for (var i = 0; i < pr.length; i++) {
+                if (pr[i][0] == aLine && pr[i][1] == aColumn) {
+                    return true;
+                }
+            }
+
+            if (positionDepart[0] == aLine && positionDepart[1] == aColumn) {
+                return true;
+            }
+            return false;
+        }
 
         this.getPositionDepart = function () {
             return positionDepart;
@@ -65,6 +127,10 @@ module.exports = (function (self) {
 
         this.getPositionArrive = function () {
             return positionArrive;
+        };
+
+        this.getPositionPawnRemove = function () {
+            return positionPawnRemove;
         };
 
         this.recursiveOperation = function (nextMove) {
