@@ -8,7 +8,6 @@ module.exports = function (self) {
 
     self.Pawn = function (_type, _colour) {
         var type;
-        // var pos = []; // [line, column]  ---- We're not gonna use it
         var lastPos = [-1,-1];
         var colour; // WHITE || BLACK
         var isQueen;
@@ -49,24 +48,15 @@ module.exports = function (self) {
             lastPos = position;
         };
 
-//        this.setPos = function (_pos) {
-//            pos = _pos;
-//        };
-//
-//        this.getPos = function () {
-//            return pos;
-//        };
-
         // This function needs a boolean
         this.setQueen = function () {
             isQueen = true;
-            if (this.getColour() === "WHITE") {//  colour === "WHITE") {
+            if (this.getColour() === "WHITE") {
                 type = core.PawnType.Q_WHITE;
             } else type = core.PawnType.Q_BLACK;
         };
 
         this.isQueen = function () {
-//            return (type == core.PawnType.Q_BLACK || type == core.PawnType.Q_WHITE);
             return isQueen;
         };
 

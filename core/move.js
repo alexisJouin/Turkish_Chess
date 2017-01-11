@@ -1,7 +1,5 @@
 var Turkish_Chess = Turkish_Chess || {};
 
-//var merge = require('merge');
-//var core = merge(require('./pawn_type'));
 
 module.exports = (function (self) {
     "use strict";
@@ -20,7 +18,7 @@ module.exports = (function (self) {
             positionDepart = [];
             positionArrive = [];
             positionPawnRemove = [];
-            nextMove = null; //[]; //null;
+            nextMove = null;
             originalMove = null;
             direction = null;
             size = 1;
@@ -69,39 +67,27 @@ module.exports = (function (self) {
         this.addMove = function (newMove) {
             nextMove = newMove;
 
-           // if (positionPawnRemove.length > 0  ) {
-                nextMove.positionPawnRemove.concat(this.positionPawnRemove);
-           // }
-
+            nextMove.positionPawnRemove.concat(this.positionPawnRemove);
 
             if (originalMove == null) {
                 nextMove.setOriginalMove(this);
-
-               // this.incSize();
             } else {
                 nextMove.setOriginalMove(originalMove);
-                //originalMove.incSize();
             }
-
-           // size++;
         };
 
         this.getTotalSize = function () {
             var aMove = this;
             var aSize = 1;//size = 1;
-            while (aMove !== null ) { //&& aMove.getNextMove() !== null) {
+            while (aMove !== null ) {
                 if (aMove.getNextMove() !== null) {
                     aMove = aMove.getNextMove();
                     aSize++;
                 } else {
-                    aMove = null; //aMove.getNextMove();
+                    aMove = null;
                 }
             }
-            return aSize; //+ this.recursiveOperation(nextMove);
-
-            //return size;
-
-            //return size + this.recursiveOperation(nextMove);
+            return aSize;
         };
 
         this.isValidPawn = function (aLine,aColumn) {
@@ -133,10 +119,6 @@ module.exports = (function (self) {
                 return true;
             }
             return false;
-
-
-
-
         }
 
         this.getPositionDepart = function () {
