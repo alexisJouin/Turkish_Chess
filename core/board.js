@@ -162,9 +162,10 @@ module.exports = function (self) {
 
 
         this.movePawn = function (pawnIndexLine, pawnIndexColumn, indexLineToMove, indexColumnToMove) {
+
             board[indexLineToMove][indexColumnToMove] = board[pawnIndexLine][pawnIndexColumn];
             board[pawnIndexLine][pawnIndexColumn] = 0;
-            board[indexLineToMove][indexColumnToMove].setLastPosition([indexLineToMove, indexColumnToMove]);
+            board[indexLineToMove][indexColumnToMove].setLastPosition([indexLineToMove,indexColumnToMove]);
 
             if (board[indexLineToMove][indexColumnToMove].getColour() == "WHITE") {
                 var indextemp = whitePawns.indexOf(board[indexLineToMove][indexColumnToMove]);
@@ -273,7 +274,8 @@ module.exports = function (self) {
                             //move right
                             if (pawnIndexColumn < indexColumnToMove && pawnIndexLine == indexLineToMove) {
                                 movecol = pawnIndexColumn +1;
-                                while (movecol <= indexLineToMove && movecol <= 7 && possible) {
+                                while (movecol <= indexLineToMove && movecol <= 7 ) { //&&
+                                    // possible) {
                                     if (board[indexLineToMove][movecol] !== 0){
                                         return false;
                                     }
@@ -335,8 +337,10 @@ module.exports = function (self) {
         //Case vide
         this.empty = function (position) {
             if (board[position[0]][position[1]] == 0) {
+               // console.log(position,"vide");
                 return true;
             } else {
+              //  console.log(position,"pleine");
                 return false;
             }
         };
@@ -346,8 +350,11 @@ module.exports = function (self) {
         this.getPossibleAttacks = function (pawnIndexLine, pawnIndexColumn, pawn, possibleMove) {
 
             var movesArray = [];
+            //// console.log("move array",movesArray);
+
 
             var caseDown = [pawnIndexLine + 1, pawnIndexColumn];
+            var case2Down = [pawnIndexLine + 2, pawnIndexColumn];
             var caseUp = [pawnIndexLine - 1, pawnIndexColumn];
             var caseLeft = [pawnIndexLine, pawnIndexColumn - 1];
             var caseRight = [pawnIndexLine, pawnIndexColumn + 1];
@@ -360,7 +367,7 @@ module.exports = function (self) {
                 possibleMove = new core.Move();
                 possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
             }
-
+            //// console.log("Entree possible ",(typeof possibleMove.getPositionPawnRemove() !== 'undefined') ? possibleMove.getPositionPawnRemove() : [] );
             if (pawn !== 0) {
 
                 switch (pawn.isQueen()) {
@@ -369,113 +376,131 @@ module.exports = function (self) {
 
                         //Possible capture ?
                         if (pawnIndexColumn < 6
-                            && !this.empty(caseRight) //CASE RIGHT
+                            && (!this.empty(caseRight) //CASE RIGHT
+                                && !possibleMove.isIn(pawnIndexLine, pawnIndexColumn + 1))
                             && board[pawnIndexLine][pawnIndexColumn + 1].getColour() !== pawn.getColour() //board[pawnIndexLine][pawnIndexColumn].getColour()
-                            && board[pawnIndexLine][pawnIndexColumn + 2] == 0) {
+                            && (board[pawnIndexLine][pawnIndexColumn + 2] == 0
+                                || possibleMove.isIn(pawnIndexLine, pawnIndexColumn + 2)) ) {
+                            // console.log("Right pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + 2];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn +1]];
-                                possibleMove.determinateDirection();
-                            }
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn +2];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine,pawnIndexColumn +1]];
+                            possibleMove.determinateDirection();
+
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn + 2, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 2];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + 1];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine, pawnIndexColumn +2];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine, pawnIndexColumn +1];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Right getPawnRemove ", possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
                         if (pawnIndexColumn > 1
-                            && !this.empty(caseLeft) //CASE LEFT
-
+                            && (!this.empty(caseLeft) //CASE LEFT
+                                && !possibleMove.isIn(pawnIndexLine, pawnIndexColumn - 1))
                             && (board[pawnIndexLine][pawnIndexColumn - 1].getColour() !== pawn.getColour()) //board[pawnIndexLine][pawnIndexColumn].getColour())
-                            && (board[pawnIndexLine][pawnIndexColumn - 2] == 0)) {
+                            && (board[pawnIndexLine][pawnIndexColumn - 2] == 0
+                                || possibleMove.isIn(pawnIndexLine, pawnIndexColumn - 2)) ) {
+                            // console.log("Left pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - 2];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn -1]];
-                                possibleMove.determinateDirection();
-                            }
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn -2];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine,pawnIndexColumn -1]];
+                            possibleMove.determinateDirection();
+
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn - 2, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
+
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 2];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - 1];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine, pawnIndexColumn -2];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine, pawnIndexColumn -1];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
-
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Left getPawnRemove ", possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
                         //Pawn is WHITE
                         if (pawnIndexLine < 6
-                            && !this.empty(caseDown)
                             // CASE DOWN
                             && pawn.getColour() == "WHITE"
-                            && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
-                            && board[pawnIndexLine + 2][pawnIndexColumn] == 0) {
+                            && (!this.empty(caseDown)
+                                && !possibleMove.isIn(pawnIndexLine + 1, pawnIndexColumn))
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine + 1, pawnIndexColumn]];
-                                possibleMove.determinateDirection();
-                            }
+                            && board[pawnIndexLine + 1][pawnIndexColumn].getColour() == "BLACK"
+                            && (board[pawnIndexLine + 2][pawnIndexColumn] == 0
+                                || possibleMove.isIn(pawnIndexLine + 2, pawnIndexColumn)) ) {
+
+                            // console.log("Down pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine + 1,pawnIndexColumn]];
+                            possibleMove.determinateDirection();
+
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine + 2, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
 
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] + 2, possibleMove.positionArrive[1]];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] + 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine + 2, pawnIndexColumn];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine + 1, pawnIndexColumn];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
-
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Down getPawnRemove ", possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
                         //Pawn is BLACK
                         if (pawnIndexLine > 1
                             // CASE UP
                             && pawn.getColour() == "BLACK"
-                            && !this.empty(caseUp)
+                            && (!this.empty(caseUp)
+                                && !possibleMove.isIn(pawnIndexLine - 1, pawnIndexColumn))
                             && board[pawnIndexLine - 1][pawnIndexColumn].getColour() == "WHITE"
-                            && board[pawnIndexLine - 2][pawnIndexColumn] == 0) {
+                            && (board[pawnIndexLine - 2][pawnIndexColumn] == 0
+                               || possibleMove.isIn(pawnIndexLine - 2, pawnIndexColumn)) ) {
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine - 1, pawnIndexColumn]];
-                                possibleMove.determinateDirection();
-                            }
+                            // console.log("Up pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine - 1,pawnIndexColumn]];
+                            possibleMove.determinateDirection();
+
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine - 2, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] - 2, possibleMove.positionArrive[1]];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] - 1, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine - 2, pawnIndexColumn];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine - 1, pawnIndexColumn];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Up getPawnRemove ", possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
 
                         break;
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     // Si c'est une reine.
                     case true :
 
@@ -489,28 +514,32 @@ module.exports = function (self) {
                                moveCol++;
                         }
                         if ((pawnIndexColumn-moveCol) > 0
-                            && board[pawnIndexLine][pawnIndexColumn-moveCol] != 0
+                            && (board[pawnIndexLine][pawnIndexColumn-moveCol] != 0
+                                && !possibleMove.isIn(pawnIndexLine, pawnIndexColumn - moveCol))
                             && board[pawnIndexLine][pawnIndexColumn-moveCol].getColour() !== myColor
-                            && board[pawnIndexLine][pawnIndexColumn-moveCol-1] == 0) {
+                            && (board[pawnIndexLine][pawnIndexColumn-moveCol-1] == 0
+                                || possibleMove.isIn(pawnIndexLine, pawnIndexColumn - moveCol -1 )) ) {
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - moveCol - 1];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn - moveCol]];
-                                possibleMove.determinateDirection();
-                            }
+                            // console.log("Left pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn - moveCol - 1];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn - moveCol]];
+                            possibleMove.determinateDirection();
 
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn - moveCol - 1, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - moveCol - 1];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] - moveCol];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine, pawnIndexColumn - moveCol - 1];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine, pawnIndexColumn - moveCol];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Queen Left getPawnRemove ", possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
                         //Attack RIGHT
@@ -520,35 +549,39 @@ module.exports = function (self) {
                                moveCol++;
                         }
                         if ((pawnIndexColumn + moveCol) < 7
-                            && board[pawnIndexLine][pawnIndexColumn + moveCol] != 0
+                            && (board[pawnIndexLine][pawnIndexColumn + moveCol] != 0
+                                && !possibleMove.isIn(pawnIndexLine, pawnIndexColumn + moveCol))
                             && board[pawnIndexLine][pawnIndexColumn + moveCol].getColour() !== myColor
-                            && board[pawnIndexLine][pawnIndexColumn + moveCol +1] == 0) {
+                            && (board[pawnIndexLine][pawnIndexColumn + moveCol +1] == 0
+                                || possibleMove.isIn(pawnIndexLine, pawnIndexColumn + moveCol +1)) ) {
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + moveCol + 1];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn + moveCol]];
-                                possibleMove.determinateDirection();
-                            }
+                            // console.log("Right pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine, pawnIndexColumn + moveCol + 1];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine, pawnIndexColumn + moveCol]];
+                            possibleMove.determinateDirection();
 
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine, pawnIndexColumn + moveCol + 1, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
-
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + moveCol + 1];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0], possibleMove.positionArrive[1] + moveCol];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine, pawnIndexColumn + moveCol + 1];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine, pawnIndexColumn + moveCol];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Queen Right getPawnRemove ",
+                            // possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
                         //Attack Down
                         moveLine = 1;
                         while ((pawnIndexLine + moveLine) < 7   //cherche pion bas
-                        && board[pawnIndexLine + moveLine][pawnIndexColumn] == 0) {
+                        && board[pawnIndexLine + moveLine][pawnIndexColumn] == 0 ) {
                             moveLine++;
                         }
                         if ((pawnIndexLine + moveLine) < 7
@@ -556,26 +589,29 @@ module.exports = function (self) {
                                 && !possibleMove.isIn(pawnIndexLine + moveLine, pawnIndexColumn))
                             && board[pawnIndexLine + moveLine][pawnIndexColumn].getColour() !== myColor
                             && (board[pawnIndexLine + moveLine + 1][pawnIndexColumn] == 0
-                               || !possibleMove.isIn(pawnIndexLine + moveLine + 1, pawnIndexColumn)) ) {
+                               || possibleMove.isIn(pawnIndexLine + moveLine + 1, pawnIndexColumn)) ) {
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine + moveLine + 1, pawnIndexColumn];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
-                                possibleMove.determinateDirection();
-                            }
+                            // console.log("Down pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine + moveLine + 1, pawnIndexColumn];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
+                            possibleMove.determinateDirection();
 
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine + moveLine + 1, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] + moveLine + 1, possibleMove.positionArrive[1]];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] + moveLine, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine + moveLine + 1, pawnIndexColumn];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine + moveLine, pawnIndexColumn];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Queen Down getPawnRemove ",
+                            // possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
 
                         //Attack UP
@@ -590,31 +626,35 @@ module.exports = function (self) {
                                 && !possibleMove.isIn(pawnIndexLine- moveLine, pawnIndexColumn))
                             && board[pawnIndexLine - moveLine][pawnIndexColumn].getColour() !== myColor
                             && (board[pawnIndexLine - moveLine - 1][pawnIndexColumn] == 0
-                            || !possibleMove.isIn(pawnIndexLine - moveLine - 1, pawnIndexColumn)) ) {
+                                || possibleMove.isIn(pawnIndexLine - moveLine - 1, pawnIndexColumn)) ) {
 
-                            if (possibleMove.positionArrive == null) {
-                                possibleMove.positionArrive = [pawnIndexLine - moveLine - 1, pawnIndexColumn];
-                                possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
-                                possibleMove.determinateDirection();
-                            }
+                            // console.log("Down pawnIndexLine ",pawnIndexLine," pawnIndexColumn"
+                            //             ,pawnIndexColumn);
+
+                            possibleMove.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                            possibleMove.positionArrive = [pawnIndexLine + moveLine - 1, pawnIndexColumn];
+                            possibleMove.positionPawnRemove = [[pawnIndexLine + moveLine, pawnIndexColumn]];
+                            possibleMove.determinateDirection();
 
                             var thisPossibleAttack = this.getPossibleAttacks(pawnIndexLine - moveLine - 1, pawnIndexColumn, pawn, possibleMove);
                             if (thisPossibleAttack != null && thisPossibleAttack.length > 0) {
                                 var myMoveAttack = new core.Move();
-                                myMoveAttack.positionDepart = possibleMove.positionArrive;
-                                myMoveAttack.positionArrive = [possibleMove.positionArrive[0] - moveLine - 1, possibleMove.positionArrive[1]];
-                                myMoveAttack.positionPawnRemove = [possibleMove.positionArrive[0] - moveLine, possibleMove.positionArrive[1]];
+                                myMoveAttack.positionDepart = [pawnIndexLine, pawnIndexColumn];
+                                myMoveAttack.positionArrive = [pawnIndexLine - moveLine - 1, pawnIndexColumn];
+                                myMoveAttack.positionPawnRemove = [pawnIndexLine - moveLine, pawnIndexColumn];
                                 myMoveAttack.determinateDirection();
                                 possibleMove.addMove(myMoveAttack);
-                                possibleMove.positionPawnRemove.push(myMoveAttack.positionPawnRemove);
-                                possibleMove.positionArrive = myMoveAttack.positionArrive;
                             }
-                            movesArray.push(possibleMove);
+                            movesArray.unshift(possibleMove);
+                            // console.log("Queen Down getPawnRemove ",
+                            // possibleMove.getPawnRemove());
+                            //possibleMove = null;
                         }
                         break;
                     default:
                         break;
                 }
+                //// console.log("move array < sortie >",movesArray[0]);
                 return movesArray;
             } else {
                 return null;
@@ -674,15 +714,39 @@ module.exports = function (self) {
             if (everyAttackesPossible != null && everyAttackesPossible.length > 0) {
                 var maxSize = 0;
                 var indexMaxSize = -1;
+                var indexChoice = -1;
                 for (var i = 0; i < everyAttackesPossible.length; i++) {
-                    for (var j = 0; j < everyAttackesPossible[i].length; j++) {
-                        if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
-                            maxSize = everyAttackesPossible[i][j].getTotalSize();
-                            indexMaxSize = i;
-                        }
+                    if (everyAttackesPossible[i][0].getTotalSize() > maxSize) {
+                        maxSize = everyAttackesPossible[i][0].getTotalSize();
+                        indexMaxSize = i;
                     }
+                    //console.log(everyAttackesPossible[i][0].positionArrive[0],"
+                    // ",everyAttackesPossible[i][0].positionArrive[1]);
+                    //console.log(everyAttackesPossible[i][0].positionArrive[0] == toLine,"
+                    // ",everyAttackesPossible[i][0].positionArrive[1] == toColumn);
+
+                    if (everyAttackesPossible[i][0].positionArrive[0] == toLine
+                        && everyAttackesPossible[i][0].positionArrive[1] == toColumn) {
+                        indexChoice = i;
+                        //console.log(indexChoice);
+                    }
+
+                    // for (var j = 0; j < everyAttackesPossible[i].length; j++) {
+                    //     if (everyAttackesPossible[i][j].getTotalSize() > maxSize) {
+                    //         maxSize = everyAttackesPossible[i][j].getTotalSize();
+                    //         indexMaxSize = i;
+                    //         // if (everyAttackesPossible[i][j].getPositionArrive()[0] == toLine
+                    //         //     && everyAttackesPossible[i][j].getPositionArrive()[1] == toColumn) {
+                    //         //     break;
+                    //         // }
+                    //     }
+                    // }
                 }
-                return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
+                if (indexChoice > -1 && everyAttackesPossible[indexChoice][0].getTotalSize()
+                    >= everyAttackesPossible[indexMaxSize][0].getTotalSize() ) {
+                    return {type: "Attack", move: everyAttackesPossible[indexChoice]};
+                } else return {type: "Attack", move: everyAttackesPossible[indexMaxSize]};
+
             } else if (everyMovesPossible != null && everyMovesPossible.length > 0) {
 
                 //mouvement est un mouvement possible
@@ -710,6 +774,7 @@ module.exports = function (self) {
                 if (whatToDo.type === "Attack") {
                     var attackMovement = whatToDo.move;
                     //VIOLENT ATTACK !!!!
+                   //// console.log("--------------------------",attackMovement);
                     this.attackPawn(attackMovement);
                 } else if (whatToDo.type === "Move") {
                     var moveMovement = whatToDo.move;
@@ -729,15 +794,27 @@ module.exports = function (self) {
         };
 
         this.attackPawn = function (move) {
+            //TODO verifier si plus d'une attack, celle choisie par joueur
+            //var positionDepart = move[0].positionDepart;
+            var positionDepart;// = move[0].getPositionDepart();
+            if (move[0].getNextMove() != null
+                && move[0].getNextMove().positionDepart != "undefined" ) {
+                positionDepart = move[0].getNextMove().positionDepart;
+            } else positionDepart = move[0].getPositionDepart();
 
-            var positionDepart = move[0].positionDepart;
+            console.log("positionDep :",positionDepart);
             var positionArrive = move[0].positionArrive;
 
-            var positionPawnRemove = move[0].positionPawnRemove;
-
+            var positionPawnRemove = move[0].getPawnRemove(); // move[0].positionPawnRemove;
+            console.log("positionArr :",positionArrive);
+           // console.log("remove :",positionPawnRemove);
+            console.log("remove :",move[0].getPawnRemove());
+            console.log();
             for (var i = 0; i < positionPawnRemove.length; i++) {
                 this.removePawn(positionPawnRemove[i][0], positionPawnRemove[i][1]);
             }
+
+            //// console.log("===========================",move[0].getNextMove().positionDepart);
 
             this.movePawn(positionDepart[0], positionDepart[1],
                 positionArrive[0], positionArrive[1]);

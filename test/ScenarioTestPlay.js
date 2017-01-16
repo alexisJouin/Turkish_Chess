@@ -100,10 +100,11 @@ describe('Test a Play', function () {
         //attention multiple attack must be [5,3] and after [7,5] and Queen !
       //  console.log(board.getBoardArray());
         board.moveOrAttackPawn(3,3,7,3); //normaly must be (3,3,7,3)
-       // console.log(board.getBoardArray());
+        //console.log(board.getBoardArray());
         expect(board.empty([3,3])).equal(true); // White origin
         expect(board.empty([5,3])).equal(true); // White origin
         expect(board.empty([7,3])).equal(false); // white final
+
 
         //remove black after attack
         expect(board.getNbPawns("BLACK")).equal(14);
@@ -120,6 +121,31 @@ describe('Test a Play', function () {
         board.swapPlayer();
         expect(board.getCurrentPlayer()).equal(1);
         //player 2
+        board.moveOrAttackPawn(5,5,4,5);
+        board.swapPlayer();
+        //player 1
+        board.moveOrAttackPawn(2,5,3,5);
+        board.swapPlayer();
+        //player 2
+        console.log("****************************");
+        console.log(board.getBoardArray(),"\n");
+       // console.log(board.getPossibleAttacks(4,5));
+        board.moveOrAttackPawn(4,5,0,3);
+        expect(board.empty([3,5])).equal(true); // White to remove
+
+        //todo bug ne choisit pas la meileur attaque lors de chemein multiple
+        // expect(board.empty([2,4])).equal(true); // White to remove
+        // expect(board.empty([1,3])).equal(true); // White to remove
+        // expect(board.empty([0,3])).equal(false); // Black final
+
+
+
+
+        console.log(board.getBoardArray(),"\n");
+        board.swapPlayer();
+        //player 1
+        console.log(board.getPossibleAttacks(7,3));
+
 
      //   console.log(board.getBoardArray());
 
@@ -145,19 +171,24 @@ describe('Test a Win', function () {
 
     it('New play for Queen', function () {
 
-    //    console.log(board.getBoardArray());
-    //    console.log();
+        console.log(board.getBoardArray());
+        console.log();
         expect(board.getNbPawns("WHITE")).equal(3);
 
         board.moveOrAttackPawn(6,4,7,4);
         expect(board.getPositionBoard(7,4).isQueen()).equal(true);
         expect(board.getPositionBoard(7,4).getType()).equal(3);
-    //    console.log(board.getBoardArray());
+        console.log(board.getBoardArray());
 
         board.swapPlayer();
         //player 2
+       // console.log("Moves  ",board.getPossibleMoves(4,4));
+       // console.log("Attack ",board.getPossibleAttacks(4,4));
         board.moveOrAttackPawn(4,4,4,3);
 
+        // automatic attack
+        expect(board.empty([7,4])).equal(true); // White to remove
+        expect(board.empty([7,3])).equal(false); // Black final
 
     //    console.log(board.getBoardArray(),"\n test queen");
         board.swapPlayer();
@@ -213,48 +244,51 @@ describe('Test a Win', function () {
 //     board.initTest();
 //
 //     it('New play for Queen', function () {
-//
+//         console.log("New play for Queen");
+//         console.log();
 //         console.log(board.getBoardArray());
-//         expect(board.getNbPawns("WHITE")).equal(2);
+//         console.log();
+//         expect(board.getNbPawns("WHITE")).equal(3);
 //
 //         board.moveOrAttackPawn(6,2,7,2);
+//         //console.log(board.getBoardArray(),"\n");
+//         // console.log("[7,2] isQueen = ", board.getPositionBoard(7,2).isQueen,"\n");
+//         // console.log("[7,2] type = ",board.getPositionBoard(7,2).getType(),"\n");
+//         expect(myIsQueen(board,7,2)).equal(true);
+//         expect(board.getPositionBoard(7,2).isQueen()).equal(true);
+//
+//
+//
+//
 //         console.log(board.getBoardArray(),"\n");
-//         console.log("[7,2] isQueen = ", board.getPositionBoard(7,2).isQueen,"\n");
-//         console.log("[7,2] type = ",board.getPositionBoard(7,2).getType(),"\n");
+//         console.log();
+//         board.moveOrAttackPawn(2,2,3,2);
+//         board.moveOrAttackPawn(3,2,4,2);
+//         board.moveOrAttackPawn(4,2,5,2);
+//         board.moveOrAttackPawn(5,2,6,2);
+//         board.moveOrAttackPawn(6,2,7,2);
+//         console.log(board.getBoardArray(),"\n");
+//         console.log("[7,2] isQueen = ",board.getPositionBoard(7,2).isQueen,"\n");
+//         //console.log("[7,2] type = ",board.getPositionBoard(7,2).getType(),"\n");
 //         //expect(myIsQueen(board2,7,2)).equal(true);
 //         expect(board.getPositionBoard(7,2).isQueen).equal(true);
-//
-//
-//
-//
-//         console.log(board2.getBoardArray(),"\n");
-//         board2.moveOrAttackPawn(2,2,3,2);
-//         board2.moveOrAttackPawn(3,2,4,2);
-//         board2.moveOrAttackPawn(4,2,5,2);
-//         board2.moveOrAttackPawn(5,2,6,2);
-//         board2.moveOrAttackPawn(6,2,7,2);
-//         console.log(board2.getBoardArray(),"\n");
-//         console.log("[7,2] isQueen = ",board2.getPositionBoard(7,2).isQueen,"\n");
-//         console.log("[7,2] type = ",board2.getPositionBoard(7,2).getType(),"\n");
-//         //expect(myIsQueen(board2,7,2)).equal(true);
-//         expect(board2.getPositionBoard(7,2).isQueen).equal(true);
 //      //   expect(board2.getPositionBoard(7,2).getType()).equal(3);
 //
 //
 //         //expect(myIsQueen(board2,7,2)).equal(true);
 //
-//         board2.swapPlayer();
+//         board.swapPlayer();
 //         //player 2
 //
-//         board2.moveOrAttackPawn(5,5,4,5);
-//         board2.moveOrAttackPawn(4,5,3,5);
-//         board2.moveOrAttackPawn(3,5,2,5);
-//         board2.moveOrAttackPawn(2,5,1,5);
-//         board2.moveOrAttackPawn(1,5,0,5);
-//         console.log(board2.getBoardArray(),"\n");
-//         console.log("[0,5] isQueen = ",board2.getPositionBoard(0,5).isQueen,"\n");
+//         board.moveOrAttackPawn(5,5,4,5);
+//         board.moveOrAttackPawn(4,5,3,5);
+//         board.moveOrAttackPawn(3,5,2,5);
+//         board.moveOrAttackPawn(2,5,1,5);
+//         board.moveOrAttackPawn(1,5,0,5);
+//         console.log(board.getBoardArray(),"\n");
+//         console.log("[0,5] isQueen = ",board.getPositionBoard(0,5).isQueen,"\n");
 //         //expect(myIsQueen(board2,0,5)).equal(true);
-//         expect(board2.getPositionBoard(0,5).isQueen).equal(true);
+//         expect(board.getPositionBoard(0,5).isQueen).equal(true);
 //
 //     });
 // });

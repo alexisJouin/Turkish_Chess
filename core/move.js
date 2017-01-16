@@ -22,7 +22,6 @@ module.exports = (function (self) {
             originalMove = null;
             direction = null;
             size = 1;
-            originalMove = null;
         };
 
 
@@ -53,34 +52,41 @@ module.exports = (function (self) {
         };
 
         this.getNextMove = function () {
-            return nextMove;
+            return this.nextMove;
         };
 
+        // this.setNextMove = function (aNewMove) {
+        //     this.nextMove = aNewMove;
+        // };
+
         this.setOriginalMove = function(aMove) {
-            originalMove = aMove;
+            this.originalMove = aMove;
         };
 
         this.getOriginalMove = function () {
-            return originalMove;
+            return this.originalMove;
         };
 
         this.addMove = function (newMove) {
-            nextMove = newMove;
+            this.nextMove = (newMove);
 
-            nextMove.positionPawnRemove.concat(this.positionPawnRemove);
-
-            if (originalMove == null) {
-                nextMove.setOriginalMove(this);
-            } else {
-                nextMove.setOriginalMove(originalMove);
-            }
+           // nextMove.positionPawnRemove.concat(this.positionPawnRemove);
+            if (this.getOriginalMove() != null ) {
+                this.nextMove.setOriginalMove(this.getOriginalMove());
+               // this.nextMove = (this.getOriginalMove());
+            } else  this.nextMove.setOriginalMove(this);
+            // if (nextMove.getOriginalMove() == null) {
+            //     nextMove.setOriginalMove(this);
+            // } else {
+            //     nextMove.setOriginalMove(originalMove);
+            // }
         };
 
         this.getTotalSize = function () {
             var aMove = this;
             var aSize = 1;//size = 1;
-            while (aMove !== null ) {
-                if (aMove.getNextMove() !== null) {
+            while (aMove != null ) {
+                if (aMove.getNextMove() != null) {
                     aMove = aMove.getNextMove();
                     aSize++;
                 } else {
@@ -106,31 +112,79 @@ module.exports = (function (self) {
         };
 
         this.isIn = function (aLine,aColumn) {
-            var pr = this.positionPawnRemove;
+           // console.log(aLine," ",aColumn);
+            //var pr = this.positionPawnRemove;
+            var pr = this.getPawnRemove();
 
-            if (pr == null) {return false}
+            if (pr == null) {
+              //  console.log(aLine," ",aColumn, "Null");
+                return false;}
             for (var i = 0; i < pr.length; i++) {
                 if (pr[i][0] == aLine && pr[i][1] == aColumn) {
+                  //  console.log(aLine," ",aColumn, "yes");
                     return true;
                 }
             }
 
             if (positionDepart[0] == aLine && positionDepart[1] == aColumn) {
+               // console.log(aLine," ",aColumn, "yes");
                 return true;
             }
             return false;
         }
 
         this.getPositionDepart = function () {
-            return positionDepart;
+
+
+            // var aMove =  this.getOriginalMove();
+            // return aMove.getPositionDepart();
+
+            //return this.getOriginalMove().getPositionDepart();
+
+
+            if (this.getOriginalMove() != null) {
+               return this.getNextMove().getOriginalMove().getPositionDepart();
+            }
+           // //return (this.getOriginalMove() != null) ?
+           //  // this.getOriginalMove().getPositionDepart() : this.positionDepart;
+           return this.positionDepart;
         };
 
         this.getPositionArrive = function () {
-            return positionArrive;
+            return this.positionArrive;
         };
 
         this.getPositionPawnRemove = function () {
-            return positionPawnRemove;
+            return this.positionPawnRemove;
+        };
+
+        this.addpositionPawnRemove = function (position) {
+            if (this.positionPawnRemove == null) {
+                this.positionPawnRemove = [];
+            }
+            this.positionPawnRemove.push(position);
+        };
+
+        this.getPawnRemove = function () {
+            //var tabRemove = [];
+            var aMove;
+            if (this.getOriginalMove() != null) {
+                aMove = this.getOriginalMove(); //cas secondaire
+            } else
+                aMove = this; // cas primaire
+
+            var tabRemove = (typeof aMove.getPositionPawnRemove() !== 'undefined') ? aMove.getPositionPawnRemove().slice(0) : [];
+            while (aMove !== null) {
+
+                if (aMove.getNextMove() != null) {
+                    aMove = aMove.getNextMove();
+                    if (aMove.getPositionPawnRemove() != null && aMove.getPositionPawnRemove().length > 0) {
+                       // tabRemove.splice(0,0,aMove.getPositionPawnRemove()[0].slice(0));
+                        tabRemove.splice(0,0,aMove.getPositionPawnRemove().slice(0));
+                    }
+                } else {aMove = null;}
+            }
+            return tabRemove;
         };
 
         this.recursiveOperation = function (nextMove) {

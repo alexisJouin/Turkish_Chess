@@ -25,6 +25,8 @@ describe('Global Test', function () {
     });
 
     it('Base move pawn White', function () {
+        console.log("Base move pawn White");
+        console.log();
         // ok for front
         expect(board.allow(2,0,3,0)).equal(true);
         expect(board.allow(2,1,3,1)).equal(true);
@@ -50,6 +52,8 @@ describe('Global Test', function () {
     });
 
     it('Base move pawn Black', function () {
+        console.log("Base move pawn Black");
+        console.log();
         board.swapPlayer();
         // ok for front
         expect(board.allow(5,0,4,0)).equal(true);
@@ -82,6 +86,8 @@ describe('Init Pawn tests', function () {
     var pawnB = new core.Pawn(core.PawnType.BLACK, "BLACK");
 
     it('Base create pawnW', function () {
+        console.log("Base create pawn White");
+        console.log();
         //test white pawn
         expect(pawnW.getType()).equal(core.PawnType.WHITE);
         expect(pawnW.getColour()).equal("WHITE");
@@ -97,6 +103,8 @@ describe('Init Pawn tests', function () {
     });
 
     it('Base create pawnB', function () {
+        console.log("Base create pawn Black");
+        console.log();
         //test white pawn
         expect(pawnB.getType()).equal(core.PawnType.BLACK);
         expect(pawnB.getColour()).equal("BLACK");
@@ -112,20 +120,30 @@ describe('Init Pawn tests', function () {
     });
 });
 
-// describe('Init moves tests', function () {
-//     var board = new core.Board();
-//     var m1 = new core.Move();
-//     var m2 = new core.Move();
-//     var m3 = new core.Move();
-//
-//  //   console.log("size move ",m1.getSize());
-//  //   console.log("globalsize move ",m1.getTotalSize());
-//     m1.addMove(m2);
-//  //   console.log("size move ",m1.getSize());
-//  //   console.log("globalsize move ",m1.getTotalSize());
-//     m2.addMove(m3);
-//  //   console.log("size move ",m1.getSize());
-// //    console.log("globalsize move ",m1.getTotalSize());
-//     //expect(m1.getTotalSize()).equal(2);
-// });
+
+
+
+describe('Init moves tests', function () {
+    console.log("Init moves tests");
+    console.log();
+    var board = new core.Board();
+    var m1 = new core.Move();
+    var m2 = new core.Move();
+    var m3 = new core.Move();
+
+   console.log("size move ",m1.getSize());
+   console.log("globalsize move ",m1.getTotalSize());
+    m1.addpositionPawnRemove([1,1]);
+    m2.addpositionPawnRemove([2,2]);
+    m3.addpositionPawnRemove([3,3]);
+    m1.addMove(m2);
+   console.log("size move ",m1.getSize());
+   console.log("globalsize move ",m1.getTotalSize());
+    m2.addMove(m3);
+   console.log("size move ",m1.getSize());
+   console.log("globalsize move ",m1.getTotalSize());
+    expect(m1.getTotalSize()).equal(3);
+    console.log(m1.getPawnRemove());
+   // expect(m1.getPawnRemove()).to.deep.equal([ [ 3, 3 ], [ 2, 2 ], [ 1, 1 ] ]);
+});
 

@@ -26,7 +26,7 @@ describe('Test a Play', function () {
 
         board.swapPlayer();
         //player 1
-     //   console.log(board.getBoardArray(),"\n");
+        //console.log(board.getBoardArray(),"\n");
 
         board.moveOrAttackPawn(2,4,2,3);
      //   console.log(board.getBoardArray());
@@ -49,7 +49,18 @@ describe('Test a Play', function () {
         expect(board.empty([4,3])).equal(false);
         expect(board.empty([3,2])).equal(true);
 
+        board.swapPlayer();
+        //player 2
+       // console.log(board.getPossibleAttacks(5,3),"\n");
+       // console.log(board.getPossibleAttacks(4,4),"\n");
+       // console.log(board.getPossibleAttacks(5,4),"\n");
 
+        // console.log(board.allowMovePawn(5,4,4,4).positionArrive,"\n");
+        // console.log(board.allowMovePawn(5,3,3,3).positionArrive,"\n");
+        // console.log(board.allowMovePawn(4,4,4,2).positionArrive,"\n");
+
+        board.moveOrAttackPawn(4,4,4,2);
+        console.log(board.getBoardArray(),"\n");
 
     });
 });
