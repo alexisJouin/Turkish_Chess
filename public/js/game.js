@@ -164,9 +164,20 @@ function constructBoard(board) {
                 //&#9823;
                 output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/noirPion.png' class='piece blackPawn'/></td>";
             }
+            //Blanc
             else if (element == 1) {
                 //&#9817;
                 output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/blancPion.png' class='piece whitePawn'/></td>";
+            }
+            //Blanc Reine
+            else if (element == 3) {
+                //&#9817;
+                output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/blancQueen.png' class='piece whitePawn'/></td>";
+            }
+            //Noir Reine
+            else if (element == 4) {
+                //&#9817;
+                output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'><img src='img/noirQueen.png' class='piece whitePawn'/></td>";
             }
             else {
                 output += "<td class='tile' align='center' id='" + nbColumn + "_" + nbLigne + "'></td>";
