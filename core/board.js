@@ -273,7 +273,7 @@ module.exports = function (self) {
                             //move right
                             if (pawnIndexColumn < indexColumnToMove && pawnIndexLine == indexLineToMove) {
                                 movecol = pawnIndexColumn +1;
-                                while (movecol <= indexLineToMove && movecol <= 7 && possible) {
+                                while (movecol <= indexLineToMove && movecol <= 7) {
                                     if (board[indexLineToMove][movecol] !== 0){
                                         return false;
                                     }
