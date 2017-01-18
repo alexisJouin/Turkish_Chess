@@ -132,8 +132,21 @@ io.sockets.on('connection', function (socket) {
         board[0].getPlayers()[1].emit("board", board[0].getBoardArray(), board[0].getNbPawns("WHITE"), board[0].getNbPawns("BLACK"));
         board[0].getPlayers()[0].emit("board", board[0].getBoardArray(), board[0].getNbPawns("WHITE"), board[0].getNbPawns("BLACK"));
 
-        board[0].getPlayers()[board[0].getCurrentPlayer()].emit("turn", true);
-        board[0].getPlayers()[(board[0].getCurrentPlayer()+1)%2].emit("turn", false);
+        var win = board[0].whoWins();
+        if(win != "NOBODY"){
+            if(win == "WHITE"){
+                board[0].getPlayers()[0].emit("win", true);
+                board[0].getPlayers()[1].emit("win", false);
+            }
+            else if(win == "BLACK") {
+                board[0].getPlayers()[0].emit("win", false);
+                board[0].getPlayers()[1].emit("win", true);
+            }
+        }
+        else {
+            board[0].getPlayers()[board[0].getCurrentPlayer()].emit("turn", true);
+            board[0].getPlayers()[(board[0].getCurrentPlayer() + 1) % 2].emit("turn", false);
+        }
     });
 
 
