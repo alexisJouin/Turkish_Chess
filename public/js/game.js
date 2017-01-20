@@ -124,6 +124,15 @@ socket.on('getPossibleAttacks', function(ObligatoireMove){
     console.log("Obligatoire"+ ObligatoireMove);
 });
 
+socket.on('win', function(win){
+    if(win){
+        alert(" VICTOIRE !!!!")
+    }else{
+        alert(" DéFAITE :'( !!!!")
+    }
+    console.log("Obligatoire"+ ObligatoireMove);
+});
+
 //Déplace la pièce au click sur possible case
 $(document).on('click', ".possibleCase", function () {
 
